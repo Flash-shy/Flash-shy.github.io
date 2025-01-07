@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Ceph</title>
+    <url>/RHCA/my-first-test/</url>
+    <content><![CDATA[<h1 id="Chapter1"><a href="#Chapter1" class="headerlink" title="Chapter1"></a>Chapter1</h1><p>Description of the content.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello World&quot;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>RHCA</category>
+      </categories>
+      <tags>
+        <tag>DO260</tag>
+      </tags>
+  </entry>
+</search>
