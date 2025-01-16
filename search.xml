@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>English accumulation</title>
+    <url>/Language/English-accumulation/</url>
+    <content><![CDATA[<h2 id="2025-01-15"><a href="#2025-01-15" class="headerlink" title="2025&#x2F;01&#x2F;15"></a>2025&#x2F;01&#x2F;15</h2><ul>
+<li><p><strong>hands-on activity</strong>: It is an expression that means <strong>practical, active involvement or direct experience with something</strong>, rather than just theoretical or observational.It refers to doing something yourself rather than just studying or observing it.</p>
+</li>
+<li><p><strong>get to do something</strong>: It is an expression that means “<strong>have the opportunity or permission to do something</strong>“. It often conveys a sense of <strong>privillege or enjoyment</strong> in being able to do it.</p>
+</li>
+<li><p><strong>the bulk of</strong>: It is an expression that means “<strong>the majority</strong>“ or “<strong>the largest part</strong>“ of something.</p>
+</li>
+<li><p><strong>be provisioned to</strong>: It is an expression that means “<strong>be set up or prepared</strong> for a specific purpose or function”, typically with the necessary resources, equipment, or configuration required to perform a task or service.</p>
+</li>
+<li><p><strong>persona</strong>: “Persona” originally comes from <em>Latin</em>, where it referred to a mask worn by actors in ancient Roman theatre, and later came to mean the character an individual presents to the outside world. It is often used in psychology to describe the social or public identity someone assumes. Currently, it is the <strong>identity or role</strong> that someone presents to the outside world, often shaped by social expectations or context.</p>
+</li>
+<li><p><strong>foremost</strong>: It is used to describe something that is <strong>the most important</strong> or <strong>the leading</strong> in a given situation, whether in terms of importance, position, or rank. It’s a formal word and often used in more serious or academic contexts to <strong>highlight priorities or leadership</strong>.</p>
+</li>
+<li><p><strong>as distinct from</strong>: It is used to <strong>show the contrast, highlight differences or to make a clear distinction between two things</strong>, indicating that they are different from each other in significant ways. It’s typically used to clarify or emphasize the separation between ideas, objects, or concepts.</p>
+</li>
+<li><p><strong>correlate</strong>: It means to <strong>establish or indicate a relationship or connection between two things</strong>, where changes in one thing are associated with changes in another. It can be used in contexts involving statistics, research, or any situation where there is a noticeable relationship between two factors.</p>
+</li>
+<li><p><strong>consultant</strong>: It generally refers to a <strong>professional</strong> who offers expert advice or guidance in a particular field. A consultant’s role is generally focused on <strong>advisory</strong> work rather than direct implementation or execution.</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Chapter1:Introducing Red Hat Ceph Storage Architecture</title>
+    <url>/RHCA/Chapter1-Introducing-Red-Hat-Ceph-Storage-Architecture/</url>
+    <content><![CDATA[<h2 id="Personas"><a href="#Personas" class="headerlink" title="Personas"></a>Personas</h2><p>The personas that are presented here embody the most common roles of Red Hat Ceph Storage users. You can simply understand the meaning of the word as “user role”.</p>
+<p>In Red Hat Ceph Storage, there are three types of personas, namely the Storage Administrator, the Storage Operator and other Storage-related personas.</p>
+<h3 id="Storage-Administrator"><a href="#Storage-Administrator" class="headerlink" title="Storage Administrator"></a><strong>Storage Administrator</strong></h3><p>The primary persona for Red Hat Ceph is the storage administrator. A Ceph storage administrator performs the following tasks:</p>
+<ul>
+<li><blockquote>
+<p>Installs, configures, and maintains a Ceph storage cluster.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Educates infrastructure architects about Ceph capabilities and features.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Informs users about Ceph data presentation and methods, as choices for their data applications.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Provides resilience and recovery, such as replication, backup, and disaster recovery methods.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Automates and integrates through Infrastructure as Code.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Provides access for data analytics and advanced mass data mining.</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="Storage-Operator"><a href="#Storage-Operator" class="headerlink" title="Storage Operator"></a><strong>Storage Operator</strong></h3><p>The secondary persona for Red Hat Ceph is the storage operator.Storage operators primarily use <em>the Ceph Dashboard GUI</em> to view and respond to cluster alerts and statistics. They also perform routine storage administration tasks that are defined as Dashboard workflows, such as replacing a failed storage device.</p>
+<h3 id="Other-Storage-related-Personas"><a href="#Other-Storage-related-Personas" class="headerlink" title="Other Storage-related Personas"></a>Other Storage-related Personas</h3><p>Other personas that use Ceph directly include <em>application developers, project managers, and service administrators</em> with data processing, data warehouse, big data, and similar application needs. The storage administrator frequently communicates with these personas.</p>
+<ul>
+<li><p>Cloud Operator</p>
+<blockquote>
+<p>A cloud operator administers cloud resources at their organization, such as OpenStack or OpenShift infrastructures. The storage administrator works closely with a cloud operator to maintain the Ceph cluster that is configured to provide storage for those platforms.</p>
+</blockquote>
+</li>
+<li><p>Automation Engineer</p>
+<blockquote>
+<p>Automation engineers frequently use Ceph directly. An automation engineer is responsible for creating playbooks for commonly repeated tasks. Storage administrators would be familiar with these same actions because they are typically the foremost Ceph subject matter experts.</p>
+</blockquote>
+</li>
+<li><p>Application Developer (DevOps Developer)</p>
+<blockquote>
+<p>An application developer can be an original coder, maintainer, or other cloud user who is responsible for the correct deployment and behavior of an application. A storage administrator coordinates with the application developer to ensure that storage resources are available, sets quotas, and secures the application storage.</p>
+</blockquote>
+</li>
+<li><p>Deployment Engineer (DevOps Engineer)</p>
+<blockquote>
+<p>In larger environments, dedicated personnel perform, manage, and tune application deployments, working with the storage administrator and the application developer.</p>
+</blockquote>
+</li>
+<li><p>Application Architect</p>
+<blockquote>
+<p>A storage administrator relies on the application architect as a subject matter expert who can correlate between Ceph infrastructure layout and resource availability, scaling, and latency. This archicture expertise helps the storage administrator to design complex application deployments effectively. To support the cloud users and their applications, a storage administrator must comprehend those same aspects of resource availability, scaling, and latency.</p>
+</blockquote>
+</li>
+<li><p>Infrastructure Architect</p>
+<blockquote>
+<p>A storage administrator must master the storage cluster’s architectural layout to manage resource location, capacity, and latency. The infrastructure architect for the Ceph cluster deployment and maintenance is a primary source of information for the storage administrator. The infrastructure architect might be a cloud service provider employee or a vendor solutions architect or consultant.</p>
+</blockquote>
+</li>
+<li><p>Data Center Operator</p>
+<blockquote>
+<p>Personas at the lower Ceph storage infrastructure layer support data provisioning. Data center operators are typically employed by the public cloud service provider or the organization’s internal IT group in a private data center cloud. The storage administrator opens service tickets with the relevant public cloud service provider or internal IT group.</p>
+</blockquote>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>RHCA</category>
+      </categories>
+      <tags>
+        <tag>CL260</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ceph</title>
+    <url>/RHCA/my-first-test/</url>
+    <content><![CDATA[<h1 id="Chapter1"><a href="#Chapter1" class="headerlink" title="Chapter1"></a>Chapter1</h1><p>Description of the content.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello World&quot;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>RHCA</category>
+      </categories>
+      <tags>
+        <tag>DO260</tag>
+      </tags>
+  </entry>
+</search>
