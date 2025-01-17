@@ -64,7 +64,7 @@
 </li>
 </ul>
 <h3 id="Storage-Operator"><a href="#Storage-Operator" class="headerlink" title="Storage Operator"></a><strong>Storage Operator</strong></h3><p>The secondary persona for Red Hat Ceph is the storage operator.Storage operators primarily use <em>the Ceph Dashboard GUI</em> to view and respond to cluster alerts and statistics. They also perform routine storage administration tasks that are defined as Dashboard workflows, such as replacing a failed storage device.</p>
-<h3 id="Other-Storage-related-Personas"><a href="#Other-Storage-related-Personas" class="headerlink" title="Other Storage-related Personas"></a>Other Storage-related Personas</h3><p>Other personas that use Ceph directly include <em>application developers, project managers, and service administrators</em> with data processing, data warehouse, big data, and similar application needs. The storage administrator frequently communicates with these personas.</p>
+<h3 id="Other-Storage-related-Personas"><a href="#Other-Storage-related-Personas" class="headerlink" title="Other Storage-related Personas"></a><strong>Other Storage-related Personas</strong></h3><p>Other personas that use Ceph directly include <em>application developers, project managers, and service administrators</em> with data processing, data warehouse, big data, and similar application needs. The storage administrator frequently communicates with these personas.</p>
 <ul>
 <li><p>Cloud Operator</p>
 <blockquote>
