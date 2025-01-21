@@ -1,6 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Complete Guide to Markdown shortcuts for typora</title>
+    <url>//Tools/Markdown/Complete-Guide-to-Markdown-shortcuts-for-typora/index.html</url>
+    <content><![CDATA[<h2 id="文字样式部分"><a href="#文字样式部分" class="headerlink" title="文字样式部分"></a>文字样式部分</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + 数字键`</span>快速创建各种等级的标题。(P.s.标题最小分化到6级标题。)</span><br><span class="line">使用<span class="code">`ctrl + 0`</span>可以快速将选中标题调成普通文本。</span><br><span class="line">使用<span class="code">`ctrl + 加号/减号`</span>对标题的级别进行升高和降低。</span><br></pre></td></tr></table></figure>
+
+<h3 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + u`</span>添加下划线。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.下划线(<font color=red><b>U</b></font>nderline)，因此 <u><strong>+u</strong></u>。</p>
+<h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`alt + shift + 5`</span>添加删除线。</span><br></pre></td></tr></table></figure>
+
+<h3 id="字体加粗"><a href="#字体加粗" class="headerlink" title="字体加粗"></a>字体加粗</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + b`</span>加粗文字。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.粗体的(<font color=red><b>B</b></font>old)，因此 **<u>+b</u>**。</p>
+<h3 id="字体倾斜"><a href="#字体倾斜" class="headerlink" title="字体倾斜"></a>字体倾斜</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + i`</span>倾斜文字。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.斜体的(<font color=red><b>I</b></font>talic)，因此 **<u>+i</u>**。</p>
+<hr>
+<h2 id="内容部分"><a href="#内容部分" class="headerlink" title="内容部分"></a>内容部分</h2><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + q`</span>创建引用。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.引用(<font color=red><b>Q</b></font>uote)，因此 **<u>+q</u>**。</p>
+<h3 id="插入链接"><a href="#插入链接" class="headerlink" title="插入链接"></a>插入链接</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + k`</span>插入链接。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.超链接(Hyper<font color=red><b>link</b></font>)，因此 **<u>+k</u>**。</p>
+<h3 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + i`</span>插入图片。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.超链接(<font color=red><b>I</b></font>mage)，因此 **<u>+i</u>**。</p>
+<h3 id="文档内部跳转"><a href="#文档内部跳转" class="headerlink" title="文档内部跳转"></a>文档内部跳转</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + home`</span>跳转至文档开头,使用<span class="code">`ctrl + end`</span> 跳转至文档末尾。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.home：起始 end：终止</p>
+<h3 id="选择英文单词-中文"><a href="#选择英文单词-中文" class="headerlink" title="选择英文单词&#x2F;中文"></a>选择英文单词&#x2F;中文</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + d`</span>选中文本；使用<span class="code">`ctrl + shift + left/right`</span> 左右移动进行文本选中。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.向下填充(<font color=red><b>D</b></font>own)，因此 **<u>+d</u>**。</p>
+<h3 id="按行选中文本"><a href="#按行选中文本" class="headerlink" title="按行选中文本"></a>按行选中文本</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + l`</span>选中光标所在行文本。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.排成一行(<font color=red><b>L</b></font>ine)，因此 **<u>+l</u>**。</p>
+<h3 id="快速搜索文本内容"><a href="#快速搜索文本内容" class="headerlink" title="快速搜索文本内容"></a>快速搜索文本内容</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + f`</span>对全文本进行关键词搜索。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.找寻(<font color=red><b>F</b></font>ind)，因此 **<u>+f</u>**。</p>
+<h3 id="快速替换文本"><a href="#快速替换文本" class="headerlink" title="快速替换文本"></a>快速替换文本</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + h`</span>对全文本进行指定词替换。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.替换(<font color=red><b>R</b></font>eplace)，但R键位被占用，转而使用 **<u>+h</u>**。</p>
+<h3 id="快速生成表格"><a href="#快速生成表格" class="headerlink" title="快速生成表格"></a>快速生成表格</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + t`</span>创建自定义表格。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.表格(<font color=red><b>T</b></font>able)，因此 **<u>+t</u>**。</p>
+<h3 id="快速打开最近浏览笔记"><a href="#快速打开最近浏览笔记" class="headerlink" title="快速打开最近浏览笔记"></a>快速打开最近浏览笔记</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + p`</span>打开最近浏览笔记。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.呈现(<font color=red><b>P</b></font>resent)，因此 **<u>+p</u>**。</p>
+<h3 id="快速生成目录"><a href="#快速生成目录" class="headerlink" title="快速生成目录"></a>快速生成目录</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用 <span class="code">`[toc] + enter`</span>快速生成目录。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.目录表(<font color=red><b>T</b></font>able <font color=red><b>O</b></font>f <font color=red><b>C</b></font>ontents )，因此 **<u>[toc]</u>**。</p>
+<h3 id="着重关键字"><a href="#着重关键字" class="headerlink" title="着重关键字"></a>着重关键字</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + 反引号键(tab键上面那个键)`</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="快速创建代码块-自定义语言类型"><a href="#快速创建代码块-自定义语言类型" class="headerlink" title="快速创建代码块(自定义语言类型)"></a>快速创建代码块(自定义语言类型)</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + k`</span>快速创建代码块，可自定义输入语言类型。</span><br></pre></td></tr></table></figure>
+
+<div STYLE="page-break-after: always;"></div>
+
+<h3 id="数学表达式-支持Latex语法"><a href="#数学表达式-支持Latex语法" class="headerlink" title="数学表达式(支持Latex语法)"></a>数学表达式(支持Latex语法)</h3><ul>
+<li><p>行内公式</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用两个<span class="code">`$`</span>一前一后将公式内容包裹起来。</span><br></pre></td></tr></table></figure>
+
+<p>例如不定积分公式：$\int f(x)dx &#x3D; F(x) + c (c\in {\forall} constants)$</p>
+</li>
+<li><p>行外公式</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + m`</span>创建数学公式块</span><br></pre></td></tr></table></figure>
+
+<p>P.s.数学(<font color=red><b>M</b></font>athematics)，因此 **<u>+m</u>**。</p>
+<p>例如单调收敛定理：</p>
+<p>$$<br>\forall x \in E , 0 \leq f_n(x) \leq f_{n+1}(x),n\in {N_+}.且\lim\limits_{n\to\infty}f_n(x)&#x3D;f(x).<br>那么，\lim\limits_{n\to\infty}\int_Ef(x)dx&#x3D;\int_Ef(x)dx.<br>$$</p>
+<hr>
+</li>
+</ul>
+<h2 id="工具自身部分"><a href="#工具自身部分" class="headerlink" title="工具自身部分"></a>工具自身部分</h2><h3 id="新建文件"><a href="#新建文件" class="headerlink" title="新建文件"></a>新建文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + n`</span>创建新的.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.新建(<font color=red><b>N</b></font>ew)，因此 **<u>+n</u>**。</p>
+<h3 id="打开已有-md文件"><a href="#打开已有-md文件" class="headerlink" title="打开已有.md文件"></a>打开已有.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + o`</span>选择打开已有.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.打开(<font color=red><b>O</b></font>pen)，因此 **<u>+o</u>**。</p>
+<h3 id="保存-md文件"><a href="#保存-md文件" class="headerlink" title="保存.md文件"></a>保存.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + s`</span>保存已编辑好的.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.保存(<font color=red><b>S</b></font>ave)，因此 **<u>+s</u>**。</p>
+<h3 id="关闭-md文件"><a href="#关闭-md文件" class="headerlink" title="关闭.md文件"></a>关闭.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + w`</span>关闭已保存.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.窗口(<font color=red><b>W</b></font>indow)，因此 **<u>+w</u>**。</p>
+<h3 id="显示和隐藏侧边栏"><a href="#显示和隐藏侧边栏" class="headerlink" title="显示和隐藏侧边栏"></a>显示和隐藏侧边栏</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + l`</span>来显示/隐藏侧边栏。</span><br></pre></td></tr></table></figure>
+
+<h3 id="偏好设置"><a href="#偏好设置" class="headerlink" title="偏好设置"></a>偏好设置</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + comma`</span>打开偏好设置栏。</span><br></pre></td></tr></table></figure>
+
+<h3 id="源代码模式"><a href="#源代码模式" class="headerlink" title="源代码模式"></a>源代码模式</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + /`</span>进入源代码模式。</span><br></pre></td></tr></table></figure>
+
+<h3 id="全屏切换"><a href="#全屏切换" class="headerlink" title="全屏切换"></a>全屏切换</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`F11`</span>进入/退出全屏模式。</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Complete Guide to Markdown Features</title>
     <url>//Tools/Markdown/Complete-Guide-to-Markdown-Features/index.html</url>
     <content><![CDATA[<h2 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h2><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：# 标题名字（井号的个数代表标题的级数，最多到六级标题）</span><br></pre></td></tr></table></figure>
