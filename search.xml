@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>English accumulation</title>
-    <url>/Language/English-accumulation/</url>
+    <title>2025/01/15 English accumulation</title>
+    <url>/Language/20250115_English-accumulation/index.html</url>
     <content><![CDATA[<h2 id="2025-01-15"><a href="#2025-01-15" class="headerlink" title="2025&#x2F;01&#x2F;15"></a>2025&#x2F;01&#x2F;15</h2><ul>
 <li><p><strong>hands-on activity</strong>: It is an expression that means <strong>practical, active involvement or direct experience with something</strong>, rather than just theoretical or observational.It refers to doing something yourself rather than just studying or observing it.</p>
 </li>
@@ -32,8 +32,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Chapter1:Introducing Red Hat Ceph Storage Architecture</title>
-    <url>/RHCA/Chapter1-Introducing-Red-Hat-Ceph-Storage-Architecture/</url>
+    <title>Ceph Series (Part 0):Personas</title>
+    <url>/Cloud/Ceph_0.Personas/index.html</url>
     <content><![CDATA[<h2 id="Personas"><a href="#Personas" class="headerlink" title="Personas"></a>Personas</h2><p>The personas that are presented here embody the most common roles of Red Hat Ceph Storage users. You can simply understand the meaning of the word as “user role”.</p>
 <p>In Red Hat Ceph Storage, there are three types of personas, namely the Storage Administrator, the Storage Operator and other Storage-related personas.</p>
 <h3 id="Storage-Administrator"><a href="#Storage-Administrator" class="headerlink" title="Storage Administrator"></a><strong>Storage Administrator</strong></h3><p>The primary persona for Red Hat Ceph is the storage administrator. A Ceph storage administrator performs the following tasks:</p>
@@ -104,23 +104,10 @@
 </ul>
 ]]></content>
       <categories>
-        <category>RHCA</category>
+        <category>Cloud</category>
       </categories>
       <tags>
-        <tag>CL260</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Ceph</title>
-    <url>/RHCA/my-first-test/</url>
-    <content><![CDATA[<h1 id="Chapter1"><a href="#Chapter1" class="headerlink" title="Chapter1"></a>Chapter1</h1><p>Description of the content.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;Hello World&quot;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>RHCA</category>
-      </categories>
-      <tags>
-        <tag>DO260</tag>
+        <tag>Ceph</tag>
       </tags>
   </entry>
 </search>
