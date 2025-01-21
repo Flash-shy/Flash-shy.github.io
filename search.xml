@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Complete-Guide-to-Markdown-Features</title>
+    <title>Complete Guide to Markdown Features</title>
     <url>//Tools/Markdown/Complete-Guide-to-Markdown-Features/index.html</url>
     <content><![CDATA[<h2 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h2><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：# 标题名字（井号的个数代表标题的级数，最多到六级标题）</span><br></pre></td></tr></table></figure>
 
@@ -10,18 +10,18 @@
 
 <h2 id="文字样式"><a href="#文字样式" class="headerlink" title="文字样式"></a>文字样式</h2><h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用两个 ~ 来包裹删除的内容</span><br><span class="line">~~文本内容被删除~~</span><br></pre></td></tr></table></figure>
 
-<p> <del>文本内容被删除</del> </p>
-<h3 id="斜体"><a href="#斜体" class="headerlink" title="斜体"></a>斜体</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用一个 * 来包裹斜体的内容</span><br><span class="line"></span><br><span class="line"><span class="emphasis">*文本内容倾斜*</span></span><br></pre></td></tr></table></figure>
+<p><del>文本内容被删除</del></p>
+<h3 id="斜体"><a href="#斜体" class="headerlink" title="斜体"></a>斜体</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用一个 \* 来包裹斜体的内容</span><br><span class="line"></span><br><span class="line"><span class="emphasis">_文本内容倾斜_</span></span><br></pre></td></tr></table></figure>
 
 <p><em>文本内容倾斜</em></p>
 <p>快捷键：选中需要斜体的内容后 <code>Ctrl</code>+<code>I</code></p>
-<h3 id="加粗"><a href="#加粗" class="headerlink" title="加粗"></a>加粗</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用两个 * 来包裹加粗的内容</span><br><span class="line"></span><br><span class="line"><span class="strong">**文本内容加粗**</span></span><br></pre></td></tr></table></figure>
+<h3 id="加粗"><a href="#加粗" class="headerlink" title="加粗"></a>加粗</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用两个 \* 来包裹加粗的内容</span><br><span class="line"></span><br><span class="line"><span class="strong">**文本内容加粗**</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>文本内容加粗</strong></p>
 <p>快捷键：选中需要加粗的内容后 <code>Ctrl</code>+<code>B</code></p>
-<h3 id="斜体-加粗"><a href="#斜体-加粗" class="headerlink" title="斜体+加粗"></a>斜体+加粗</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用三个 * 来包裹斜体+加粗的内容</span><br><span class="line"></span><br><span class="line"><span class="strong">**<span class="emphasis">*文本内容既倾斜又加粗*</span>**</span></span><br></pre></td></tr></table></figure>
+<h3 id="斜体-加粗"><a href="#斜体-加粗" class="headerlink" title="斜体+加粗"></a>斜体+加粗</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用三个 \* 来包裹斜体+加粗的内容</span><br><span class="line"></span><br><span class="line"><span class="strong">**<span class="emphasis">_文本内容既倾斜又加粗_</span>**</span></span><br></pre></td></tr></table></figure>
 
-<p><em><strong>文本内容既倾斜又加粗</strong></em></p>
+<p><strong><em>文本内容既倾斜又加粗</em></strong></p>
 <h3 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">下划线是HTML语法：用 <span class="language-xml"><span class="tag">&lt;<span class="name">u</span>&gt;</span></span>&lt;\u&gt; 来包裹添加下划线内容</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">u</span>&gt;</span></span>文本内容添加下划线<span class="language-xml"><span class="tag">&lt;/<span class="name">u</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
 
 <p><u>文本内容添加下划线</u></p>
@@ -29,17 +29,17 @@
 <h3 id="高亮（需在偏好设置勾选扩展语法）"><a href="#高亮（需在偏好设置勾选扩展语法）" class="headerlink" title="高亮（需在偏好设置勾选扩展语法）"></a>高亮（需在偏好设置勾选扩展语法）</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用 == 来包裹高亮内容</span><br><span class="line"></span><br><span class="line">==文本内容高亮==</span><br></pre></td></tr></table></figure>
 
 <p>&#x3D;&#x3D;文本内容高亮&#x3D;&#x3D;</p>
-<h3 id="下标（需在偏好设置勾选扩展语法）"><a href="#下标（需在偏好设置勾选扩展语法）" class="headerlink" title="下标（需在偏好设置勾选扩展语法）"></a>下标（需在偏好设置勾选扩展语法）</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用 ~ 来包裹下标内容</span><br><span class="line"></span><br><span class="line">水 H~2~O </span><br><span class="line">双氧水 H~2~O~2~ </span><br></pre></td></tr></table></figure>
+<h3 id="下标（需在偏好设置勾选扩展语法）"><a href="#下标（需在偏好设置勾选扩展语法）" class="headerlink" title="下标（需在偏好设置勾选扩展语法）"></a>下标（需在偏好设置勾选扩展语法）</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用 ~ 来包裹下标内容</span><br><span class="line"></span><br><span class="line">水 H~2~O</span><br><span class="line">双氧水 H~2~O~2~</span><br></pre></td></tr></table></figure>
 
-<p>水 H<del>2</del>O </p>
+<p>水 H<del>2</del>O</p>
 <p>双氧水 H<del>2</del>O<del>2</del></p>
-<h3 id="上标（需在偏好设置内选扩展语法）"><a href="#上标（需在偏好设置内选扩展语法）" class="headerlink" title="上标（需在偏好设置内选扩展语法）"></a>上标（需在偏好设置内选扩展语法）</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用 ^ 来包裹上标内容</span><br><span class="line"></span><br><span class="line">平方米 m^2^ </span><br><span class="line">立方米 m^3^</span><br></pre></td></tr></table></figure>
+<h3 id="上标（需在偏好设置内选扩展语法）"><a href="#上标（需在偏好设置内选扩展语法）" class="headerlink" title="上标（需在偏好设置内选扩展语法）"></a>上标（需在偏好设置内选扩展语法）</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：用 ^ 来包裹上标内容</span><br><span class="line"></span><br><span class="line">平方米 m^2^</span><br><span class="line">立方米 m^3^</span><br></pre></td></tr></table></figure>
 
 <p>平方米 m^2^<br>立方米 m^3^</p>
 <hr>
 <h2 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h2><p>表格的源码格式：</p>
 <p>使用 <code>|</code> 来分隔不同的单元格，使用 <code>-</code> 来分隔表头和其他行：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">name | gender</span><br><span class="line">--- | ---</span><br><span class="line">Torvalds | Male</span><br><span class="line">Tove|Female</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">| name     | gender |</span><br><span class="line">| -------- | ------ |</span><br><span class="line">| Torvalds | Male   |</span><br><span class="line">| Tove     | Female |</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>为了使 Markdown 更清晰，<code>|</code> 和 <code>-</code> 两侧需要至少有一个空格（最左侧和最右侧的 <code>|</code> 外就不需要了）。</p>
@@ -64,7 +64,7 @@
 </tr>
 </tbody></table>
 <p>除此之外可以使用空格对齐不同行的单元格，并在左右两侧都使用 <code>|</code> 来标记单元格边界，在表头下方的分隔线标记中加入 <code>:</code>，即可标记下方单元格内容的对齐方式：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">| Name | Gender | Age |</span><br><span class="line">| :------- | :----: | -: | </span><br><span class="line">| Torvalds | Male   | 55</span><br><span class="line">| Tove     | Female | 58 |</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">| Name     | Gender | Age |</span><br><span class="line">| :------- | :----: | --: |</span><br><span class="line">| Torvalds |  Male  |  55 |</span><br><span class="line">| Tove     | Female |  58 |</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -91,7 +91,7 @@
 <blockquote>
 <p>引用文本内容</p>
 </blockquote>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">&gt;可以在引用中</span><br><span class="line">&gt;&gt;使用嵌套的引用</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="quote">&gt; 可以在引用中</span></span><br><span class="line"><span class="quote">&gt;</span></span><br><span class="line"><span class="quote">&gt; &gt; 使用嵌套的引用</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>可以在引用中</p>
@@ -105,16 +105,15 @@
 <hr>
 <div STYLE="page-break-after: always;"></div>
 
-<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><h3 id="无序列表–符号-空格"><a href="#无序列表–符号-空格" class="headerlink" title="无序列表–符号 空格"></a>无序列表–符号 空格</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">*</span> 可以使用 <span class="code">`*`</span> 作为标记</span><br><span class="line"><span class="bullet">+</span> 也可以使用 <span class="code">`+`</span></span><br><span class="line"><span class="bullet">-</span> 或者 <span class="code">`-`</span></span><br></pre></td></tr></table></figure>
+<h2 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h2><h3 id="无序列表–符号-空格"><a href="#无序列表–符号-空格" class="headerlink" title="无序列表–符号 空格"></a>无序列表–符号 空格</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> 可以使用 <span class="code">`*`</span> 作为标记</span><br><span class="line"></span><br><span class="line"><span class="bullet">*</span> 也可以使用 <span class="code">`+`</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 或者 <span class="code">`-`</span></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>可以使用 <code>*</code> 作为标记（不推荐使用星号）</li>
-</ul>
-<ul>
-<li>也可以使用 <code>+</code></li>
-</ul>
-<ul>
-<li>或者 <code>-</code></li>
+<li><p>可以使用 <code>*</code> 作为标记（不推荐使用星号）</p>
+</li>
+<li><p>也可以使用 <code>+</code></p>
+</li>
+<li><p>或者 <code>-</code></p>
+</li>
 </ul>
 <h3 id="有序列表–数字-空格"><a href="#有序列表–数字-空格" class="headerlink" title="有序列表–数字 . 空格"></a>有序列表–数字 <code>.</code> 空格</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">1.</span> 有序列表以数字和 <span class="code">`.`</span> 开始；</span><br><span class="line"><span class="bullet">2.</span> 数字的序列并不会影响生成的列表序列；</span><br><span class="line"><span class="bullet">3.</span> 但仍然推荐按照自然顺序（1.2.3...）编写。</span><br></pre></td></tr></table></figure>
 
@@ -127,7 +126,7 @@
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">可以使用：数字\. 来取消显示为列表（用反斜杠进行转义）</span><br></pre></td></tr></table></figure></li>
 </ol>
 <hr>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="code">```语言名称</span></span><br></pre></td></tr></table></figure>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="code">```语言名称</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">```</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
 
@@ -136,12 +135,12 @@
 <p><code>Markdown</code></p>
 <hr>
 <h2 id="分隔线"><a href="#分隔线" class="headerlink" title="分隔线"></a>分隔线</h2><p>可以在一行中使用三个或更多的 <code>*</code>、<code>-</code> 或 <code>_</code> 来添加分隔线（&#96;&#96;）：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="section"><span class="strong">***</span></span></span><br><span class="line"><span class="strong"><span class="section">------</span></span></span><br><span class="line"><span class="strong"><span class="section">__<span class="emphasis">_</span></span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="section">---</span></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
 
 <hr>
 <hr>
 <hr>
-<h2 id="任务列表"><a href="#任务列表" class="headerlink" title="任务列表"></a>任务列表</h2><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：</span><br><span class="line">未完成事项:- [ ] </span><br><span class="line">已完成事项:- [x] </span><br><span class="line">可以通过鼠标左键勾选或取消方框内的√。</span><br></pre></td></tr></table></figure>
+<h2 id="任务列表"><a href="#任务列表" class="headerlink" title="任务列表"></a>任务列表</h2><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法：</span><br><span class="line">未完成事项:- [ ]</span><br><span class="line">已完成事项:- [x]</span><br><span class="line">可以通过鼠标左键勾选或取消方框内的√。</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li><input checked="" disabled="" type="checkbox"> 任务1</li>
@@ -163,7 +162,7 @@
 <p><a href="https://www.baidu.com/">https://www.baidu.com</a></p>
 <hr>
 <h3 id="本地图片"><a href="#本地图片" class="headerlink" title="本地图片"></a>本地图片</h3><p>图像与链接类似， 但在链接语法之前需要添加额外的 <code>!</code> 字符。 图像语法如下所示：</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">图片命名</span>](<span class="link">图片本地存储的路径</span>)  P.s.用相对路径或绝对路径都可以</span><br><span class="line">或者直接拷贝到Typora内。</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">![<span class="string">图片命名</span>](<span class="link">图片本地存储的路径</span>) P.s.用相对路径或绝对路径都可以</span><br><span class="line">或者直接拷贝到Typora内。</span><br></pre></td></tr></table></figure>
 
 <hr>
 <h2 id="数学表达式-支持Latex语法"><a href="#数学表达式-支持Latex语法" class="headerlink" title="数学表达式(支持Latex语法)"></a>数学表达式(支持Latex语法)</h2><h3 id="内联公式"><a href="#内联公式" class="headerlink" title="内联公式"></a>内联公式</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用两个<span class="code">`$`</span>一前一后将公式内容包裹起来。</span><br></pre></td></tr></table></figure>
@@ -172,7 +171,8 @@
 <h3 id="行外公式"><a href="#行外公式" class="headerlink" title="行外公式"></a>行外公式</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + m`</span>创建数学公式块</span><br></pre></td></tr></table></figure>
 
 <p>P.s.数学(<font color=red><b>M</b></font>athematics)，因此 **<u>+m</u>**。</p>
-<p>例如单调收敛定理：<br>$$<br>\forall x \in E	, 0 \leq f_n(x) \leq f_{n+1}(x),n\in {N_+}.且\lim\limits_{n\to\infty}f_n(x)&#x3D;f(x).<br>那么，\lim\limits_{n\to\infty}\int_Ef(x)dx&#x3D;\int_Ef(x)dx.<br>$$</p>
+<p>例如单调收敛定理：</p>
+<p>$$<br>\forall x \in E , 0 \leq f_n(x) \leq f_{n+1}(x),n\in {N_+}.且\lim\limits_{n\to\infty}f_n(x)&#x3D;f(x).<br>那么，\lim\limits_{n\to\infty}\int_Ef(x)dx&#x3D;\int_Ef(x)dx.<br>$$</p>
 <hr>
 <div STYLE="page-break-after: always;"></div>
 
@@ -207,41 +207,31 @@
 </tr>
 </tbody></table>
 <p>接下来我将一一介绍上述三种类型的图表。</p>
-<h3 id="Sequence-Diagrams"><a href="#Sequence-Diagrams" class="headerlink" title="Sequence Diagrams"></a>Sequence Diagrams</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Title: MarkDown时序图实例</span><br><span class="line"><span class="code">	</span></span><br><span class="line"><span class="code">    participant 客户端</span></span><br><span class="line"><span class="code">    participant 控制器</span></span><br><span class="line"><span class="code">    participant 业务</span></span><br><span class="line"><span class="code">    participant 数据库</span></span><br><span class="line"><span class="code">    </span></span><br><span class="line"><span class="code">     客户端-&gt;&gt;数据库:提交数据店铺</span></span><br><span class="line"><span class="code">     Note right of 客户端:提交数据进行验证</span></span><br><span class="line"><span class="code">     控制器-&gt;&gt;控制器:验证数据完整性</span></span><br><span class="line"><span class="code">     Note left of 控制器:返回错误的字段信息</span></span><br><span class="line"><span class="code">     控制器--&gt;&gt;客户端:数据不完整</span></span><br><span class="line"><span class="code">     Note over 客户端: 用户输入通行证的账号、密码</span></span><br><span class="line"><span class="code">     控制器-&gt;&gt;业务:保存店铺到数据库</span></span><br><span class="line"><span class="code">     业务-&gt;&gt;业务:save店铺数据</span></span><br><span class="line"><span class="code">     业务--&gt;&gt;控制器:保存出现异常</span></span><br><span class="line"><span class="code">     控制器--&gt;&gt;客户端:保存成功</span></span><br><span class="line"><span class="code">     数据库--&gt;&gt;业务:success</span></span><br><span class="line"><span class="code">     业务--&gt;&gt;控制器:success</span></span><br><span class="line"><span class="code">     控制器--&gt;&gt;客户端:success 客户端</span></span><br><span class="line"><span class="code">     Note left of 控制器:返回正确的提示，并跳转到审核第二步</span></span><br></pre></td></tr></table></figure>
+<h3 id="Sequence-Diagrams"><a href="#Sequence-Diagrams" class="headerlink" title="Sequence Diagrams"></a>Sequence Diagrams</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">Title: MarkDown时序图实例</span><br><span class="line">participant 客户端</span><br><span class="line">participant 控制器</span><br><span class="line">participant 业务</span><br><span class="line">participant 数据库</span><br><span class="line"></span><br><span class="line"><span class="code">     客户端-&gt;&gt;数据库:提交数据店铺</span></span><br><span class="line"><span class="code">     Note right of 客户端:提交数据进行验证</span></span><br><span class="line"><span class="code">     控制器-&gt;&gt;控制器:验证数据完整性</span></span><br><span class="line"><span class="code">     Note left of 控制器:返回错误的字段信息</span></span><br><span class="line"><span class="code">     控制器--&gt;&gt;客户端:数据不完整</span></span><br><span class="line"><span class="code">     Note over 客户端: 用户输入通行证的账号、密码</span></span><br><span class="line"><span class="code">     控制器-&gt;&gt;业务:保存店铺到数据库</span></span><br><span class="line"><span class="code">     业务-&gt;&gt;业务:save店铺数据</span></span><br><span class="line"><span class="code">     业务--&gt;&gt;控制器:保存出现异常</span></span><br><span class="line"><span class="code">     控制器--&gt;&gt;客户端:保存成功</span></span><br><span class="line"><span class="code">     数据库--&gt;&gt;业务:success</span></span><br><span class="line"><span class="code">     业务--&gt;&gt;控制器:success</span></span><br><span class="line"><span class="code">     控制器--&gt;&gt;客户端:success 客户端</span></span><br><span class="line"><span class="code">     Note left of 控制器:返回正确的提示，并跳转到审核第二步</span></span><br></pre></td></tr></table></figure>
 
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Title: MarkDown时序图实例</span><br><span class="line"></span><br><span class="line">    participant 客户端</span><br><span class="line">    participant 控制器</span><br><span class="line">    participant 业务</span><br><span class="line">    participant 数据库</span><br><span class="line"></span><br><span class="line">     客户端-&gt;&gt;数据库:提交数据店铺</span><br><span class="line">     Note right of 客户端:提交数据进行验证</span><br><span class="line">     控制器-&gt;&gt;控制器:验证数据完整性</span><br><span class="line">     Note left of 控制器:返回错误的字段信息</span><br><span class="line">     控制器--&gt;&gt;客户端:数据不完整</span><br><span class="line">     Note over 客户端: 用户输入通行证的账号、密码</span><br><span class="line">     控制器-&gt;&gt;业务:保存店铺到数据库</span><br><span class="line">     业务-&gt;&gt;业务:save店铺数据</span><br><span class="line">     业务--&gt;&gt;控制器:保存出现异常</span><br><span class="line">     控制器--&gt;&gt;客户端:保存成功</span><br><span class="line">     数据库--&gt;&gt;业务:success</span><br><span class="line">     业务--&gt;&gt;控制器:success</span><br><span class="line">     控制器--&gt;&gt;客户端:success 客户端</span><br><span class="line">     Note left of 控制器:返回正确的提示，并跳转到审核第二步</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Title: MarkDown时序图实例</span><br><span class="line">	</span><br><span class="line">    participant 客户端</span><br><span class="line">    participant 控制器</span><br><span class="line">    participant 业务</span><br><span class="line">    participant 数据库</span><br><span class="line">    </span><br><span class="line">     客户端-&gt;&gt;数据库:提交数据店铺</span><br><span class="line">     Note right of 客户端:提交数据进行验证</span><br><span class="line">     控制器-&gt;&gt;控制器:验证数据完整性</span><br><span class="line">     Note left of 控制器:返回错误的字段信息</span><br><span class="line">     控制器--&gt;&gt;客户端:数据不完整</span><br><span class="line">     Note over 客户端: 用户输入通行证的账号、密码</span><br><span class="line">     控制器-&gt;&gt;业务:保存店铺到数据库</span><br><span class="line">     业务-&gt;&gt;业务:save店铺数据</span><br><span class="line">     业务--&gt;&gt;控制器:保存出现异常</span><br><span class="line">     控制器--&gt;&gt;客户端:保存成功</span><br><span class="line">     数据库--&gt;&gt;业务:success</span><br><span class="line">     业务--&gt;&gt;控制器:success</span><br><span class="line">     控制器--&gt;&gt;客户端:success 客户端</span><br><span class="line">     Note left of 控制器:返回正确的提示，并跳转到审核第二步</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> 代表实线 ， 主动发送消息，比如 request请求</span><br><span class="line"><span class="quote">&gt; 代表实心箭头 ， 同步消息，比如 AJAX 的同步请求</span></span><br><span class="line">-- 代表虚线，表示返回消息，spring Controller return</span><br><span class="line">&gt;&gt; 代表非实心箭头 ，异步消息，比如AJAX请求</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> 代表实线 ， 主动发送消息，比如 request请求</span><br><span class="line">  &gt; 代表实心箭头 ， 同步消息，比如 AJAX 的同步请求</span><br><span class="line">  &gt; -- 代表虚线，表示返回消息，spring Controller return</span><br><span class="line">  &gt;</span><br><span class="line">  &gt; &gt; 代表非实心箭头 ，异步消息，比如AJAX请求</span><br></pre></td></tr></table></figure>
 
 <div STYLE="page-break-after: always;"></div>
 
 <h3 id="Flowcharts"><a href="#Flowcharts" class="headerlink" title="Flowcharts"></a>Flowcharts</h3><ul>
 <li><strong>标准竖向流程图</strong></li>
 </ul>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 开始框</span><br><span class="line"> </span><br><span class="line">op=&gt;operation: 处理框</span><br><span class="line"> </span><br><span class="line">cond=&gt;condition: 判断框(是或否?)</span><br><span class="line"> </span><br><span class="line">sub1=&gt;subroutine: 子流程</span><br><span class="line"> </span><br><span class="line">io=&gt;inputoutput: 输入输出框</span><br><span class="line"> </span><br><span class="line">e=&gt;end: 结束框</span><br><span class="line"> </span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line"> </span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line"> </span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 开始框</span><br><span class="line"></span><br><span class="line">op=&gt;operation: 处理框</span><br><span class="line"></span><br><span class="line">cond=&gt;condition: 判断框(是或否?)</span><br><span class="line"></span><br><span class="line">sub1=&gt;subroutine: 子流程</span><br><span class="line"></span><br><span class="line">io=&gt;inputoutput: 输入输出框</span><br><span class="line"></span><br><span class="line">e=&gt;end: 结束框</span><br><span class="line"></span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line"></span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line"></span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
 
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 出发</span><br><span class="line"> </span><br><span class="line">op=&gt;operation: 下雨</span><br><span class="line"> </span><br><span class="line">cond=&gt;condition: 带雨伞</span><br><span class="line"> </span><br><span class="line">sub1=&gt;subroutine: 回家取伞</span><br><span class="line"> </span><br><span class="line">io=&gt;inputoutput: 继续出行</span><br><span class="line"> </span><br><span class="line">e=&gt;end: 到达目的地</span><br><span class="line"> </span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line"> </span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line"> </span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 出发</span><br><span class="line"></span><br><span class="line">op=&gt;operation: 下雨</span><br><span class="line"></span><br><span class="line">cond=&gt;condition: 带雨伞</span><br><span class="line"></span><br><span class="line">sub1=&gt;subroutine: 回家取伞</span><br><span class="line"></span><br><span class="line">io=&gt;inputoutput: 继续出行</span><br><span class="line"></span><br><span class="line">e=&gt;end: 到达目的地</span><br><span class="line"></span><br><span class="line">st-&gt;op-&gt;cond</span><br><span class="line"></span><br><span class="line">cond(yes)-&gt;io-&gt;e</span><br><span class="line"></span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li><strong>标准横向流程图</strong></li>
 </ul>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 开始框</span><br><span class="line"> </span><br><span class="line">op=&gt;operation: 处理框</span><br><span class="line"> </span><br><span class="line">cond=&gt;condition: 判断框(是或否?)</span><br><span class="line"> </span><br><span class="line">sub1=&gt;subroutine: 子流程</span><br><span class="line"> </span><br><span class="line">io=&gt;inputoutput: 输入输出框</span><br><span class="line"> </span><br><span class="line">e=&gt;end: 结束框</span><br><span class="line"> </span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line"> </span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line"> </span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 开始框</span><br><span class="line"></span><br><span class="line">op=&gt;operation: 处理框</span><br><span class="line"></span><br><span class="line">cond=&gt;condition: 判断框(是或否?)</span><br><span class="line"></span><br><span class="line">sub1=&gt;subroutine: 子流程</span><br><span class="line"></span><br><span class="line">io=&gt;inputoutput: 输入输出框</span><br><span class="line"></span><br><span class="line">e=&gt;end: 结束框</span><br><span class="line"></span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line"></span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line"></span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
 
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 出发</span><br><span class="line"> </span><br><span class="line">op=&gt;operation: 下雨</span><br><span class="line"> </span><br><span class="line">cond=&gt;condition: 带雨伞</span><br><span class="line"> </span><br><span class="line">sub1=&gt;subroutine: 回家取伞</span><br><span class="line"> </span><br><span class="line">io=&gt;inputoutput: 继续出行</span><br><span class="line"> </span><br><span class="line">e=&gt;end: 到达目的地</span><br><span class="line"> </span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line"> </span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line"> </span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">st=&gt;start: 出发</span><br><span class="line"></span><br><span class="line">op=&gt;operation: 下雨</span><br><span class="line"></span><br><span class="line">cond=&gt;condition: 带雨伞</span><br><span class="line"></span><br><span class="line">sub1=&gt;subroutine: 回家取伞</span><br><span class="line"></span><br><span class="line">io=&gt;inputoutput: 继续出行</span><br><span class="line"></span><br><span class="line">e=&gt;end: 到达目的地</span><br><span class="line"></span><br><span class="line">st(right)-&gt;op(right)-&gt;cond</span><br><span class="line"></span><br><span class="line">cond(yes)-&gt;io(bottom)-&gt;e</span><br><span class="line"></span><br><span class="line">cond(no)-&gt;sub1(right)-&gt;op</span><br></pre></td></tr></table></figure>
 
 <div STYLE="page-break-after: always;"></div>
 
-<h3 id="Mermaid"><a href="#Mermaid" class="headerlink" title="Mermaid"></a>Mermaid</h3><h4 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph 方向描述</span><br><span class="line"><span class="code">    图表中的其他语句...</span></span><br></pre></td></tr></table></figure>
+<h3 id="Mermaid"><a href="#Mermaid" class="headerlink" title="Mermaid"></a>Mermaid</h3><h4 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph 方向描述</span><br><span class="line">图表中的其他语句...</span><br></pre></td></tr></table></figure>
 
 <p>关键字graph表示一个流程图的开始，同时需要指定该图的方向。</p>
 <p>其中“方向描述”为：</p>
@@ -273,17 +263,13 @@
 <p>T &#x3D; TOP，B &#x3D; BOTTOM，L &#x3D; LEFT，R &#x3D; RIGHT，D &#x3D; DOWN</p>
 </blockquote>
 <p>最常用的布局方向是TB、LR。</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph TB;</span><br><span class="line">  A--&gt;B</span><br><span class="line">  B--&gt;C</span><br><span class="line">  C--&gt;A</span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph TB;</span><br><span class="line">A--&gt;B</span><br><span class="line">B--&gt;C</span><br><span class="line">C--&gt;A</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph TB;</span><br><span class="line">  A--&gt;B</span><br><span class="line">  B--&gt;C</span><br><span class="line">  C--&gt;A</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">  A--&gt;B</span><br><span class="line">  B--&gt;C</span><br><span class="line">  C--&gt;A</span><br></pre></td></tr></table></figure>
-
-
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">A--&gt;B</span><br><span class="line">B--&gt;C</span><br><span class="line">C--&gt;A</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph LR;</span><br><span class="line">  A--&gt;B</span><br><span class="line">  B--&gt;C</span><br><span class="line">  C--&gt;A</span><br></pre></td></tr></table></figure>
-
-
 
 <h5 id="节点形状"><a href="#节点形状" class="headerlink" title="节点形状"></a>节点形状</h5><table>
 <thead>
@@ -324,61 +310,47 @@
 <p>id即为节点的唯一标识，A~F 是当前节点名字，类似于变量名，画图时便于引用</p>
 <p>括号内是节点中要显示的文字，默认节点的名字和显示的文字都为A</p>
 </blockquote>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">  A</span><br><span class="line">  B(圆角矩形节点)</span><br><span class="line">  C[矩形节点]</span><br><span class="line">  D((圆形节点))</span><br><span class="line">  E&#123;菱形节点&#125;</span><br><span class="line">  F&gt;右向旗帜状节点] </span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">A</span><br><span class="line">B(圆角矩形节点)</span><br><span class="line">C[矩形节点]</span><br><span class="line">D((圆形节点))</span><br><span class="line">E&#123;菱形节点&#125;</span><br><span class="line">F&gt;右向旗帜状节点]</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">  A</span><br><span class="line">  B(圆角矩形节点)</span><br><span class="line">  C[矩形节点]</span><br><span class="line">  D((圆形节点))</span><br><span class="line">  E&#123;菱形节点&#125;</span><br><span class="line">  F&gt;右向旗帜状节点]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">%% 语法示例</span><br><span class="line">graph TB</span><br><span class="line"><span class="code">    sport(出发运动)--&gt; badminton[羽毛球]</span></span><br><span class="line"><span class="code">    badminton --&gt; IsWin&#123;&quot;有没有赢下单打比赛？&quot;&#125;</span></span><br><span class="line"><span class="code">    IsWin --&gt;|有|happy[赢下比赛]--&gt;goBack(回家)</span></span><br><span class="line"><span class="code">    IsWin --&gt;|没有|sad[再接再厉]--&gt;goBack</span></span><br><span class="line"><span class="code"></span></span><br></pre></td></tr></table></figure>
 
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    sport(出发运动)--&gt; badminton[羽毛球]</span><br><span class="line">    badminton --&gt; IsWin&#123;&quot;有没有赢下单打比赛？&quot;&#125;</span><br><span class="line">    IsWin --&gt;|有|happy[赢下比赛]--&gt;goBack(回家)</span><br><span class="line">    IsWin --&gt;|没有|sad[再接再厉]--&gt;goBack</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">%% 语法示例</span><br><span class="line">graph TB</span><br><span class="line"><span class="code">    sport(出发运动)--&gt; badminton[羽毛球]</span></span><br><span class="line"><span class="code">    badminton --&gt; IsWin&#123;&quot;有没有赢下单打比赛？&quot;&#125;</span></span><br><span class="line"><span class="code">    IsWin --&gt;|有|happy[赢下比赛]--&gt;goBack(回家)</span></span><br><span class="line"><span class="code">    IsWin --&gt;|没有|sad[再接再厉]--&gt;goBack</span></span><br><span class="line"><span class="code">    </span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">    sport(出发运动)--&gt; badminton[羽毛球]</span><br><span class="line">    badminton --&gt; IsWin&#123;&quot;有没有赢下单打比赛？&quot;&#125;</span><br><span class="line">    IsWin --&gt;|有|happy[赢下比赛]--&gt;goBack(回家)</span><br><span class="line">    IsWin --&gt;|没有|sad[再接再厉]--&gt;goBack</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-
-
-<h5 id="连线"><a href="#连线" class="headerlink" title="连线"></a>连线</h5><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">  A1--&gt;B1</span><br><span class="line">  A2---B2</span><br><span class="line">  A3--text---B3</span><br><span class="line">  A4--text--&gt;B4</span><br><span class="line">  A5-.-B5</span><br><span class="line">  A6-.-&gt;B6</span><br><span class="line">  A7-.text.-B7</span><br><span class="line">  A8-.text.-&gt;B8</span><br><span class="line">  A9===B9</span><br><span class="line">  A10==&gt;B10</span><br><span class="line">  A11==text===B11</span><br><span class="line">  A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
+<h5 id="连线"><a href="#连线" class="headerlink" title="连线"></a>连线</h5><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">A1--&gt;B1</span><br><span class="line">A2---B2</span><br><span class="line">A3--text---B3</span><br><span class="line">A4--text--&gt;B4</span><br><span class="line">A5-.-B5</span><br><span class="line">A6-.-&gt;B6</span><br><span class="line">A7-.text.-B7</span><br><span class="line">A8-.text.-&gt;B8</span><br><span class="line">A9===B9</span><br><span class="line">A10==&gt;B10</span><br><span class="line">A11==text===B11</span><br><span class="line">A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">graph TB</span><br><span class="line">  A1--&gt;B1</span><br><span class="line">  A2---B2</span><br><span class="line">  A3--text---B3</span><br><span class="line">  A4--text--&gt;B4</span><br><span class="line">  A5-.-B5</span><br><span class="line">  A6-.-&gt;B6</span><br><span class="line">  A7-.text.-B7</span><br><span class="line">  A8-.text.-&gt;B8</span><br><span class="line">  A9===B9</span><br><span class="line">  A10==&gt;B10</span><br><span class="line">  A11==text===B11</span><br><span class="line">  A12==text==&gt;B12</span><br></pre></td></tr></table></figure>
 
+<h4 id="UML时序图"><a href="#UML时序图" class="headerlink" title="UML时序图"></a>UML时序图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">顾客--&gt;API: 预约产品</span><br><span class="line">API--&gt;预约服务: 开始预约流程</span><br><span class="line">break 当预约失败时</span><br><span class="line">API--&gt;顾客: 展示预约失败原因</span><br><span class="line">end</span><br><span class="line">API--&gt;支付账单服务: 开始支付账单流程</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line"> 顾客--&gt;API: 预约产品</span><br><span class="line"> API--&gt;预约服务: 开始预约流程</span><br><span class="line"> break 当预约失败时</span><br><span class="line">  API--&gt;顾客: 展示预约失败原因</span><br><span class="line"> end</span><br><span class="line"> API--&gt;支付账单服务: 开始支付账单流程</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+<p>​</p>
+<p>​</p>
+<h4 id="甘特图"><a href="#甘特图" class="headerlink" title="甘特图"></a>甘特图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">%% 语法示例</span><br><span class="line">gantt</span><br><span class="line">dateFormat YYYY-MM-DD</span><br><span class="line">title 软件开发甘特图</span><br><span class="line">section 设计</span><br><span class="line">需求 :done, des1, 2014-01-06,2014-01-08</span><br><span class="line">原型 :active, des2, 2014-01-09, 3d</span><br><span class="line">UI设计 : des3, after des2, 5d</span><br><span class="line">未来任务 : des4, after des3, 5d</span><br><span class="line">section 开发</span><br><span class="line">学习准备理解需求 :crit, done, 2014-01-06,24h</span><br><span class="line">设计框架 :crit, done, after des2, 2d</span><br><span class="line">开发 :crit, active, 3d</span><br><span class="line">未来任务 :crit, 5d</span><br><span class="line">耍 :2d</span><br><span class="line"></span><br><span class="line"><span class="code">        section 测试</span></span><br><span class="line"><span class="code">        功能测试                              :active, a1, after des3, 3d</span></span><br><span class="line"><span class="code">        压力测试                               :after a1  , 20h</span></span><br><span class="line"><span class="code">        测试报告                               : 48h</span></span><br></pre></td></tr></table></figure>
 
-
-<h4 id="UML时序图"><a href="#UML时序图" class="headerlink" title="UML时序图"></a>UML时序图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line"><span class="code">	顾客--&gt;API: 预约产品</span></span><br><span class="line"><span class="code">	API--&gt;预约服务: 开始预约流程</span></span><br><span class="line"><span class="code">	break 当预约失败时</span></span><br><span class="line"><span class="code">		API--&gt;顾客: 展示预约失败原因</span></span><br><span class="line"><span class="code">	end</span></span><br><span class="line"><span class="code">	API--&gt;支付账单服务: 开始支付账单流程</span></span><br><span class="line"><span class="code"></span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">	顾客--&gt;API: 预约产品</span><br><span class="line">	API--&gt;预约服务: 开始预约流程</span><br><span class="line">	break 当预约失败时</span><br><span class="line">		API--&gt;顾客: 展示预约失败原因</span><br><span class="line">	end</span><br><span class="line">	API--&gt;支付账单服务: 开始支付账单流程</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>​                          </p>
-<p>​                                                                                                                                                                                                                                                                      </p>
-<h4 id="甘特图"><a href="#甘特图" class="headerlink" title="甘特图"></a>甘特图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">%% 语法示例</span><br><span class="line"><span class="code">        gantt</span></span><br><span class="line"><span class="code">        dateFormat  YYYY-MM-DD</span></span><br><span class="line"><span class="code">        title 软件开发甘特图</span></span><br><span class="line"><span class="code">        section 设计</span></span><br><span class="line"><span class="code">        需求                      :done,    des1, 2014-01-06,2014-01-08</span></span><br><span class="line"><span class="code">        原型                      :active,  des2, 2014-01-09, 3d</span></span><br><span class="line"><span class="code">        UI设计                     :         des3, after des2, 5d</span></span><br><span class="line"><span class="code">    未来任务                     :         des4, after des3, 5d</span></span><br><span class="line"><span class="code">        section 开发</span></span><br><span class="line"><span class="code">        学习准备理解需求                      :crit, done, 2014-01-06,24h</span></span><br><span class="line"><span class="code">        设计框架                             :crit, done, after des2, 2d</span></span><br><span class="line"><span class="code">        开发                                 :crit, active, 3d</span></span><br><span class="line"><span class="code">        未来任务                              :crit, 5d</span></span><br><span class="line"><span class="code">        耍                                   :2d</span></span><br><span class="line"><span class="code"> </span></span><br><span class="line"><span class="code">        section 测试</span></span><br><span class="line"><span class="code">        功能测试                              :active, a1, after des3, 3d</span></span><br><span class="line"><span class="code">        压力测试                               :after a1  , 20h</span></span><br><span class="line"><span class="code">        测试报告                               : 48h</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gantt</span><br><span class="line">        dateFormat  YYYY-MM-DD</span><br><span class="line">        title 软件开发甘特图</span><br><span class="line">        section 设计</span><br><span class="line">        需求                      :done,    des1, 2014-01-06,2014-01-08</span><br><span class="line">        原型                      :active,  des2, 2014-01-09, 3d</span><br><span class="line">        UI设计                     :         des3, after des2, 5d</span><br><span class="line">        未来任务                     :         des4, after des3, 5d</span><br><span class="line">        </span><br><span class="line">        section 开发</span><br><span class="line">        学习准备理解需求                      :crit, done, 2014-01-06,24h</span><br><span class="line">        设计框架                             :crit, done, after des2, 2d</span><br><span class="line">        开发                                 :crit, active, 3d</span><br><span class="line">        未来任务                              :crit, 5d</span><br><span class="line"></span><br><span class="line">        section 测试</span><br><span class="line">        功能测试                              :active, a1, after des3, 3d</span><br><span class="line">        压力测试                               :after a1  , 20h</span><br><span class="line">        测试报告                               : 48h</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">gantt</span><br><span class="line">        dateFormat  YYYY-MM-DD</span><br><span class="line">        title 软件开发甘特图</span><br><span class="line">        section 设计</span><br><span class="line">        需求                      :done,    des1, 2014-01-06,2014-01-08</span><br><span class="line">        原型                      :active,  des2, 2014-01-09, 3d</span><br><span class="line">        UI设计                     :         des3, after des2, 5d</span><br><span class="line">        未来任务                     :         des4, after des3, 5d</span><br><span class="line"></span><br><span class="line">        section 开发</span><br><span class="line">        学习准备理解需求                      :crit, done, 2014-01-06,24h</span><br><span class="line">        设计框架                             :crit, done, after des2, 2d</span><br><span class="line">        开发                                 :crit, active, 3d</span><br><span class="line">        未来任务                              :crit, 5d</span><br><span class="line"></span><br><span class="line">        section 测试</span><br><span class="line">        功能测试                              :active, a1, after des3, 3d</span><br><span class="line">        压力测试                               :after a1  , 20h</span><br><span class="line">        测试报告                               : 48h</span><br></pre></td></tr></table></figure>
 
 <div STYLE="page-break-after: always;"></div>
 
 <h4 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">语法解释：&lt;|-- 表示继承，+ 表示 public，- 表示 private。</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">classDiagram</span><br><span class="line"><span class="code">      动物 &lt;|-- 鸭子</span></span><br><span class="line"><span class="code">      动物 &lt;|-- 鱼</span></span><br><span class="line"><span class="code">      动物 &lt;|-- 斑马</span></span><br><span class="line"><span class="code">      动物 : +int age</span></span><br><span class="line"><span class="code">      动物 : +String gender</span></span><br><span class="line"><span class="code">      动物: +isMammal()</span></span><br><span class="line"><span class="code">      动物: +mate()</span></span><br><span class="line"><span class="code">      class 鸭子&#123;</span></span><br><span class="line"><span class="code">          +String beakColor</span></span><br><span class="line"><span class="code">          +swim()</span></span><br><span class="line"><span class="code">          +quack()</span></span><br><span class="line"><span class="code">      &#125;</span></span><br><span class="line"><span class="code">      class 鱼&#123;</span></span><br><span class="line"><span class="code">          -int sizeInFeet</span></span><br><span class="line"><span class="code">          -canEat()</span></span><br><span class="line"><span class="code">      &#125;</span></span><br><span class="line"><span class="code">      class 斑马&#123;</span></span><br><span class="line"><span class="code">          +bool is_wild</span></span><br><span class="line"><span class="code">          +run()</span></span><br><span class="line"><span class="code">      &#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">classDiagram</span><br><span class="line">动物 &lt;|-- 鸭子</span><br><span class="line">动物 &lt;|-- 鱼</span><br><span class="line">动物 &lt;|-- 斑马</span><br><span class="line">动物 : +int age</span><br><span class="line">动物 : +String gender</span><br><span class="line">动物: +isMammal()</span><br><span class="line">动物: +mate()</span><br><span class="line">class 鸭子&#123;</span><br><span class="line">+String beakColor</span><br><span class="line">+swim()</span><br><span class="line">+quack()</span><br><span class="line">&#125;</span><br><span class="line">class 鱼&#123;</span><br><span class="line">-int sizeInFeet</span><br><span class="line">-canEat()</span><br><span class="line">&#125;</span><br><span class="line">class 斑马&#123;</span><br><span class="line">+bool is<span class="emphasis">_wild</span></span><br><span class="line"><span class="emphasis">+run()</span></span><br><span class="line"><span class="emphasis">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">classDiagram</span><br><span class="line">      动物 &lt;|-- 鸭子</span><br><span class="line">      动物 &lt;|-- 鱼</span><br><span class="line">      动物 &lt;|-- 斑马</span><br><span class="line">      动物 : +int age</span><br><span class="line">      动物 : +String gender</span><br><span class="line">      动物: +isMammal()</span><br><span class="line">      动物: +mate()</span><br><span class="line">      class 鸭子&#123;</span><br><span class="line">          +String beakColor</span><br><span class="line">          +swim()</span><br><span class="line">          +quack()</span><br><span class="line">      &#125;</span><br><span class="line">      class 鱼&#123;</span><br><span class="line">          -int sizeInFeet</span><br><span class="line">          -canEat()</span><br><span class="line">      &#125;</span><br><span class="line">      class 斑马&#123;</span><br><span class="line">          +bool is_wild</span><br><span class="line">          +run()</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
 
 <div STYLE="page-break-after: always;"></div>
 
-<h4 id="状态图"><a href="#状态图" class="headerlink" title="状态图"></a>状态图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">stateDiagram</span><br><span class="line"><span class="code">	[*] --&gt; Still</span></span><br><span class="line"><span class="code">	Still --&gt; [*]</span></span><br><span class="line"><span class="code">	</span></span><br><span class="line"><span class="code">	Still --&gt; Moving</span></span><br><span class="line"><span class="code">	Moving --&gt; Still</span></span><br><span class="line"><span class="code">	Moving --&gt; Crash</span></span><br><span class="line"><span class="code">	Crash --&gt; [*]</span></span><br></pre></td></tr></table></figure>
+<h4 id="状态图"><a href="#状态图" class="headerlink" title="状态图"></a>状态图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">stateDiagram</span><br><span class="line">[<span class="emphasis">*] --&gt; Still</span></span><br><span class="line"><span class="emphasis">Still --&gt; [*</span>]</span><br><span class="line">Still --&gt; Moving</span><br><span class="line">Moving --&gt; Still</span><br><span class="line">Moving --&gt; Crash</span><br><span class="line">Crash --&gt; [<span class="emphasis">*]</span></span><br></pre></td></tr></table></figure>
 
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">stateDiagram</span><br><span class="line">	[*] --&gt; 静止</span><br><span class="line">	静止 --&gt; [*]</span><br><span class="line">	</span><br><span class="line">	静止 --&gt; 运动</span><br><span class="line">	运动 --&gt; 静止</span><br><span class="line">	运动 --&gt; 碰撞</span><br><span class="line">	碰撞 --&gt; [*]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">stateDiagram</span><br><span class="line"> [*] --&gt; 静止</span><br><span class="line"> 静止 --&gt; [*]</span><br><span class="line"></span><br><span class="line"> 静止 --&gt; 运动</span><br><span class="line"> 运动 --&gt; 静止</span><br><span class="line"> 运动 --&gt; 碰撞</span><br><span class="line"> 碰撞 --&gt; [*]</span><br></pre></td></tr></table></figure>
 
 <div STYLE="page-break-after: always;"></div>
 
-<h4 id="饼图"><a href="#饼图" class="headerlink" title="饼图"></a>饼图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">pie</span><br><span class="line"><span class="code">	title Pie Chart</span></span><br><span class="line"><span class="code">	&quot;狗&quot; : 386</span></span><br><span class="line"><span class="code">	&quot;猫&quot; : 85</span></span><br><span class="line"><span class="code">	&quot;老鼠&quot; : 150</span></span><br></pre></td></tr></table></figure>
+<h4 id="饼图"><a href="#饼图" class="headerlink" title="饼图"></a>饼图</h4><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">pie</span><br><span class="line">title Pie Chart</span><br><span class="line">&quot;狗&quot; : 386</span><br><span class="line">&quot;猫&quot; : 85</span><br><span class="line">&quot;老鼠&quot; : 150</span><br></pre></td></tr></table></figure>
 
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pie</span><br><span class="line">	title Pie Chart</span><br><span class="line">	&quot;狗&quot; : 386</span><br><span class="line">	&quot;猫&quot; : 85</span><br><span class="line">	&quot;老鼠&quot; : 150</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pie</span><br><span class="line"> title Pie Chart</span><br><span class="line"> &quot;狗&quot; : 386</span><br><span class="line"> &quot;猫&quot; : 85</span><br><span class="line"> &quot;老鼠&quot; : 150</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Tools</category>
