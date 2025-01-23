@@ -1,63 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Docker Series (Chapter 0): Installing docker-engine in Ubuntu</title>
-    <url>//Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html</url>
-    <content><![CDATA[<h2 id="What-is-Docker"><a href="#What-is-Docker" class="headerlink" title="What is Docker?"></a>What is Docker?</h2><p>The name <code>Docker</code> is derived from the term used in maritime shipping, referring to <code>dockworkers</code>. It serves as a metaphorical representation.</p>
-<p>In traditional shipping, goods are packed into standardized containers, enabling seamless transfer across different modes of transportation, such as trucks, trains, and ships. Similarly, Docker provides a <code>standardized container</code> that packages applications and all their dependencies together, allowing them to run efficiently and reliably across different environments, such as development, testing, and production. Docker is just one of the most commmon technical tools in the area of containerization. What’s more, such as: Podman, CRI-O, Containerd are also useful containerization tools.</p>
-<p>Containerization leverages Linux container technologies such as LXC and cgroups to provide a lightweight method for running applications in isolation. Container looks like a box including all dependencies files or applications, developers only need to develop in this environment. After developing, they could delivery programs&#x2F;projects to operation teams by image directly. This method avoid the confliction between development &amp; production environment due to configuration differences or dependency conflicts.</p>
-<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><h3 id="Firewall"><a href="#Firewall" class="headerlink" title="Firewall"></a>Firewall</h3><blockquote>
-<p>Docker is only compatible with <code>iptables-nft</code> and <code>iptables-legacy</code>. Firewall rules created with <code>nft</code> are not supported on a system with Docker installed. Make sure that any firewall rulesets you use are created with <code>iptables</code> or <code>ip6tables</code>, and that you add them to the <code>DOCKER-USER</code> chain.</p>
-</blockquote>
-<h3 id="Operating-system"><a href="#Operating-system" class="headerlink" title="Operating system"></a>Operating system</h3><ul>
-<li><p>Ubuntu Oracular 24.10</p>
+    <title>2025/01/15 English accumulation</title>
+    <url>//Language/English/20250115/index.html</url>
+    <content><![CDATA[<ul>
+<li><p><strong>hands-on activity</strong>: It is an expression that means <strong>practical, active involvement or direct experience with something</strong>, rather than just theoretical or observational.It refers to doing something yourself rather than just studying or observing it.</p>
 </li>
-<li><p>Ubuntu Noble 24.04 (LTS)</p>
+<li><p><strong>get to do something</strong>: It is an expression that means “<strong>have the opportunity or permission to do something</strong>“. It often conveys a sense of <strong>privillege or enjoyment</strong> in being able to do it.</p>
 </li>
-<li><p>Ubuntu Jammy 22.04 (LTS)</p>
+<li><p><strong>the bulk of</strong>: It is an expression that means “<strong>the majority</strong>“ or “<strong>the largest part</strong>“ of something.</p>
 </li>
-<li><p>Ubuntu Focal 20.04 (LTS)</p>
+<li><p><strong>be provisioned to</strong>: It is an expression that means “<strong>be set up or prepared</strong> for a specific purpose or function”, typically with the necessary resources, equipment, or configuration required to perform a task or service.</p>
+</li>
+<li><p><strong>persona</strong>: “Persona” originally comes from <em>Latin</em>, where it referred to a mask worn by actors in ancient Roman theatre, and later came to mean the character an individual presents to the outside world. It is often used in psychology to describe the social or public identity someone assumes. Currently, it is the <strong>identity or role</strong> that someone presents to the outside world, often shaped by social expectations or context.</p>
+</li>
+<li><p><strong>foremost</strong>: It is used to describe something that is <strong>the most important</strong> or <strong>the leading</strong> in a given situation, whether in terms of importance, position, or rank. It’s a formal word and often used in more serious or academic contexts to <strong>highlight priorities or leadership</strong>.</p>
+</li>
+<li><p><strong>as distinct from</strong>: It is used to <strong>show the contrast, highlight differences or to make a clear distinction between two things</strong>, indicating that they are different from each other in significant ways. It’s typically used to clarify or emphasize the separation between ideas, objects, or concepts.</p>
+</li>
+<li><p><strong>correlate</strong>: It means to <strong>establish or indicate a relationship or connection between two things</strong>, where changes in one thing are associated with changes in another. It can be used in contexts involving statistics, research, or any situation where there is a noticeable relationship between two factors.</p>
+</li>
+<li><p><strong>consultant</strong>: It generally refers to a <strong>professional</strong> who offers expert advice or guidance in a particular field. A consultant’s role is generally focused on <strong>advisory</strong> work rather than direct implementation or execution.</p>
 </li>
 </ul>
-<blockquote>
-<p>Docker Engine for Ubuntu is compatible with x86_64 (or amd64), armhf, arm64, s390x, and ppc64le (ppc64el) architectures.</p>
-</blockquote>
-<h2 id="Installing-docker-engine"><a href="#Installing-docker-engine" class="headerlink" title="Installing docker-engine"></a>Installing docker-engine</h2><p>I followed the <a href="https://docs.docker.com/engine/install/ubuntu/">Docker official website</a> for the installation.</p>
-<h3 id="Uninstalling-the-old-version"><a href="#Uninstalling-the-old-version" class="headerlink" title="Uninstalling the old version"></a>Uninstalling the old version</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> pkg <span class="keyword">in</span> docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; <span class="keyword">do</span> <span class="built_in">sudo</span> apt-get remove <span class="variable">$pkg</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Installing-by-using-apt-repository"><a href="#Installing-by-using-apt-repository" class="headerlink" title="Installing by using apt repository"></a>Installing by using <code>apt</code> repository</h3><p>There are many various methods to install docker-engine, I will use the recommended method to install here.</p>
-<h4 id="Setting-up-Docker’s-apt-repository"><a href="#Setting-up-Docker’s-apt-repository" class="headerlink" title="Setting up Docker’s apt repository"></a>Setting up Docker’s apt repository</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add Docker&#x27;s official GPG key:</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install ca-certificates curl</span><br><span class="line"><span class="built_in">sudo</span> install -m 0755 -d /etc/apt/keyrings</span><br><span class="line"><span class="built_in">sudo</span> curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> a+r /etc/apt/keyrings/docker.asc</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add the repository to Apt sources:</span></span><br><span class="line"><span class="built_in">echo</span> \</span><br><span class="line">  <span class="string">&quot;deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \</span></span><br><span class="line"><span class="string">  <span class="subst">$(. /etc/os-release &amp;&amp; echo <span class="string">&quot;<span class="variable">$VERSION_CODENAME</span>&quot;</span>)</span> stable&quot;</span> | \</span><br><span class="line">  <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br></pre></td></tr></table></figure>
-
-<h4 id="Installing-the-latest-version"><a href="#Installing-the-latest-version" class="headerlink" title="Installing the latest version"></a>Installing the latest version</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br></pre></td></tr></table></figure>
-
-<h3 id="Setting-auto-start-automatically-at-boot-and-take-effect-immediately"><a href="#Setting-auto-start-automatically-at-boot-and-take-effect-immediately" class="headerlink" title="Setting auto-start automatically at boot and take effect immediately"></a>Setting auto-start automatically at boot and take effect immediately</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> containerd.service</span><br></pre></td></tr></table></figure>
-
-<h3 id="Confirming-the-installation-result"><a href="#Confirming-the-installation-result" class="headerlink" title="Confirming the installation result"></a>Confirming the installation result</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker run hello-world</span><br></pre></td></tr></table></figure>
-
-<p>If you install the docker-engine successfully, there is a sentence to inform and congratulate to you.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ sudo docker run hello-world</span><br><span class="line">Unable to find image &#x27;hello-world:latest&#x27; locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">e6590344b1a5: Pull complete</span><br><span class="line">Digest: sha256:d715f14f9eca81473d9112df50457893aa4d099adeb4729f679006bf5ea12407</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-
-<p>And then, you could find the image called <code>hello-world</code> in the image list.</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ sudo docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">hello-world                                                                                              latest    74cc54e27dc4   32 hours ago    10.1kB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-
-<h3 id="Granting-regular-users-access-to-the-docker-engine"><a href="#Granting-regular-users-access-to-the-docker-engine" class="headerlink" title="Granting regular users access to the docker-engine"></a>Granting regular users access to the docker-engine</h3><p>You must receive errors when trying to run without root. The reason is that the docker user group exists but contains no users, which is why you’re required to use sudo to run Docker commands.</p>
-<p>The Docker daemon binds to a Unix socket, not a TCP port. By default it’s the root user that owns the Unix socket, and other users can only access it using sudo. The Docker daemon always runs as the root user.</p>
-<h4 id="Creating-the-docker-group-and-add-your-user"><a href="#Creating-the-docker-group-and-add-your-user" class="headerlink" title="Creating the docker group and add your user"></a>Creating the docker group and add your user</h4><p>Sometimes, you could skip this step because the docker group has already been created.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> groupadd docker</span><br></pre></td></tr></table></figure>
-
-<h4 id="Adding-your-user-to-the-docker-group"><a href="#Adding-your-user-to-the-docker-group" class="headerlink" title="Adding your user to the docker group"></a>Adding your user to the docker group</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="Restarting"><a href="#Restarting" class="headerlink" title="Restarting"></a>Restarting</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
-
-<h3 id="Confirming-without-root-privilege"><a href="#Confirming-without-root-privilege" class="headerlink" title="Confirming without root privilege"></a>Confirming without root privilege</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">hello-world                                                                                              latest    74cc54e27dc4   32 hours ago    10.1kB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
-
-<p>Congratulations to you! Up to now, you installed docker-engine successfully!</p>
 ]]></content>
       <categories>
-        <category>Cloud</category>
+        <category>Language</category>
       </categories>
       <tags>
-        <tag>Docker</tag>
+        <tag>English</tag>
       </tags>
   </entry>
   <entry>
@@ -332,101 +303,82 @@
       </tags>
   </entry>
   <entry>
-    <title>Complete Guide to Markdown shortcuts for typora</title>
-    <url>//Tools/Markdown/Complete-Guide-to-Markdown-shortcuts-for-typora/index.html</url>
-    <content><![CDATA[<h2 id="文字样式部分"><a href="#文字样式部分" class="headerlink" title="文字样式部分"></a>文字样式部分</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + 数字键`</span>快速创建各种等级的标题。(P.s.标题最小分化到6级标题。)</span><br><span class="line">使用<span class="code">`ctrl + 0`</span>可以快速将选中标题调成普通文本。</span><br><span class="line">使用<span class="code">`ctrl + 加号/减号`</span>对标题的级别进行升高和降低。</span><br></pre></td></tr></table></figure>
-
-<h3 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + u`</span>添加下划线。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.下划线(<font color=red><b>U</b></font>nderline)，因此 <u><strong>+u</strong></u>。</p>
-<h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`alt + shift + 5`</span>添加删除线。</span><br></pre></td></tr></table></figure>
-
-<h3 id="字体加粗"><a href="#字体加粗" class="headerlink" title="字体加粗"></a>字体加粗</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + b`</span>加粗文字。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.粗体的(<font color=red><b>B</b></font>old)，因此 **<u>+b</u>**。</p>
-<h3 id="字体倾斜"><a href="#字体倾斜" class="headerlink" title="字体倾斜"></a>字体倾斜</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + i`</span>倾斜文字。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.斜体的(<font color=red><b>I</b></font>talic)，因此 **<u>+i</u>**。</p>
-<hr>
-<h2 id="内容部分"><a href="#内容部分" class="headerlink" title="内容部分"></a>内容部分</h2><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + q`</span>创建引用。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.引用(<font color=red><b>Q</b></font>uote)，因此 **<u>+q</u>**。</p>
-<h3 id="插入链接"><a href="#插入链接" class="headerlink" title="插入链接"></a>插入链接</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + k`</span>插入链接。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.超链接(Hyper<font color=red><b>link</b></font>)，因此 **<u>+k</u>**。</p>
-<h3 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + i`</span>插入图片。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.超链接(<font color=red><b>I</b></font>mage)，因此 **<u>+i</u>**。</p>
-<h3 id="文档内部跳转"><a href="#文档内部跳转" class="headerlink" title="文档内部跳转"></a>文档内部跳转</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + home`</span>跳转至文档开头,使用<span class="code">`ctrl + end`</span> 跳转至文档末尾。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.home：起始 end：终止</p>
-<h3 id="选择英文单词-中文"><a href="#选择英文单词-中文" class="headerlink" title="选择英文单词&#x2F;中文"></a>选择英文单词&#x2F;中文</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + d`</span>选中文本；使用<span class="code">`ctrl + shift + left/right`</span> 左右移动进行文本选中。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.向下填充(<font color=red><b>D</b></font>own)，因此 **<u>+d</u>**。</p>
-<h3 id="按行选中文本"><a href="#按行选中文本" class="headerlink" title="按行选中文本"></a>按行选中文本</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + l`</span>选中光标所在行文本。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.排成一行(<font color=red><b>L</b></font>ine)，因此 **<u>+l</u>**。</p>
-<h3 id="快速搜索文本内容"><a href="#快速搜索文本内容" class="headerlink" title="快速搜索文本内容"></a>快速搜索文本内容</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + f`</span>对全文本进行关键词搜索。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.找寻(<font color=red><b>F</b></font>ind)，因此 **<u>+f</u>**。</p>
-<h3 id="快速替换文本"><a href="#快速替换文本" class="headerlink" title="快速替换文本"></a>快速替换文本</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + h`</span>对全文本进行指定词替换。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.替换(<font color=red><b>R</b></font>eplace)，但R键位被占用，转而使用 **<u>+h</u>**。</p>
-<h3 id="快速生成表格"><a href="#快速生成表格" class="headerlink" title="快速生成表格"></a>快速生成表格</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + t`</span>创建自定义表格。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.表格(<font color=red><b>T</b></font>able)，因此 **<u>+t</u>**。</p>
-<h3 id="快速打开最近浏览笔记"><a href="#快速打开最近浏览笔记" class="headerlink" title="快速打开最近浏览笔记"></a>快速打开最近浏览笔记</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + p`</span>打开最近浏览笔记。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.呈现(<font color=red><b>P</b></font>resent)，因此 **<u>+p</u>**。</p>
-<h3 id="快速生成目录"><a href="#快速生成目录" class="headerlink" title="快速生成目录"></a>快速生成目录</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用 <span class="code">`[toc] + enter`</span>快速生成目录。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.目录表(<font color=red><b>T</b></font>able <font color=red><b>O</b></font>f <font color=red><b>C</b></font>ontents )，因此 **<u>[toc]</u>**。</p>
-<h3 id="着重关键字"><a href="#着重关键字" class="headerlink" title="着重关键字"></a>着重关键字</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + 反引号键(tab键上面那个键)`</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="快速创建代码块-自定义语言类型"><a href="#快速创建代码块-自定义语言类型" class="headerlink" title="快速创建代码块(自定义语言类型)"></a>快速创建代码块(自定义语言类型)</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + k`</span>快速创建代码块，可自定义输入语言类型。</span><br></pre></td></tr></table></figure>
-
-<div STYLE="page-break-after: always;"></div>
-
-<h3 id="数学表达式-支持Latex语法"><a href="#数学表达式-支持Latex语法" class="headerlink" title="数学表达式(支持Latex语法)"></a>数学表达式(支持Latex语法)</h3><ul>
-<li><p>行内公式</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用两个<span class="code">`$`</span>一前一后将公式内容包裹起来。</span><br></pre></td></tr></table></figure>
-
-<p>例如不定积分公式：$\int f(x)dx &#x3D; F(x) + c (c\in {\forall} constants)$</p>
+    <title>Ceph Series (Chapter 1): Introducing Red Hat Ceph Storage Architecture</title>
+    <url>//Cloud/Ceph/Introducing-Red-Hat-Ceph-Storage-Architecture/index.html</url>
+    <content><![CDATA[<h2 id="Personas"><a href="#Personas" class="headerlink" title="Personas"></a>Personas</h2><p>The personas that are presented here embody the most common roles of Red Hat Ceph Storage users. You can simply understand the meaning of the word as “user role”.</p>
+<p>In Red Hat Ceph Storage, there are three types of personas, namely the Storage Administrator, the Storage Operator and other Storage-related personas.</p>
+<h3 id="Storage-Administrator"><a href="#Storage-Administrator" class="headerlink" title="Storage Administrator"></a><strong>Storage Administrator</strong></h3><p>The primary persona for Red Hat Ceph is the storage administrator. A Ceph storage administrator performs the following tasks:</p>
+<ul>
+<li><blockquote>
+<p>Installs, configures, and maintains a Ceph storage cluster.</p>
+</blockquote>
 </li>
-<li><p>行外公式</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + m`</span>创建数学公式块</span><br></pre></td></tr></table></figure>
-
-<p>P.s.数学(<font color=red><b>M</b></font>athematics)，因此 **<u>+m</u>**。</p>
-<p>例如单调收敛定理：</p>
-<p>$$<br>\forall x \in E , 0 \leq f_n(x) \leq f_{n+1}(x),n\in {N_+}.且\lim\limits_{n\to\infty}f_n(x)&#x3D;f(x).<br>那么，\lim\limits_{n\to\infty}\int_Ef(x)dx&#x3D;\int_Ef(x)dx.<br>$$</p>
-<hr>
+<li><blockquote>
+<p>Educates infrastructure architects about Ceph capabilities and features.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Informs users about Ceph data presentation and methods, as choices for their data applications.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Provides resilience and recovery, such as replication, backup, and disaster recovery methods.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Automates and integrates through Infrastructure as Code.</p>
+</blockquote>
+</li>
+<li><blockquote>
+<p>Provides access for data analytics and advanced mass data mining.</p>
+</blockquote>
 </li>
 </ul>
-<h2 id="工具自身部分"><a href="#工具自身部分" class="headerlink" title="工具自身部分"></a>工具自身部分</h2><h3 id="新建文件"><a href="#新建文件" class="headerlink" title="新建文件"></a>新建文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + n`</span>创建新的.md文件。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.新建(<font color=red><b>N</b></font>ew)，因此 **<u>+n</u>**。</p>
-<h3 id="打开已有-md文件"><a href="#打开已有-md文件" class="headerlink" title="打开已有.md文件"></a>打开已有.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + o`</span>选择打开已有.md文件。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.打开(<font color=red><b>O</b></font>pen)，因此 **<u>+o</u>**。</p>
-<h3 id="保存-md文件"><a href="#保存-md文件" class="headerlink" title="保存.md文件"></a>保存.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + s`</span>保存已编辑好的.md文件。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.保存(<font color=red><b>S</b></font>ave)，因此 **<u>+s</u>**。</p>
-<h3 id="关闭-md文件"><a href="#关闭-md文件" class="headerlink" title="关闭.md文件"></a>关闭.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + w`</span>关闭已保存.md文件。</span><br></pre></td></tr></table></figure>
-
-<p>P.s.窗口(<font color=red><b>W</b></font>indow)，因此 **<u>+w</u>**。</p>
-<h3 id="显示和隐藏侧边栏"><a href="#显示和隐藏侧边栏" class="headerlink" title="显示和隐藏侧边栏"></a>显示和隐藏侧边栏</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + l`</span>来显示/隐藏侧边栏。</span><br></pre></td></tr></table></figure>
-
-<h3 id="偏好设置"><a href="#偏好设置" class="headerlink" title="偏好设置"></a>偏好设置</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + comma`</span>打开偏好设置栏。</span><br></pre></td></tr></table></figure>
-
-<h3 id="源代码模式"><a href="#源代码模式" class="headerlink" title="源代码模式"></a>源代码模式</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + /`</span>进入源代码模式。</span><br></pre></td></tr></table></figure>
-
-<h3 id="全屏切换"><a href="#全屏切换" class="headerlink" title="全屏切换"></a>全屏切换</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`F11`</span>进入/退出全屏模式。</span><br></pre></td></tr></table></figure>
+<h3 id="Storage-Operator"><a href="#Storage-Operator" class="headerlink" title="Storage Operator"></a><strong>Storage Operator</strong></h3><p>The secondary persona for Red Hat Ceph is the storage operator.Storage operators primarily use <em>the Ceph Dashboard GUI</em> to view and respond to cluster alerts and statistics. They also perform routine storage administration tasks that are defined as Dashboard workflows, such as replacing a failed storage device.</p>
+<h3 id="Other-Storage-related-Personas"><a href="#Other-Storage-related-Personas" class="headerlink" title="Other Storage-related Personas"></a><strong>Other Storage-related Personas</strong></h3><p>Other personas that use Ceph directly include <em>application developers, project managers, and service administrators</em> with data processing, data warehouse, big data, and similar application needs. The storage administrator frequently communicates with these personas.</p>
+<ul>
+<li><p>Cloud Operator</p>
+<blockquote>
+<p>A cloud operator administers cloud resources at their organization, such as OpenStack or OpenShift infrastructures. The storage administrator works closely with a cloud operator to maintain the Ceph cluster that is configured to provide storage for those platforms.</p>
+</blockquote>
+</li>
+<li><p>Automation Engineer</p>
+<blockquote>
+<p>Automation engineers frequently use Ceph directly. An automation engineer is responsible for creating playbooks for commonly repeated tasks. Storage administrators would be familiar with these same actions because they are typically the foremost Ceph subject matter experts.</p>
+</blockquote>
+</li>
+<li><p>Application Developer (DevOps Developer)</p>
+<blockquote>
+<p>An application developer can be an original coder, maintainer, or other cloud user who is responsible for the correct deployment and behavior of an application. A storage administrator coordinates with the application developer to ensure that storage resources are available, sets quotas, and secures the application storage.</p>
+</blockquote>
+</li>
+<li><p>Deployment Engineer (DevOps Engineer)</p>
+<blockquote>
+<p>In larger environments, dedicated personnel perform, manage, and tune application deployments, working with the storage administrator and the application developer.</p>
+</blockquote>
+</li>
+<li><p>Application Architect</p>
+<blockquote>
+<p>A storage administrator relies on the application architect as a subject matter expert who can correlate between Ceph infrastructure layout and resource availability, scaling, and latency. This archicture expertise helps the storage administrator to design complex application deployments effectively. To support the cloud users and their applications, a storage administrator must comprehend those same aspects of resource availability, scaling, and latency.</p>
+</blockquote>
+</li>
+<li><p>Infrastructure Architect</p>
+<blockquote>
+<p>A storage administrator must master the storage cluster’s architectural layout to manage resource location, capacity, and latency. The infrastructure architect for the Ceph cluster deployment and maintenance is a primary source of information for the storage administrator. The infrastructure architect might be a cloud service provider employee or a vendor solutions architect or consultant.</p>
+</blockquote>
+</li>
+<li><p>Data Center Operator</p>
+<blockquote>
+<p>Personas at the lower Ceph storage infrastructure layer support data provisioning. Data center operators are typically employed by the public cloud service provider or the organization’s internal IT group in a private data center cloud. The storage administrator opens service tickets with the relevant public cloud service provider or internal IT group.</p>
+</blockquote>
+</li>
+</ul>
 ]]></content>
       <categories>
-        <category>Tools</category>
+        <category>Cloud</category>
       </categories>
       <tags>
-        <tag>Markdown</tag>
+        <tag>Ceph</tag>
       </tags>
   </entry>
   <entry>
@@ -789,113 +741,161 @@
       </tags>
   </entry>
   <entry>
-    <title>2025/01/15 English accumulation</title>
-    <url>//Language/English/20250115/index.html</url>
-    <content><![CDATA[<ul>
-<li><p><strong>hands-on activity</strong>: It is an expression that means <strong>practical, active involvement or direct experience with something</strong>, rather than just theoretical or observational.It refers to doing something yourself rather than just studying or observing it.</p>
+    <title>Complete Guide to Markdown shortcuts for typora</title>
+    <url>//Tools/Markdown/Complete-Guide-to-Markdown-shortcuts-for-typora/index.html</url>
+    <content><![CDATA[<h2 id="文字样式部分"><a href="#文字样式部分" class="headerlink" title="文字样式部分"></a>文字样式部分</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + 数字键`</span>快速创建各种等级的标题。(P.s.标题最小分化到6级标题。)</span><br><span class="line">使用<span class="code">`ctrl + 0`</span>可以快速将选中标题调成普通文本。</span><br><span class="line">使用<span class="code">`ctrl + 加号/减号`</span>对标题的级别进行升高和降低。</span><br></pre></td></tr></table></figure>
+
+<h3 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + u`</span>添加下划线。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.下划线(<font color=red><b>U</b></font>nderline)，因此 <u><strong>+u</strong></u>。</p>
+<h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a>删除线</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`alt + shift + 5`</span>添加删除线。</span><br></pre></td></tr></table></figure>
+
+<h3 id="字体加粗"><a href="#字体加粗" class="headerlink" title="字体加粗"></a>字体加粗</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + b`</span>加粗文字。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.粗体的(<font color=red><b>B</b></font>old)，因此 **<u>+b</u>**。</p>
+<h3 id="字体倾斜"><a href="#字体倾斜" class="headerlink" title="字体倾斜"></a>字体倾斜</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + i`</span>倾斜文字。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.斜体的(<font color=red><b>I</b></font>talic)，因此 **<u>+i</u>**。</p>
+<hr>
+<h2 id="内容部分"><a href="#内容部分" class="headerlink" title="内容部分"></a>内容部分</h2><h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + q`</span>创建引用。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.引用(<font color=red><b>Q</b></font>uote)，因此 **<u>+q</u>**。</p>
+<h3 id="插入链接"><a href="#插入链接" class="headerlink" title="插入链接"></a>插入链接</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + k`</span>插入链接。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.超链接(Hyper<font color=red><b>link</b></font>)，因此 **<u>+k</u>**。</p>
+<h3 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + i`</span>插入图片。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.超链接(<font color=red><b>I</b></font>mage)，因此 **<u>+i</u>**。</p>
+<h3 id="文档内部跳转"><a href="#文档内部跳转" class="headerlink" title="文档内部跳转"></a>文档内部跳转</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + home`</span>跳转至文档开头,使用<span class="code">`ctrl + end`</span> 跳转至文档末尾。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.home：起始 end：终止</p>
+<h3 id="选择英文单词-中文"><a href="#选择英文单词-中文" class="headerlink" title="选择英文单词&#x2F;中文"></a>选择英文单词&#x2F;中文</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + d`</span>选中文本；使用<span class="code">`ctrl + shift + left/right`</span> 左右移动进行文本选中。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.向下填充(<font color=red><b>D</b></font>own)，因此 **<u>+d</u>**。</p>
+<h3 id="按行选中文本"><a href="#按行选中文本" class="headerlink" title="按行选中文本"></a>按行选中文本</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + l`</span>选中光标所在行文本。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.排成一行(<font color=red><b>L</b></font>ine)，因此 **<u>+l</u>**。</p>
+<h3 id="快速搜索文本内容"><a href="#快速搜索文本内容" class="headerlink" title="快速搜索文本内容"></a>快速搜索文本内容</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + f`</span>对全文本进行关键词搜索。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.找寻(<font color=red><b>F</b></font>ind)，因此 **<u>+f</u>**。</p>
+<h3 id="快速替换文本"><a href="#快速替换文本" class="headerlink" title="快速替换文本"></a>快速替换文本</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + h`</span>对全文本进行指定词替换。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.替换(<font color=red><b>R</b></font>eplace)，但R键位被占用，转而使用 **<u>+h</u>**。</p>
+<h3 id="快速生成表格"><a href="#快速生成表格" class="headerlink" title="快速生成表格"></a>快速生成表格</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + t`</span>创建自定义表格。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.表格(<font color=red><b>T</b></font>able)，因此 **<u>+t</u>**。</p>
+<h3 id="快速打开最近浏览笔记"><a href="#快速打开最近浏览笔记" class="headerlink" title="快速打开最近浏览笔记"></a>快速打开最近浏览笔记</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + p`</span>打开最近浏览笔记。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.呈现(<font color=red><b>P</b></font>resent)，因此 **<u>+p</u>**。</p>
+<h3 id="快速生成目录"><a href="#快速生成目录" class="headerlink" title="快速生成目录"></a>快速生成目录</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用 <span class="code">`[toc] + enter`</span>快速生成目录。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.目录表(<font color=red><b>T</b></font>able <font color=red><b>O</b></font>f <font color=red><b>C</b></font>ontents )，因此 **<u>[toc]</u>**。</p>
+<h3 id="着重关键字"><a href="#着重关键字" class="headerlink" title="着重关键字"></a>着重关键字</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + 反引号键(tab键上面那个键)`</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="快速创建代码块-自定义语言类型"><a href="#快速创建代码块-自定义语言类型" class="headerlink" title="快速创建代码块(自定义语言类型)"></a>快速创建代码块(自定义语言类型)</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + k`</span>快速创建代码块，可自定义输入语言类型。</span><br></pre></td></tr></table></figure>
+
+<div STYLE="page-break-after: always;"></div>
+
+<h3 id="数学表达式-支持Latex语法"><a href="#数学表达式-支持Latex语法" class="headerlink" title="数学表达式(支持Latex语法)"></a>数学表达式(支持Latex语法)</h3><ul>
+<li><p>行内公式</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用两个<span class="code">`$`</span>一前一后将公式内容包裹起来。</span><br></pre></td></tr></table></figure>
+
+<p>例如不定积分公式：$\int f(x)dx &#x3D; F(x) + c (c\in {\forall} constants)$</p>
 </li>
-<li><p><strong>get to do something</strong>: It is an expression that means “<strong>have the opportunity or permission to do something</strong>“. It often conveys a sense of <strong>privillege or enjoyment</strong> in being able to do it.</p>
-</li>
-<li><p><strong>the bulk of</strong>: It is an expression that means “<strong>the majority</strong>“ or “<strong>the largest part</strong>“ of something.</p>
-</li>
-<li><p><strong>be provisioned to</strong>: It is an expression that means “<strong>be set up or prepared</strong> for a specific purpose or function”, typically with the necessary resources, equipment, or configuration required to perform a task or service.</p>
-</li>
-<li><p><strong>persona</strong>: “Persona” originally comes from <em>Latin</em>, where it referred to a mask worn by actors in ancient Roman theatre, and later came to mean the character an individual presents to the outside world. It is often used in psychology to describe the social or public identity someone assumes. Currently, it is the <strong>identity or role</strong> that someone presents to the outside world, often shaped by social expectations or context.</p>
-</li>
-<li><p><strong>foremost</strong>: It is used to describe something that is <strong>the most important</strong> or <strong>the leading</strong> in a given situation, whether in terms of importance, position, or rank. It’s a formal word and often used in more serious or academic contexts to <strong>highlight priorities or leadership</strong>.</p>
-</li>
-<li><p><strong>as distinct from</strong>: It is used to <strong>show the contrast, highlight differences or to make a clear distinction between two things</strong>, indicating that they are different from each other in significant ways. It’s typically used to clarify or emphasize the separation between ideas, objects, or concepts.</p>
-</li>
-<li><p><strong>correlate</strong>: It means to <strong>establish or indicate a relationship or connection between two things</strong>, where changes in one thing are associated with changes in another. It can be used in contexts involving statistics, research, or any situation where there is a noticeable relationship between two factors.</p>
-</li>
-<li><p><strong>consultant</strong>: It generally refers to a <strong>professional</strong> who offers expert advice or guidance in a particular field. A consultant’s role is generally focused on <strong>advisory</strong> work rather than direct implementation or execution.</p>
+<li><p>行外公式</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + m`</span>创建数学公式块</span><br></pre></td></tr></table></figure>
+
+<p>P.s.数学(<font color=red><b>M</b></font>athematics)，因此 **<u>+m</u>**。</p>
+<p>例如单调收敛定理：</p>
+<p>$$<br>\forall x \in E , 0 \leq f_n(x) \leq f_{n+1}(x),n\in {N_+}.且\lim\limits_{n\to\infty}f_n(x)&#x3D;f(x).<br>那么，\lim\limits_{n\to\infty}\int_Ef(x)dx&#x3D;\int_Ef(x)dx.<br>$$</p>
+<hr>
 </li>
 </ul>
+<h2 id="工具自身部分"><a href="#工具自身部分" class="headerlink" title="工具自身部分"></a>工具自身部分</h2><h3 id="新建文件"><a href="#新建文件" class="headerlink" title="新建文件"></a>新建文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + n`</span>创建新的.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.新建(<font color=red><b>N</b></font>ew)，因此 **<u>+n</u>**。</p>
+<h3 id="打开已有-md文件"><a href="#打开已有-md文件" class="headerlink" title="打开已有.md文件"></a>打开已有.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + o`</span>选择打开已有.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.打开(<font color=red><b>O</b></font>pen)，因此 **<u>+o</u>**。</p>
+<h3 id="保存-md文件"><a href="#保存-md文件" class="headerlink" title="保存.md文件"></a>保存.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + s`</span>保存已编辑好的.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.保存(<font color=red><b>S</b></font>ave)，因此 **<u>+s</u>**。</p>
+<h3 id="关闭-md文件"><a href="#关闭-md文件" class="headerlink" title="关闭.md文件"></a>关闭.md文件</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + w`</span>关闭已保存.md文件。</span><br></pre></td></tr></table></figure>
+
+<p>P.s.窗口(<font color=red><b>W</b></font>indow)，因此 **<u>+w</u>**。</p>
+<h3 id="显示和隐藏侧边栏"><a href="#显示和隐藏侧边栏" class="headerlink" title="显示和隐藏侧边栏"></a>显示和隐藏侧边栏</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + shift + l`</span>来显示/隐藏侧边栏。</span><br></pre></td></tr></table></figure>
+
+<h3 id="偏好设置"><a href="#偏好设置" class="headerlink" title="偏好设置"></a>偏好设置</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + comma`</span>打开偏好设置栏。</span><br></pre></td></tr></table></figure>
+
+<h3 id="源代码模式"><a href="#源代码模式" class="headerlink" title="源代码模式"></a>源代码模式</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + /`</span>进入源代码模式。</span><br></pre></td></tr></table></figure>
+
+<h3 id="全屏切换"><a href="#全屏切换" class="headerlink" title="全屏切换"></a>全屏切换</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`F11`</span>进入/退出全屏模式。</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>Language</category>
+        <category>Tools</category>
       </categories>
       <tags>
-        <tag>English</tag>
+        <tag>Markdown</tag>
       </tags>
   </entry>
   <entry>
-    <title>Ceph Series (Chapter 1): Introducing Red Hat Ceph Storage Architecture</title>
-    <url>//Cloud/Ceph/Introducing-Red-Hat-Ceph-Storage-Architecture/index.html</url>
-    <content><![CDATA[<h2 id="Personas"><a href="#Personas" class="headerlink" title="Personas"></a>Personas</h2><p>The personas that are presented here embody the most common roles of Red Hat Ceph Storage users. You can simply understand the meaning of the word as “user role”.</p>
-<p>In Red Hat Ceph Storage, there are three types of personas, namely the Storage Administrator, the Storage Operator and other Storage-related personas.</p>
-<h3 id="Storage-Administrator"><a href="#Storage-Administrator" class="headerlink" title="Storage Administrator"></a><strong>Storage Administrator</strong></h3><p>The primary persona for Red Hat Ceph is the storage administrator. A Ceph storage administrator performs the following tasks:</p>
-<ul>
-<li><blockquote>
-<p>Installs, configures, and maintains a Ceph storage cluster.</p>
+    <title>Docker Series (Chapter 0): Installing docker-engine in Ubuntu</title>
+    <url>//Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html</url>
+    <content><![CDATA[<h2 id="What-is-Docker"><a href="#What-is-Docker" class="headerlink" title="What is Docker?"></a>What is Docker?</h2><p>The name <code>Docker</code> is derived from the term used in maritime shipping, referring to <code>dockworkers</code>. It serves as a metaphorical representation.</p>
+<p>In traditional shipping, goods are packed into standardized containers, enabling seamless transfer across different modes of transportation, such as trucks, trains, and ships. Similarly, Docker provides a <code>standardized container</code> that packages applications and all their dependencies together, allowing them to run efficiently and reliably across different environments, such as development, testing, and production. Docker is just one of the most commmon technical tools in the area of containerization. What’s more, such as: Podman, CRI-O, Containerd are also useful containerization tools.</p>
+<p>Containerization leverages Linux container technologies such as LXC and cgroups to provide a lightweight method for running applications in isolation. Container looks like a box including all dependencies files or applications, developers only need to develop in this environment. After developing, they could delivery programs&#x2F;projects to operation teams by image directly. This method avoid the confliction between development &amp; production environment due to configuration differences or dependency conflicts.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><h3 id="Firewall"><a href="#Firewall" class="headerlink" title="Firewall"></a>Firewall</h3><blockquote>
+<p>Docker is only compatible with <code>iptables-nft</code> and <code>iptables-legacy</code>. Firewall rules created with <code>nft</code> are not supported on a system with Docker installed. Make sure that any firewall rulesets you use are created with <code>iptables</code> or <code>ip6tables</code>, and that you add them to the <code>DOCKER-USER</code> chain.</p>
 </blockquote>
+<h3 id="Operating-system"><a href="#Operating-system" class="headerlink" title="Operating system"></a>Operating system</h3><ul>
+<li><p>Ubuntu Oracular 24.10</p>
 </li>
-<li><blockquote>
-<p>Educates infrastructure architects about Ceph capabilities and features.</p>
-</blockquote>
+<li><p>Ubuntu Noble 24.04 (LTS)</p>
 </li>
-<li><blockquote>
-<p>Informs users about Ceph data presentation and methods, as choices for their data applications.</p>
-</blockquote>
+<li><p>Ubuntu Jammy 22.04 (LTS)</p>
 </li>
-<li><blockquote>
-<p>Provides resilience and recovery, such as replication, backup, and disaster recovery methods.</p>
-</blockquote>
-</li>
-<li><blockquote>
-<p>Automates and integrates through Infrastructure as Code.</p>
-</blockquote>
-</li>
-<li><blockquote>
-<p>Provides access for data analytics and advanced mass data mining.</p>
-</blockquote>
+<li><p>Ubuntu Focal 20.04 (LTS)</p>
 </li>
 </ul>
-<h3 id="Storage-Operator"><a href="#Storage-Operator" class="headerlink" title="Storage Operator"></a><strong>Storage Operator</strong></h3><p>The secondary persona for Red Hat Ceph is the storage operator.Storage operators primarily use <em>the Ceph Dashboard GUI</em> to view and respond to cluster alerts and statistics. They also perform routine storage administration tasks that are defined as Dashboard workflows, such as replacing a failed storage device.</p>
-<h3 id="Other-Storage-related-Personas"><a href="#Other-Storage-related-Personas" class="headerlink" title="Other Storage-related Personas"></a><strong>Other Storage-related Personas</strong></h3><p>Other personas that use Ceph directly include <em>application developers, project managers, and service administrators</em> with data processing, data warehouse, big data, and similar application needs. The storage administrator frequently communicates with these personas.</p>
-<ul>
-<li><p>Cloud Operator</p>
 <blockquote>
-<p>A cloud operator administers cloud resources at their organization, such as OpenStack or OpenShift infrastructures. The storage administrator works closely with a cloud operator to maintain the Ceph cluster that is configured to provide storage for those platforms.</p>
+<p>Docker Engine for Ubuntu is compatible with x86_64 (or amd64), armhf, arm64, s390x, and ppc64le (ppc64el) architectures.</p>
 </blockquote>
-</li>
-<li><p>Automation Engineer</p>
-<blockquote>
-<p>Automation engineers frequently use Ceph directly. An automation engineer is responsible for creating playbooks for commonly repeated tasks. Storage administrators would be familiar with these same actions because they are typically the foremost Ceph subject matter experts.</p>
-</blockquote>
-</li>
-<li><p>Application Developer (DevOps Developer)</p>
-<blockquote>
-<p>An application developer can be an original coder, maintainer, or other cloud user who is responsible for the correct deployment and behavior of an application. A storage administrator coordinates with the application developer to ensure that storage resources are available, sets quotas, and secures the application storage.</p>
-</blockquote>
-</li>
-<li><p>Deployment Engineer (DevOps Engineer)</p>
-<blockquote>
-<p>In larger environments, dedicated personnel perform, manage, and tune application deployments, working with the storage administrator and the application developer.</p>
-</blockquote>
-</li>
-<li><p>Application Architect</p>
-<blockquote>
-<p>A storage administrator relies on the application architect as a subject matter expert who can correlate between Ceph infrastructure layout and resource availability, scaling, and latency. This archicture expertise helps the storage administrator to design complex application deployments effectively. To support the cloud users and their applications, a storage administrator must comprehend those same aspects of resource availability, scaling, and latency.</p>
-</blockquote>
-</li>
-<li><p>Infrastructure Architect</p>
-<blockquote>
-<p>A storage administrator must master the storage cluster’s architectural layout to manage resource location, capacity, and latency. The infrastructure architect for the Ceph cluster deployment and maintenance is a primary source of information for the storage administrator. The infrastructure architect might be a cloud service provider employee or a vendor solutions architect or consultant.</p>
-</blockquote>
-</li>
-<li><p>Data Center Operator</p>
-<blockquote>
-<p>Personas at the lower Ceph storage infrastructure layer support data provisioning. Data center operators are typically employed by the public cloud service provider or the organization’s internal IT group in a private data center cloud. The storage administrator opens service tickets with the relevant public cloud service provider or internal IT group.</p>
-</blockquote>
-</li>
-</ul>
+<h2 id="Installing-docker-engine"><a href="#Installing-docker-engine" class="headerlink" title="Installing docker-engine"></a>Installing docker-engine</h2><p>I followed the <a href="https://docs.docker.com/engine/install/ubuntu/">Docker official website</a> for the installation.</p>
+<h3 id="Uninstalling-the-old-version"><a href="#Uninstalling-the-old-version" class="headerlink" title="Uninstalling the old version"></a>Uninstalling the old version</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> pkg <span class="keyword">in</span> docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; <span class="keyword">do</span> <span class="built_in">sudo</span> apt-get remove <span class="variable">$pkg</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Installing-by-using-apt-repository"><a href="#Installing-by-using-apt-repository" class="headerlink" title="Installing by using apt repository"></a>Installing by using <code>apt</code> repository</h3><p>There are many various methods to install docker-engine, I will use the recommended method to install here.</p>
+<h4 id="Setting-up-Docker’s-apt-repository"><a href="#Setting-up-Docker’s-apt-repository" class="headerlink" title="Setting up Docker’s apt repository"></a>Setting up Docker’s apt repository</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add Docker&#x27;s official GPG key:</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install ca-certificates curl</span><br><span class="line"><span class="built_in">sudo</span> install -m 0755 -d /etc/apt/keyrings</span><br><span class="line"><span class="built_in">sudo</span> curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> a+r /etc/apt/keyrings/docker.asc</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add the repository to Apt sources:</span></span><br><span class="line"><span class="built_in">echo</span> \</span><br><span class="line">  <span class="string">&quot;deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \</span></span><br><span class="line"><span class="string">  <span class="subst">$(. /etc/os-release &amp;&amp; echo <span class="string">&quot;<span class="variable">$VERSION_CODENAME</span>&quot;</span>)</span> stable&quot;</span> | \</span><br><span class="line">  <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br></pre></td></tr></table></figure>
+
+<h4 id="Installing-the-latest-version"><a href="#Installing-the-latest-version" class="headerlink" title="Installing the latest version"></a>Installing the latest version</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br></pre></td></tr></table></figure>
+
+<h3 id="Setting-auto-start-automatically-at-boot-and-take-effect-immediately"><a href="#Setting-auto-start-automatically-at-boot-and-take-effect-immediately" class="headerlink" title="Setting auto-start automatically at boot and take effect immediately"></a>Setting auto-start automatically at boot and take effect immediately</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> containerd.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="Confirming-the-installation-result"><a href="#Confirming-the-installation-result" class="headerlink" title="Confirming the installation result"></a>Confirming the installation result</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<p>If you install the docker-engine successfully, there is a sentence to inform and congratulate to you.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ sudo docker run hello-world</span><br><span class="line">Unable to find image &#x27;hello-world:latest&#x27; locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">e6590344b1a5: Pull complete</span><br><span class="line">Digest: sha256:d715f14f9eca81473d9112df50457893aa4d099adeb4729f679006bf5ea12407</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>And then, you could find the image called <code>hello-world</code> in the image list.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ sudo docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">hello-world                                                                                              latest    74cc54e27dc4   32 hours ago    10.1kB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<h3 id="Granting-regular-users-access-to-the-docker-engine"><a href="#Granting-regular-users-access-to-the-docker-engine" class="headerlink" title="Granting regular users access to the docker-engine"></a>Granting regular users access to the docker-engine</h3><p>You must receive errors when trying to run without root. The reason is that the docker user group exists but contains no users, which is why you’re required to use sudo to run Docker commands.</p>
+<p>The Docker daemon binds to a Unix socket, not a TCP port. By default it’s the root user that owns the Unix socket, and other users can only access it using sudo. The Docker daemon always runs as the root user.</p>
+<h4 id="Creating-the-docker-group-and-add-your-user"><a href="#Creating-the-docker-group-and-add-your-user" class="headerlink" title="Creating the docker group and add your user"></a>Creating the docker group and add your user</h4><p>Sometimes, you could skip this step because the docker group has already been created.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> groupadd docker</span><br></pre></td></tr></table></figure>
+
+<h4 id="Adding-your-user-to-the-docker-group"><a href="#Adding-your-user-to-the-docker-group" class="headerlink" title="Adding your user to the docker group"></a>Adding your user to the docker group</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Restarting"><a href="#Restarting" class="headerlink" title="Restarting"></a>Restarting</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h3 id="Confirming-without-root-privilege"><a href="#Confirming-without-root-privilege" class="headerlink" title="Confirming without root privilege"></a>Confirming without root privilege</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">hello-world                                                                                              latest    74cc54e27dc4   32 hours ago    10.1kB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>Congratulations to you! Up to now, you installed docker-engine successfully!</p>
 ]]></content>
       <categories>
         <category>Cloud</category>
       </categories>
       <tags>
-        <tag>Ceph</tag>
+        <tag>Docker</tag>
       </tags>
   </entry>
 </search>
