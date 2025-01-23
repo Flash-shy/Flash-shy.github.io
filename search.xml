@@ -1,6 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker Series (Chapter 0): Installing docker-engine in Ubuntu</title>
+    <url>//Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html</url>
+    <content><![CDATA[<h2 id="What-is-Docker"><a href="#What-is-Docker" class="headerlink" title="What is Docker?"></a>What is Docker?</h2><p>The name <code>Docker</code> is derived from the term used in maritime shipping, referring to <code>dockworkers</code>. It serves as a metaphorical representation.</p>
+<p>In traditional shipping, goods are packed into standardized containers, enabling seamless transfer across different modes of transportation, such as trucks, trains, and ships. Similarly, Docker provides a <code>standardized container</code> that packages applications and all their dependencies together, allowing them to run efficiently and reliably across different environments, such as development, testing, and production. Docker is just one of the most commmon technical tools in the area of containerization. What’s more, such as: Podman, CRI-O, Containerd are also useful containerization tools.</p>
+<p>Containerization leverages Linux container technologies such as LXC and cgroups to provide a lightweight method for running applications in isolation. Container looks like a box including all dependencies files or applications, developers only need to develop in this environment. After developing, they could delivery programs&#x2F;projects to operation teams by image directly. This method avoid the confliction between development &amp; production environment due to configuration differences or dependency conflicts.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><h3 id="Firewall"><a href="#Firewall" class="headerlink" title="Firewall"></a>Firewall</h3><blockquote>
+<p>Docker is only compatible with <code>iptables-nft</code> and <code>iptables-legacy</code>. Firewall rules created with <code>nft</code> are not supported on a system with Docker installed. Make sure that any firewall rulesets you use are created with <code>iptables</code> or <code>ip6tables</code>, and that you add them to the <code>DOCKER-USER</code> chain.</p>
+</blockquote>
+<h3 id="Operating-system"><a href="#Operating-system" class="headerlink" title="Operating system"></a>Operating system</h3><ul>
+<li><p>Ubuntu Oracular 24.10</p>
+</li>
+<li><p>Ubuntu Noble 24.04 (LTS)</p>
+</li>
+<li><p>Ubuntu Jammy 22.04 (LTS)</p>
+</li>
+<li><p>Ubuntu Focal 20.04 (LTS)</p>
+</li>
+</ul>
+<blockquote>
+<p>Docker Engine for Ubuntu is compatible with x86_64 (or amd64), armhf, arm64, s390x, and ppc64le (ppc64el) architectures.</p>
+</blockquote>
+<h2 id="Installing-docker-engine"><a href="#Installing-docker-engine" class="headerlink" title="Installing docker-engine"></a>Installing docker-engine</h2><p>I followed the <a href="https://docs.docker.com/engine/install/ubuntu/">Docker official website</a> for the installation.</p>
+<h3 id="Uninstalling-the-old-version"><a href="#Uninstalling-the-old-version" class="headerlink" title="Uninstalling the old version"></a>Uninstalling the old version</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> pkg <span class="keyword">in</span> docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; <span class="keyword">do</span> <span class="built_in">sudo</span> apt-get remove <span class="variable">$pkg</span>; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Installing-by-using-apt-repository"><a href="#Installing-by-using-apt-repository" class="headerlink" title="Installing by using apt repository"></a>Installing by using <code>apt</code> repository</h3><p>There are many various methods to install docker-engine, I will use the recommended method to install here.</p>
+<h4 id="Setting-up-Docker’s-apt-repository"><a href="#Setting-up-Docker’s-apt-repository" class="headerlink" title="Setting up Docker’s apt repository"></a>Setting up Docker’s apt repository</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Add Docker&#x27;s official GPG key:</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install ca-certificates curl</span><br><span class="line"><span class="built_in">sudo</span> install -m 0755 -d /etc/apt/keyrings</span><br><span class="line"><span class="built_in">sudo</span> curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> a+r /etc/apt/keyrings/docker.asc</span><br><span class="line"></span><br><span class="line"><span class="comment"># Add the repository to Apt sources:</span></span><br><span class="line"><span class="built_in">echo</span> \</span><br><span class="line">  <span class="string">&quot;deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \</span></span><br><span class="line"><span class="string">  <span class="subst">$(. /etc/os-release &amp;&amp; echo <span class="string">&quot;<span class="variable">$VERSION_CODENAME</span>&quot;</span>)</span> stable&quot;</span> | \</span><br><span class="line">  <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br></pre></td></tr></table></figure>
+
+<h4 id="Installing-the-latest-version"><a href="#Installing-the-latest-version" class="headerlink" title="Installing the latest version"></a>Installing the latest version</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span><br></pre></td></tr></table></figure>
+
+<h4 id="Setting-auto-start-automatically-at-boot-and-take-effect-immediately"><a href="#Setting-auto-start-automatically-at-boot-and-take-effect-immediately" class="headerlink" title="Setting auto-start automatically at boot and take effect immediately"></a>Setting auto-start automatically at boot and take effect immediately</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> containerd.service</span><br></pre></td></tr></table></figure>
+
+<h4 id="Confirming-the-installation-result"><a href="#Confirming-the-installation-result" class="headerlink" title="Confirming the installation result"></a>Confirming the installation result</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<p>If you install the docker-engine successfully, there is a sentence to inform and congratulate to you.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ sudo docker run hello-world</span><br><span class="line">Unable to find image &#x27;hello-world:latest&#x27; locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">e6590344b1a5: Pull complete</span><br><span class="line">Digest: sha256:d715f14f9eca81473d9112df50457893aa4d099adeb4729f679006bf5ea12407</span><br><span class="line">Status: Downloaded newer image for hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>And then, you could find the image called <code>hello-world</code> in the image list.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ sudo docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">hello-world                                                                                              latest    74cc54e27dc4   32 hours ago    10.1kB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<h3 id="Granting-regular-users-access-to-the-docker-engine"><a href="#Granting-regular-users-access-to-the-docker-engine" class="headerlink" title="Granting regular users access to the docker-engine"></a>Granting regular users access to the docker-engine</h3><p>You must receive errors when trying to run without root. The reason is that the docker user group exists but contains no users, which is why you’re required to use sudo to run Docker commands.</p>
+<p>The Docker daemon binds to a Unix socket, not a TCP port. By default it’s the root user that owns the Unix socket, and other users can only access it using sudo. The Docker daemon always runs as the root user.</p>
+<h4 id="Creating-the-docker-group-and-add-your-user"><a href="#Creating-the-docker-group-and-add-your-user" class="headerlink" title="Creating the docker group and add your user"></a>Creating the docker group and add your user</h4><p>Sometimes, you could skip this step because the docker group has already been created.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> groupadd docker</span><br></pre></td></tr></table></figure>
+
+<h4 id="Adding-your-user-to-the-docker-group"><a href="#Adding-your-user-to-the-docker-group" class="headerlink" title="Adding your user to the docker group"></a>Adding your user to the docker group</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Restarting"><a href="#Restarting" class="headerlink" title="Restarting"></a>Restarting</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h3 id="Confirming-without-root-privilege"><a href="#Confirming-without-root-privilege" class="headerlink" title="Confirming without root privilege"></a>Confirming without root privilege</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">hello-world                                                                                              latest    74cc54e27dc4   32 hours ago    10.1kB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>Congratulations to you! Up to now, you installed docker-engine successfully!</p>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>2025/01/23 English accumulation</title>
     <url>//Language/English/20250123/index.html</url>
     <content><![CDATA[<ul>
