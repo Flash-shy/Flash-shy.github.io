@@ -1,6 +1,270 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>2025/01/23 English accumulation</title>
+    <url>//Language/English/20250123/index.html</url>
+    <content><![CDATA[<p><strong>utilize</strong>: It means to make practical or effective use of something. It often conveys a slightly more formal tone compared to “use.” Utilize is typically reserved for professional, academic, or technical contexts, whereas “use” is more versatile and widely applicable in casual settings.</p>
+<p><strong>okra</strong>: Okra is a green, pod-shaped vegetable that is commonly used in cooking, particularly in dishes from South Asia, Africa, and the Caribbean. It is sometimes referred to as “ladies’ fingers” because of its slender shape.</p>
+<p><strong>cephalopods</strong>: It is a type of marine animal belonging to the mollusc family, characterized by bilateral body symmetry, a prominent head, and a set of tentacles or arms. Common examples of cephalopods include octopuses, squids, cuttlefish, and nautiluses. Cephalopods are fascinating and highly adaptable creatures of the sea, admired for their complex behaviors and unique physiology.</p>
+<p><strong>prerequisites</strong>: Prerequisites refer to the essential requirements or conditions that must be met before something else can happen or be achieved. prerequisites is a formal word than “requirement”.</p>
+<p><strong>anchor</strong>: A heavy object, usually made of metal, attached to a ship or boat by a cable or chain and dropped into the water to keep the vessel in place.</p>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm</title>
+    <url>//Cloud/Ceph/Deploying-the-ceph-cluster-by-cephadm/index.html</url>
+    <content><![CDATA[<h2 id="What-is-Ceph"><a href="#What-is-Ceph" class="headerlink" title="What is Ceph?"></a>What is Ceph?</h2><p>At first, the phonetic transcription of ‘Ceph’ is &#x2F;sɛf&#x2F;. The name ‘Ceph’ comes from ‘cephalopod,’ which refers to marine animals such as octopuses and squids. </p>
+<p>Similarly, Ceph, as an open-source distributed storage system, has garnered widespread attention and application due to its high scalability, reliability, and performance. </p>
+<p>Ceph supports multiple storage interfaces such as <strong><code>object storage</code></strong>, <strong><code>block storage</code></strong>, and <strong><code>file system storage</code></strong>, meeting the storage needs in various business scenarios.</p>
+<p>This article will provide a detailed guide on how to deploy a Ceph distributed storage cluster from scratch using containerization on the Rocky 9.5 operating system. Through this guide, you will be able to master the installation, configuration, and management of Ceph.</p>
+<p>Replacing ceph-ansible, through containerization, <code>cephadm</code> provides a standardized approach to operate Ceph clusters, effectively reducing operational complexity.</p>
+<hr>
+<h2 id="Deployment-Plan-Table"><a href="#Deployment-Plan-Table" class="headerlink" title="Deployment Plan Table"></a>Deployment Plan Table</h2><p>Most readers are encountering Ceph for the first time. To make it clearer and more intuitive, I have created the following deployment plan table to help you deploy the ceph cluster in VMware virtual environment.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Number</th>
+<th align="center">Operating System</th>
+<th align="center">Ceph Version</th>
+<th align="center">Role</th>
+<th align="center">IP</th>
+<th align="center">Configuration</th>
+<th align="center">Hostname</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">001</td>
+<td align="center">Rocky9.5(x86_64)</td>
+<td align="center">squid (latest 19.2.0)</td>
+<td align="center">bootstrap，mon，mgr，osd</td>
+<td align="center">172.16.173.129</td>
+<td align="center">core(s):4, memeory:4G, disk: 500G*4</td>
+<td align="center">ceph001.haoyang.cn</td>
+</tr>
+<tr>
+<td align="center">002</td>
+<td align="center">Rocky9.5(x86_64)</td>
+<td align="center">squid (latest 19.2.0)</td>
+<td align="center">mon，mgr，osd</td>
+<td align="center">172.16.173.130</td>
+<td align="center">core(s):4, memeory:4G, disk: 500G*4</td>
+<td align="center">ceph002.haoyang.cn</td>
+</tr>
+<tr>
+<td align="center">003</td>
+<td align="center">Rocky9.5(x86_64)</td>
+<td align="center">squid (latest 19.2.0)</td>
+<td align="center">mon，mgr，osd</td>
+<td align="center">172.16.173.131</td>
+<td align="center">core(s):4, memeory:4G, disk: 500G*4</td>
+<td align="center">ceph003.haoyang.cn</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>Because you will deploy the ceph cluster in VMware, you need to download the x86_64 structure iso image from <strong><a href="https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.5-x86_64-minimal.iso">Rocky Linux Official Website</a></strong> to install the Rocky9.5 operating system as the base. I used the minimal version to install rocky, so you could not copy&#x2F;paste from your desktop to rocky. You’d better use <strong>ssh command</strong> to login in Rocky Linux remotely.</p>
+</li>
+<li><p>More information about the Ceph Release Version, please visit the <strong><a href ="https://docs.ceph.com/en/latest/releases/">Official Website</a></strong>.</p>
+</li>
+<li><p>More detailed information about the Role, for example: “What’s the meaning of mon&#x2F;mgr&#x2F;osd?” or “What do these words stand for?” .etc, please visit my another blog: <strong><a href="https://blog.sunhaoyang.net/Cloud/Ceph/Introducing-Red-Hat-Ceph-Storage-Architecture/index.html">Ceph Series (Chapter 1):Introducing Red Hat Ceph Storage Architecture</a></strong>. </p>
+</li>
+<li><p>From the aspect of IP address, I just set the network adaptor to NAT mode and I used the default subnet IP as well as the default generated IP address here. It doesn’t matter if you’d like to modify the subnet IP as what you want, and you may get another random IP address finally. As long as these three virtual machines can communicate with each other, that’s enough.</p>
+</li>
+<li><p>According to the performance of your hardware, I recommend you to set 4C&#x2F;4G&#x2F;500G*4 here. Don’t worry about disk space issues because of the <strong><code>Thin Provisioning Mechanism</code></strong>. When creating virtual disks, only the space for the actual data used is allocated. The total capacity declared by the virtual disk is just a logical value, and the actual storage space is dynamically allocated as the data grows.</p>
+</li>
+<li><p>As for the hostname, it’s fine as long as it’s simple and easy to understand. You can name it however you like. I used my Chinese name to represent the hostname here.</p>
+</li>
+</ul>
+<hr>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p><span style="color: red;">Please note that, unless specified，otherwise, the following prerequisites must be completed on all nodes.</span></p>
+<h3 id="Setting-the-specified-hostname"><a href="#Setting-the-specified-hostname" class="headerlink" title="Setting the specified hostname"></a>Setting the specified hostname</h3><p>Set an appropriate hostname on each node for resolution.</p>
+<p>Take the first node, 001, as an example here.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hostnamectl hostname ceph001.haoyang.cn</span><br></pre></td></tr></table></figure>
+
+<h3 id="Setting-the-resolution-between-the-cluster"><a href="#Setting-the-resolution-between-the-cluster" class="headerlink" title="Setting the resolution between the cluster"></a>Setting the resolution between the cluster</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/hosts &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">172.16.173.129 ceph001.haoyang.cn ceph001</span><br><span class="line">172.16.173.130 ceph002.haoyang.cn ceph002</span><br><span class="line">172.16.173.131 ceph003.haoyang.cn ceph003</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="Configuring-the-dnf-software-repository"><a href="#Configuring-the-dnf-software-repository" class="headerlink" title="Configuring the dnf software repository"></a>Configuring the dnf software repository</h3><p>I provided two configurations here.</p>
+<blockquote>
+<p>The repository provided by Ceph’s official site.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/yum.repos.d/ceph.repo &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">[ceph]</span><br><span class="line">name=Ceph packages <span class="keyword">for</span> x86_64</span><br><span class="line">baseurl=https://download.ceph.com/rpm-squid/el9/x86_64</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.ceph.com/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-noarch]</span><br><span class="line">name=Ceph noarch packages</span><br><span class="line">baseurl=https://download.ceph.com/rpm-squid/el9/noarch</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.ceph.com/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-source]</span><br><span class="line">name=Ceph <span class="built_in">source</span> packages</span><br><span class="line">baseurl=https://download.ceph.com/rpm-squid/el9/SRPMS</span><br><span class="line">enabled=0</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.ceph.com/keys/release.asc</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Using Nanjing University for repository acceleration.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/yum.repos.d/ceph.repo &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">[ceph]</span><br><span class="line">name=Ceph packages <span class="keyword">for</span> x86_64</span><br><span class="line">baseurl=https://mirrors.nju.edu.cn/ceph/rpm-squid/el9/x86_64</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.nju.edu.cn/ceph/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-noarch]</span><br><span class="line">name=Ceph noarch packages</span><br><span class="line">baseurl=https://mirrors.nju.edu.cn/ceph/rpm-squid/el9/noarch</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.nju.edu.cn/ceph/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-source]</span><br><span class="line">name=Ceph <span class="built_in">source</span> packages</span><br><span class="line">baseurl=https://mirrors.nju.edu.cn/ceph/rpm-squid/el9/SRPMS</span><br><span class="line">enabled=0</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.nju.edu.cn/ceph/keys/release.asc</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="Updating-and-generating-the-cache-for-the-dnf-package-manager"><a href="#Updating-and-generating-the-cache-for-the-dnf-package-manager" class="headerlink" title="Updating and generating the cache for the dnf package manager"></a>Updating and generating the cache for the dnf package manager</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dnf makecache</span><br></pre></td></tr></table></figure>
+
+<h3 id="Installing-the-necessary-software-packages"><a href="#Installing-the-necessary-software-packages" class="headerlink" title="Installing the necessary software packages"></a>Installing the necessary software packages</h3><ul>
+<li>Python 3</li>
+<li>Systemd</li>
+<li>Podman</li>
+<li>Chrony</li>
+<li>LVM2</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dnf install podman chrony lvm2 systemd python3 bash-completion wget curl epel-release -y</span><br></pre></td></tr></table></figure>
+
+<p>It may update critical components like systemd, so please <strong><code>restart</code></strong> the server after the installation.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h3 id="Enabling-NTP-synchronization"><a href="#Enabling-NTP-synchronization" class="headerlink" title="Enabling NTP synchronization"></a>Enabling NTP synchronization</h3><p>By default, it syncs from public network sources, but you can specify your own time source. Here, I use <em><strong>ntp.aliyun.com</strong></em>.</p>
+<p>Edit the configuration file and add the following line <code>pool ntp.aliyun.com iburst</code> at the very beginning.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vi /etc/chrony.conf</span><br><span class="line"><span class="comment"># Use public servers from the pool.ntp.org project.</span></span><br><span class="line"><span class="comment"># Please consider joining the pool (https://www.pool.ntp.org/join.html).</span></span><br><span class="line">pool ntp.aliyun.com iburst</span><br><span class="line">pool 2.rocky.pool.ntp.org iburst</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>After editing the <code>/etc/chrony.conf</code> file, please set the <code>chronyd.service</code> to start automatically at boot and take effect immediately.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> chronyd --now</span><br><span class="line">systemctl restart chronyd</span><br></pre></td></tr></table></figure>
+
+<h3 id="Installing-cephadm"><a href="#Installing-cephadm" class="headerlink" title="Installing cephadm"></a>Installing cephadm</h3><p>Installing the cephadm tool is sufficient, but I also install the <code>ceph-common</code> package to execute various Ceph commands like ceph and rados directly on the host. Since Ceph is deployed in a containerized manner with cephadm, these commands are not available on the host by default. By installing <code>ceph-common</code>, you can avoid logging into the container each time, making it more efficient.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">dnf install cephadm ceph-common -y</span><br></pre></td></tr></table></figure>
+
+<p>Up to this point, all prerequisites have been completed.</p>
+<hr>
+<h2 id="Deploying-a-new-ceph-cluster"><a href="#Deploying-a-new-ceph-cluster" class="headerlink" title="Deploying a new ceph cluster"></a>Deploying a new ceph cluster</h2><p>Cephadm bootstrap is the first step in initializing a Ceph cluster. It creates a small initial Ceph cluster by bootstrapping, which includes a monitor (mon) and a manager (mgr). This is the foundational step for the entire Ceph cluster deployment and management process.</p>
+<p>The <code>cephadm bootstrap</code> command will perform the following actions:</p>
+<ul>
+<li><p>Create a monitor (mon) and a manager (mgr) <code>daemon</code> on the local host for the new cluster.</p>
+</li>
+<li><p>Generate a new SSH key for the Ceph cluster and add it to the root user’s <code>/root/.ssh/authorized_keys</code> file.</p>
+</li>
+<li><p>Write a copy of the public key to the <code>/etc/ceph/ceph.pub</code> file.</p>
+</li>
+<li><p>Write a minimal configuration file to <code>/etc/ceph/ceph.conf</code>, which is used for communication with the Ceph daemons.</p>
+</li>
+<li><p>Write a copy of the client.admin administrator (privileged) key to the <code>/etc/ceph/ceph.client.admin.keyring</code> file.</p>
+</li>
+<li><p>Add the _admin label to the bootstrap host. By default, any host with this label will also receive copies of the <code>/etc/ceph/ceph.conf</code> and <code>/etc/ceph/ceph.client.admin.keyring</code> files.</p>
+</li>
+</ul>
+<p>If the hostname is <strong><u>Fully Qualified Domain Name</u></strong>(<code>FQDN</code>), you need to add the specific parameter: <code>--allow-fqdn-hostname</code>.</p>
+<p>P.S. FQDN format could be like that, for example: <code>host.example.com.</code></p>
+<p>host name: <code>host</code></p>
+<p>domain name: <code>example.com</code></p>
+<p>root domain: <code>.</code> (Omitted in daily use)</p>
+<p>If you are doing a <strong><u>single-node</u></strong> deployment, you need to add the specific parameter: <code>--single-host-defaults</code>. </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cephadm bootstrap --mon-ip 172.16.173.129 --single-host-defaults --initial-dashboard-user admin --initial-dashboard-password Sunhaoyang --dashboard-password-noupdate --allow-fqdn-hostname</span><br></pre></td></tr></table></figure>
+
+<p>This deployment uses a <strong><u>multi-node</u></strong> setup.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">cephadm bootstrap --mon-ip 172.16.173.129 --initial-dashboard-user admin --initial-dashboard-password Sunhaoyang --dashboard-password-noupdate --allow-fqdn-hostname</span><br></pre></td></tr></table></figure>
+
+<p>More than these parameters, all usage of all parameters could be checked by using <code>cephadm bootstrap --help</code>.</p>
+<ul>
+<li><p><code>--mon-ip</code> specifies the IP address of the monitor (mon) that will be created during the bootstrap process. This is the IP address of the host where the initial MON daemon will run.</p>
+</li>
+<li><p><code>--initial-dashboard-user</code> sets the username for the Ceph dashboard’s initial administrative user. In this case, the username will be admin.</p>
+</li>
+<li><p><code>--initial-dashboard-password</code> specifies the password for the initial administrative user of the Ceph dashboard. The password will be set to Sunhaoyang.</p>
+</li>
+<li><p><code>--dashboard-password-noupdate</code> prevents the Ceph cluster from automatically updating the dashboard password after the bootstrap process. This ensures the password specified in <code>--initial-dashboard-password</code> remains unchanged.</p>
+</li>
+<li><p><code>--allow-fqdn-hostname</code> allows the use of a Fully Qualified Domain Name (FQDN) as the hostname for the Ceph cluster’s initial node. This is useful when the hostname includes domain information, such as ceph.example.com.</p>
+</li>
+</ul>
+<p>Finally, the installation console output looks like this.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Ceph Dashboard is now available at:</span><br><span class="line"></span><br><span class="line">             URL: https://ceph001.haoyang.cn:8443/</span><br><span class="line">            User: admin</span><br><span class="line">        Password: Sunhaoyang</span><br><span class="line">...</span><br><span class="line">Bootstrap complete.</span><br></pre></td></tr></table></figure>
+
+<p>You could not use the promption <code>URL</code> to visit the front-end ceph website, because you did not set the resolution in your local <code>/etc/hosts</code> file. While, you could use IP address + port to visit it directly, such as: <a href="https://172.16.173.129:8443/">https://172.16.173.129:8443/</a>.</p>
+<p>When you are opening the website, you may be reminded that the website is unsafe. Now, you need to agree with it by clicking <code>advanced</code> button and then clicking <code>continue</code> button.</p>
+<p><img src="/../images/dashboard_yellow.png" alt="ceph_dashboard_yellow"></p>
+<p>As shown in the image, the page has already prompted us to expand the cluster, and there is a yellow warning next to the dashboard icon in the top left corner. Next, let’s add some disks to the cluster.</p>
+<h2 id="Deploying-OSD-resources"><a href="#Deploying-OSD-resources" class="headerlink" title="Deploying OSD resources"></a>Deploying OSD resources</h2><p>In Ceph, OSD (Object Storage Daemon) is one of the essential components of the storage cluster. Its main responsibilities include storing data, handling data replication, recovery, backfilling, and rebalancing operations.</p>
+<p>Key Concepts of Ceph OSD:</p>
+<ul>
+<li><p>Data Storage:</p>
+<p>OSDs are responsible for storing data objects. Each OSD usually corresponds to a physical storage device, such as a hard drive or SSD.</p>
+</li>
+<li><p>Data Replication:</p>
+<p>To ensure high availability and durability, OSDs replicate data among themselves. Ceph uses the CRUSH algorithm to determine the placement of data.</p>
+</li>
+<li><p>Data Recovery:</p>
+<p>When an OSD fails or goes offline, the cluster automatically recovers data from other OSDs and replicates it to new OSDs.</p>
+</li>
+<li><p>Backfilling and Rebalancing:</p>
+<p>Backfilling refers to redistributing data after an OSD is restored or new OSDs are added to ensure data is evenly distributed.</p>
+<p>Rebalancing ensures load balancing across OSDs to prevent overloading certain OSDs.</p>
+</li>
+<li><p>Monitoring and Management:</p>
+<p>OSDs use a heartbeat mechanism to report their status to the Ceph cluster, ensuring cluster health and consistency.</p>
+</li>
+</ul>
+<p>Having understood Ceph OSDs, let’s proceed to add some OSDs to the cluster to complete the expansion of the Ceph cluster.</p>
+<p>Based on the <a href="#Deployment-Plan-Table">Deployment Plan Table</a>, you have already added four disks in total for each node. </p>
+<p>Excluding the partation used for installing the operating system, there are three remaining disks: <code>nvme0n2</code>, <code>nvme0n3</code> and <code>nvme0n4</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# lsblk</span><br><span class="line">NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS</span><br><span class="line">sr0          11:0    1  1024M  0 rom</span><br><span class="line">nvme0n1     259:0    0   500G  0 disk</span><br><span class="line">├─nvme0n1p1 259:1    0   600M  0 part /boot/efi</span><br><span class="line">├─nvme0n1p2 259:2    0     1G  0 part /boot</span><br><span class="line">└─nvme0n1p3 259:3    0 498.4G  0 part</span><br><span class="line">  ├─rl-root 253:0    0 494.5G  0 lvm  /var/lib/containers/storage/overlay</span><br><span class="line">  │                                   /</span><br><span class="line">  └─rl-swap 253:1    0   3.9G  0 lvm  [SWAP]</span><br><span class="line">nvme0n2     259:4    0   500G  0 disk</span><br><span class="line">nvme0n3     259:5    0   500G  0 disk</span><br><span class="line">nvme0n4     259:6    0   500G  0 disk</span><br></pre></td></tr></table></figure>
+
+<p>Then, you could use these three remaining disks and add OSD daemon into the cluster.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch daemon add osd ceph001.haoyang.cn:/dev/nvme0n2</span><br><span class="line">Created osd(s) 0 on host &#x27;ceph001.haoyang.cn&#x27;</span><br><span class="line">[root@ceph001 ~]# ceph orch daemon add osd ceph001.haoyang.cn:/dev/nvme0n3</span><br><span class="line">Created osd(s) 1 on host &#x27;ceph001.haoyang.cn&#x27;</span><br><span class="line">[root@ceph001 ~]# ceph orch daemon add osd ceph001.haoyang.cn:/dev/nvme0n4</span><br><span class="line">Created osd(s) 2 on host &#x27;ceph001.haoyang.cn&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>Let’s check the list of OSD now.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph osd crush tree</span><br><span class="line">ID  CLASS  WEIGHT   TYPE NAME</span><br><span class="line">-1         1.46489  root default</span><br><span class="line">-3         1.46489      host ceph001</span><br><span class="line"> 0    ssd  0.48830          osd.0</span><br><span class="line"> 1    ssd  0.48830          osd.1</span><br><span class="line"> 2    ssd  0.48830          osd.2</span><br></pre></td></tr></table></figure>
+
+<p>If we manually add all the disks on each node one by one, it would be too tedious. Fortunately, we can use the parameter <code>--all-available-devices</code> to automatically detect and utilize all available storage devices in the system as OSDs. This simplifies the process of adding OSDs, eliminating the need to specify each device manually.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch apply osd --all-available-devices</span><br><span class="line">Scheduled osd.all-available-devices update...</span><br></pre></td></tr></table></figure>
+
+<h2 id="Add-new-hosts-to-the-cluster"><a href="#Add-new-hosts-to-the-cluster" class="headerlink" title="Add new hosts to the cluster"></a>Add new hosts to the cluster</h2><p><span style="color: red;">The New host must meet all the <a href="#Prerequisites">Prerequisites</a> of this article before it can be added to the cluster.</span></p>
+<p>Distribute the cluster’s SSH key to the authorized_keys file of the root user on all hosts to enable passwordless operations.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ssh-copy-id -f -i /etc/ceph/ceph.pub root@ceph001.haoyang.cn</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ssh-copy-id -f -i /etc/ceph/ceph.pub root@ceph002.haoyang.cn</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ssh-copy-id -f -i /etc/ceph/ceph.pub root@ceph003.haoyang.cn</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br></pre></td></tr></table></figure>
+
+<p>Lets’ check the current status of cluster’s host list.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host ls --detail</span><br><span class="line">HOST                ADDR         LABELS  STATUS  VENDOR/MODEL               CPU    RAM    HDD  SSD      NIC</span><br><span class="line">ceph001.haoyang.cn  172.16.173.129  _admin          VMware, Inc. (VMware20,1)  4C/4T  4 GiB  -    4/2.1TB  1</span><br><span class="line">1 hosts in cluster</span><br></pre></td></tr></table></figure>
+
+<p>When adding a host to a Ceph cluster, it is typically necessary to specify both the hostname and the IP address. This is because:</p>
+<ul>
+<li><p>Hostname: Ceph uses hostnames to identify nodes in the cluster. These hostnames must be unique and resolvable throughout the cluster (usually configured via &#x2F;etc&#x2F;hosts or DNS).</p>
+</li>
+<li><p>IP Address: The IP address is crucial for communication between Ceph nodes. Specifying the IP address ensures that Ceph knows how to communicate with the host, especially in environments with multiple network interfaces or complex network configurations.</p>
+</li>
+</ul>
+<p>After adding a host, <strong>the new host will automatically trigger the download of container images and the startup of containers</strong>, which might take some time to be ready. Additionally, since we previously configured automatic OSD addition, the disks on the new host will be automatically added to the cluster.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host add ceph002.haoyang.cn 172.16.173.130</span><br><span class="line">Added host &#x27;ceph002.haoyang.cn&#x27; with addr &#x27;172.16.173.130&#x27;</span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ceph orch host add ceph003.haoyang.cn 172.16.173.131</span><br><span class="line">Added host &#x27;ceph003.haoyang.cn&#x27; with addr &#x27;172.16.173.131&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ceph orch host ls --detail</span><br><span class="line">HOST                ADDR            LABELS  STATUS  VENDOR/MODEL                      CPU  RAM    HDD  SSD      NIC  </span><br><span class="line">ceph001.haoyang.cn  172.16.173.129  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph002.haoyang.cn  172.16.173.130  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph003.haoyang.cn  172.16.173.131                  VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">3 hosts in cluster</span><br></pre></td></tr></table></figure>
+
+<p>The container image download and container startup in the new host will take some time. You can use the command to check if all services are running normally.</p>
+<p>If everything is normal, all services will be in the “running” state.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch ps</span><br><span class="line">NAME                   HOST                PORTS             STATUS             REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID  </span><br><span class="line">alertmanager.ceph001   ceph001.haoyang.cn  *:9093,9094       running (-11706s)     9m ago  22h    19.4M        -  0.25.0   4d8d4d8334be  d7d85f0d5f90  </span><br><span class="line">ceph-exporter.ceph001  ceph001.haoyang.cn                    running (-11706s)     9m ago  22h    18.7M        -  19.2.0   fd3234b9d664  41365c9457ee  </span><br><span class="line">ceph-exporter.ceph002  ceph002.haoyang.cn                    running (-11708s)     7m ago  22h    5553k        -  19.2.0   fd3234b9d664  37efd9d7f4e1  </span><br><span class="line">ceph-exporter.ceph003  ceph003.haoyang.cn                    running (-11709s)     7m ago  22h    5666k        -  19.2.0   fd3234b9d664  5270951d5acd  </span><br><span class="line">crash.ceph001          ceph001.haoyang.cn                    running (-11706s)     9m ago  22h    6685k        -  19.2.0   fd3234b9d664  56d8da9604fa  </span><br><span class="line">crash.ceph002          ceph002.haoyang.cn                    running (-11707s)     7m ago  22h    6681k        -  19.2.0   fd3234b9d664  5fc552cacd65  </span><br><span class="line">crash.ceph003          ceph003.haoyang.cn                    running (-11709s)     7m ago  22h    6689k        -  19.2.0   fd3234b9d664  ffd2d7310ac6  </span><br><span class="line">grafana.ceph001        ceph001.haoyang.cn  *:3000            running (-11706s)     9m ago  22h    76.1M        -  9.4.12   f3e6303dba5e  fdf44407fb4c  </span><br><span class="line">mgr.ceph001.hkkqlh     ceph001.haoyang.cn  *:9283,8765,8443  running (-11706s)     9m ago  22h     551M        -  19.2.0   fd3234b9d664  7ba2eecea18b  </span><br><span class="line">mgr.ceph002.mldtvp     ceph002.haoyang.cn  *:8443,9283,8765  running (-11707s)     7m ago  22h     452M        -  19.2.0   fd3234b9d664  bdfd928dabf9  </span><br><span class="line">mon.ceph001            ceph001.haoyang.cn                    running (-11706s)     9m ago  22h     134M    2048M  19.2.0   fd3234b9d664  2bcdeda36a41  </span><br><span class="line">mon.ceph002            ceph002.haoyang.cn                    running (-11708s)     7m ago  22h     130M    2048M  19.2.0   fd3234b9d664  91486fa9f36b  </span><br><span class="line">mon.ceph003            ceph003.haoyang.cn                    running (-11709s)     7m ago  22h     129M    2048M  19.2.0   fd3234b9d664  345686a5334d  </span><br><span class="line">node-exporter.ceph001  ceph001.haoyang.cn  *:9100            running (-11706s)     9m ago  22h    14.7M        -  1.5.0    68cb0c05b3f2  9cbaabb099cc  </span><br><span class="line">node-exporter.ceph002  ceph002.haoyang.cn  *:9100            running (-11708s)     7m ago  22h    15.0M        -  1.5.0    68cb0c05b3f2  1b8fdb1f51c0  </span><br><span class="line">node-exporter.ceph003  ceph003.haoyang.cn  *:9100            running (-11709s)     7m ago  22h    12.6M        -  1.5.0    68cb0c05b3f2  0796493a5f8e  </span><br><span class="line">osd.0                  ceph001.haoyang.cn                    running (-11709s)     9m ago  22h    40.4M    4096M  19.2.0   fd3234b9d664  490045e69852  </span><br><span class="line">osd.1                  ceph001.haoyang.cn                    running (-11709s)     9m ago  22h    43.8M    4096M  19.2.0   fd3234b9d664  d0ce9e899dd7  </span><br><span class="line">osd.2                  ceph001.haoyang.cn                    running (-11709s)     9m ago  22h    54.2M    4096M  19.2.0   fd3234b9d664  c3678e3dc74e  </span><br><span class="line">osd.3                  ceph002.haoyang.cn                    running (4h)          7m ago   4h    50.6M    4096M  19.2.0   fd3234b9d664  8787bc6caa84  </span><br><span class="line">osd.4                  ceph003.haoyang.cn                    running (4h)          7m ago   4h    51.9M    4096M  19.2.0   fd3234b9d664  be6e18374b5a  </span><br><span class="line">osd.5                  ceph002.haoyang.cn                    running (4h)          7m ago   4h    49.2M    4096M  19.2.0   fd3234b9d664  1877027bdbab  </span><br><span class="line">osd.6                  ceph003.haoyang.cn                    running (4h)          7m ago   4h    47.6M    4096M  19.2.0   fd3234b9d664  8236520080e4  </span><br><span class="line">osd.7                  ceph003.haoyang.cn                    running (4h)          7m ago   4h    52.9M    4096M  19.2.0   fd3234b9d664  93ee38964a01  </span><br><span class="line">osd.8                  ceph002.haoyang.cn                    running (4h)          7m ago   4h    50.1M    4096M  19.2.0   fd3234b9d664  a737972f17c7  </span><br><span class="line">prometheus.ceph001     ceph001.haoyang.cn  *:9095            running (-11706s)     9m ago  22h    85.6M        -  2.43.0   77ee200e57dc  ce155b30e24f  </span><br></pre></td></tr></table></figure>
+
+<h2 id="Assigning-new-management-privileges"><a href="#Assigning-new-management-privileges" class="headerlink" title="Assigning new management privileges"></a>Assigning new management privileges</h2><p>For convenience in management, we will add <code>ceph002.haoyang.cn</code> as a management host.</p>
+<p>Before assigning management privileges, let’s take a look at the configuration files and keys of the <code>ceph002.haoyang.cn</code> host.</p>
+<p>Based on the information, there are no keys or configuration files present.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph002 ~]# ls /etc/ceph</span><br><span class="line">rbdmap</span><br></pre></td></tr></table></figure>
+
+<p>Similarly, without the appropriate permissions, it is not possible to retrieve cluster information.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph002 ~]# ceph -s</span><br><span class="line">Error initializing cluster client: ObjectNotFound(&#x27;RADOS object not found (error calling conf_read_file)&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s assign the <code>_admin</code> label to ceph002.haoyang.cn.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host label add ceph002.haoyang.cn _admin</span><br><span class="line">Added label _admin to host ceph002.haoyang.cn</span><br></pre></td></tr></table></figure>
+
+<p>Checking the current status of the cluster’s host list again.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host ls --detail</span><br><span class="line">HOST                ADDR            LABELS  STATUS  VENDOR/MODEL                      CPU  RAM    HDD  SSD      NIC  </span><br><span class="line">ceph001.haoyang.cn  172.16.173.129  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph002.haoyang.cn  172.16.173.130  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph003.haoyang.cn  172.16.173.131                  VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">3 hosts in cluster</span><br></pre></td></tr></table></figure>
+
+<p>Checking the keys or configuration files again in ceph002.haoyang.cn.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph002 ~]# ls /etc/ceph</span><br><span class="line">ceph.client.admin.keyring  ceph.conf  rbdmap</span><br></pre></td></tr></table></figure>
+
+<p>We can now confirm that <code>ceph002.haoyang.cn</code> has management privileges.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph002 ~]# ls /etc/ceph</span><br><span class="line">ceph.client.admin.keyring  ceph.conf  rbdmap</span><br></pre></td></tr></table></figure>
+
+<p> If the following command executes successfully, it indicates that it has successfully obtained the cluster information and the permissions are working correctly.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph002 ~]# ceph -s</span><br><span class="line">  cluster:</span><br><span class="line">    id:     365472d8-d815-11ef-90ff-000c29c84d93</span><br><span class="line">    health: HEALTH_OK</span><br><span class="line"> </span><br><span class="line">  services:</span><br><span class="line">    mon: 3 daemons, quorum ceph001,ceph002,ceph003 (age 4h)</span><br><span class="line">    mgr: ceph001.hkkqlh(active, since 4h), standbys: ceph002.mldtvp</span><br><span class="line">    osd: 9 osds: 9 up (since 4h), 9 in (since 4h)</span><br><span class="line"> </span><br><span class="line">  data:</span><br><span class="line">    pools:   1 pools, 1 pgs</span><br><span class="line">    objects: 2 objects, 449 KiB</span><br><span class="line">    usage:   244 MiB used, 4.4 TiB / 4.4 TiB avail</span><br><span class="line">    pgs:     1 active+clean</span><br></pre></td></tr></table></figure>
+
+<h2 id="Check-the-status-of-the-Ceph-cluster"><a href="#Check-the-status-of-the-Ceph-cluster" class="headerlink" title="Check the status of the Ceph cluster"></a>Check the status of the Ceph cluster</h2><p>Since we have added a new host and new OSDs to the cluster, the yellow status on the dashboard should have turned green.</p>
+<p><img src="/../images/dashboard_green.png" alt="ceph_dashboard_green"></p>
+<p>Finally, let’s use the command to check the cluster status!</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph -s</span><br><span class="line">  cluster:</span><br><span class="line">    id:     365472d8-d815-11ef-90ff-000c29c84d93</span><br><span class="line">    health: HEALTH_OK</span><br><span class="line"> </span><br><span class="line">  services:</span><br><span class="line">    mon: 3 daemons, quorum ceph001,ceph002,ceph003 (age 5h)</span><br><span class="line">    mgr: ceph001.hkkqlh(active, since 5h), standbys: ceph002.mldtvp</span><br><span class="line">    osd: 9 osds: 9 up (since 5h), 9 in (since 5h)</span><br><span class="line"> </span><br><span class="line">  data:</span><br><span class="line">    pools:   1 pools, 1 pgs</span><br><span class="line">    objects: 2 objects, 449 KiB</span><br><span class="line">    usage:   244 MiB used, 4.4 TiB / 4.4 TiB avail</span><br><span class="line">    pgs:     1 active+clean</span><br></pre></td></tr></table></figure>
+
+<p>With this, our ceph cluster deployment has been successfully completed!</p>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>Ceph</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Complete Guide to Markdown shortcuts for typora</title>
     <url>//Tools/Markdown/Complete-Guide-to-Markdown-shortcuts-for-typora/index.html</url>
     <content><![CDATA[<h2 id="文字样式部分"><a href="#文字样式部分" class="headerlink" title="文字样式部分"></a>文字样式部分</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">使用<span class="code">`ctrl + 数字键`</span>快速创建各种等级的标题。(P.s.标题最小分化到6级标题。)</span><br><span class="line">使用<span class="code">`ctrl + 0`</span>可以快速将选中标题调成普通文本。</span><br><span class="line">使用<span class="code">`ctrl + 加号/减号`</span>对标题的级别进行升高和降低。</span><br></pre></td></tr></table></figure>
@@ -459,7 +723,7 @@
   </entry>
   <entry>
     <title>2025/01/15 English accumulation</title>
-    <url>//Language/English/20150115/index.html</url>
+    <url>//Language/English/20250115/index.html</url>
     <content><![CDATA[<ul>
 <li><p><strong>hands-on activity</strong>: It is an expression that means <strong>practical, active involvement or direct experience with something</strong>, rather than just theoretical or observational.It refers to doing something yourself rather than just studying or observing it.</p>
 </li>
@@ -489,8 +753,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Ceph Series (Chapter 1):Introducing Red Hat Ceph Storage Architecture</title>
-    <url>//Cloud/Ceph/1.Introducing-Red-Hat-Ceph-Storage-Architecture/index.html</url>
+    <title>Ceph Series (Chapter 1): Introducing Red Hat Ceph Storage Architecture</title>
+    <url>//Cloud/Ceph/Introducing-Red-Hat-Ceph-Storage-Architecture/index.html</url>
     <content><![CDATA[<h2 id="Personas"><a href="#Personas" class="headerlink" title="Personas"></a>Personas</h2><p>The personas that are presented here embody the most common roles of Red Hat Ceph Storage users. You can simply understand the meaning of the word as “user role”.</p>
 <p>In Red Hat Ceph Storage, there are three types of personas, namely the Storage Administrator, the Storage Operator and other Storage-related personas.</p>
 <h3 id="Storage-Administrator"><a href="#Storage-Administrator" class="headerlink" title="Storage Administrator"></a><strong>Storage Administrator</strong></h3><p>The primary persona for Red Hat Ceph is the storage administrator. A Ceph storage administrator performs the following tasks:</p>

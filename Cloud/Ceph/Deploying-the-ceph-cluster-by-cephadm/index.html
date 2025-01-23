@@ -1,0 +1,483 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="This marks a new chapter and a fresh journey in my learning. In the first chapter of studying Ceph, I would like to introduce the simplest method to deploy our Ceph cluster in VMware.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm">
+<meta property="og:url" content="https://blog.sunhaoyang.net/Cloud/Ceph/Deploying-the-ceph-cluster-by-cephadm/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="This marks a new chapter and a fresh journey in my learning. In the first chapter of studying Ceph, I would like to introduce the simplest method to deploy our Ceph cluster in VMware.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/Ceph.png">
+<meta property="article:published_time" content="2025-01-22T11:32:07.000Z">
+<meta property="article:modified_time" content="2025-01-23T00:40:58.887Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="Ceph">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/Ceph.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://blog.sunhaoyang.net/Cloud/Ceph/Deploying-the-ceph-cluster-by-cephadm/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-01-22T11:32:07.000Z" title="Created 2025-01-22 19:32:07">2025-01-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-01-23T00:40:58.887Z" title="Updated 2025-01-23 08:40:58">2025-01-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Cloud/">Cloud</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">3.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>22mins</span></span></div></div></div><article class="container post-content" id="article-container"><h2 id="What-is-Ceph"><a href="#What-is-Ceph" class="headerlink" title="What is Ceph?"></a>What is Ceph?</h2><p>At first, the phonetic transcription of ‘Ceph’ is &#x2F;sɛf&#x2F;. The name ‘Ceph’ comes from ‘cephalopod,’ which refers to marine animals such as octopuses and squids. </p>
+<p>Similarly, Ceph, as an open-source distributed storage system, has garnered widespread attention and application due to its high scalability, reliability, and performance. </p>
+<p>Ceph supports multiple storage interfaces such as <strong><code>object storage</code></strong>, <strong><code>block storage</code></strong>, and <strong><code>file system storage</code></strong>, meeting the storage needs in various business scenarios.</p>
+<p>This article will provide a detailed guide on how to deploy a Ceph distributed storage cluster from scratch using containerization on the Rocky 9.5 operating system. Through this guide, you will be able to master the installation, configuration, and management of Ceph.</p>
+<p>Replacing ceph-ansible, through containerization, <code>cephadm</code> provides a standardized approach to operate Ceph clusters, effectively reducing operational complexity.</p>
+<hr>
+<h2 id="Deployment-Plan-Table"><a href="#Deployment-Plan-Table" class="headerlink" title="Deployment Plan Table"></a>Deployment Plan Table</h2><p>Most readers are encountering Ceph for the first time. To make it clearer and more intuitive, I have created the following deployment plan table to help you deploy the ceph cluster in VMware virtual environment.</p>
+<table>
+<thead>
+<tr>
+<th align="center">Number</th>
+<th align="center">Operating System</th>
+<th align="center">Ceph Version</th>
+<th align="center">Role</th>
+<th align="center">IP</th>
+<th align="center">Configuration</th>
+<th align="center">Hostname</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">001</td>
+<td align="center">Rocky9.5(x86_64)</td>
+<td align="center">squid (latest 19.2.0)</td>
+<td align="center">bootstrap，mon，mgr，osd</td>
+<td align="center">172.16.173.129</td>
+<td align="center">core(s):4, memeory:4G, disk: 500G*4</td>
+<td align="center">ceph001.haoyang.cn</td>
+</tr>
+<tr>
+<td align="center">002</td>
+<td align="center">Rocky9.5(x86_64)</td>
+<td align="center">squid (latest 19.2.0)</td>
+<td align="center">mon，mgr，osd</td>
+<td align="center">172.16.173.130</td>
+<td align="center">core(s):4, memeory:4G, disk: 500G*4</td>
+<td align="center">ceph002.haoyang.cn</td>
+</tr>
+<tr>
+<td align="center">003</td>
+<td align="center">Rocky9.5(x86_64)</td>
+<td align="center">squid (latest 19.2.0)</td>
+<td align="center">mon，mgr，osd</td>
+<td align="center">172.16.173.131</td>
+<td align="center">core(s):4, memeory:4G, disk: 500G*4</td>
+<td align="center">ceph003.haoyang.cn</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>Because you will deploy the ceph cluster in VMware, you need to download the x86_64 structure iso image from <strong><a target="_blank" rel="noopener" href="https://download.rockylinux.org/pub/rocky/9/isos/x86_64/Rocky-9.5-x86_64-minimal.iso">Rocky Linux Official Website</a></strong> to install the Rocky9.5 operating system as the base. I used the minimal version to install rocky, so you could not copy&#x2F;paste from your desktop to rocky. You’d better use <strong>ssh command</strong> to login in Rocky Linux remotely.</p>
+</li>
+<li><p>More information about the Ceph Release Version, please visit the <strong><a href ="https://docs.ceph.com/en/latest/releases/">Official Website</a></strong>.</p>
+</li>
+<li><p>More detailed information about the Role, for example: “What’s the meaning of mon&#x2F;mgr&#x2F;osd?” or “What do these words stand for?” .etc, please visit my another blog: <strong><a href="https://blog.sunhaoyang.net/Cloud/Ceph/Introducing-Red-Hat-Ceph-Storage-Architecture/index.html">Ceph Series (Chapter 1):Introducing Red Hat Ceph Storage Architecture</a></strong>. </p>
+</li>
+<li><p>From the aspect of IP address, I just set the network adaptor to NAT mode and I used the default subnet IP as well as the default generated IP address here. It doesn’t matter if you’d like to modify the subnet IP as what you want, and you may get another random IP address finally. As long as these three virtual machines can communicate with each other, that’s enough.</p>
+</li>
+<li><p>According to the performance of your hardware, I recommend you to set 4C&#x2F;4G&#x2F;500G*4 here. Don’t worry about disk space issues because of the <strong><code>Thin Provisioning Mechanism</code></strong>. When creating virtual disks, only the space for the actual data used is allocated. The total capacity declared by the virtual disk is just a logical value, and the actual storage space is dynamically allocated as the data grows.</p>
+</li>
+<li><p>As for the hostname, it’s fine as long as it’s simple and easy to understand. You can name it however you like. I used my Chinese name to represent the hostname here.</p>
+</li>
+</ul>
+<hr>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p><span style="color: red;">Please note that, unless specified，otherwise, the following prerequisites must be completed on all nodes.</span></p>
+<h3 id="Setting-the-specified-hostname"><a href="#Setting-the-specified-hostname" class="headerlink" title="Setting the specified hostname"></a>Setting the specified hostname</h3><p>Set an appropriate hostname on each node for resolution.</p>
+<p>Take the first node, 001, as an example here.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostnamectl hostname ceph001.haoyang.cn</span><br></pre></td></tr></table></figure>
+
+<h3 id="Setting-the-resolution-between-the-cluster"><a href="#Setting-the-resolution-between-the-cluster" class="headerlink" title="Setting the resolution between the cluster"></a>Setting the resolution between the cluster</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/hosts &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">172.16.173.129 ceph001.haoyang.cn ceph001</span><br><span class="line">172.16.173.130 ceph002.haoyang.cn ceph002</span><br><span class="line">172.16.173.131 ceph003.haoyang.cn ceph003</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="Configuring-the-dnf-software-repository"><a href="#Configuring-the-dnf-software-repository" class="headerlink" title="Configuring the dnf software repository"></a>Configuring the dnf software repository</h3><p>I provided two configurations here.</p>
+<blockquote>
+<p>The repository provided by Ceph’s official site.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/yum.repos.d/ceph.repo &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">[ceph]</span><br><span class="line">name=Ceph packages <span class="keyword">for</span> x86_64</span><br><span class="line">baseurl=https://download.ceph.com/rpm-squid/el9/x86_64</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.ceph.com/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-noarch]</span><br><span class="line">name=Ceph noarch packages</span><br><span class="line">baseurl=https://download.ceph.com/rpm-squid/el9/noarch</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.ceph.com/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-source]</span><br><span class="line">name=Ceph <span class="built_in">source</span> packages</span><br><span class="line">baseurl=https://download.ceph.com/rpm-squid/el9/SRPMS</span><br><span class="line">enabled=0</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://download.ceph.com/keys/release.asc</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Using Nanjing University for repository acceleration.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/yum.repos.d/ceph.repo &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">[ceph]</span><br><span class="line">name=Ceph packages <span class="keyword">for</span> x86_64</span><br><span class="line">baseurl=https://mirrors.nju.edu.cn/ceph/rpm-squid/el9/x86_64</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.nju.edu.cn/ceph/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-noarch]</span><br><span class="line">name=Ceph noarch packages</span><br><span class="line">baseurl=https://mirrors.nju.edu.cn/ceph/rpm-squid/el9/noarch</span><br><span class="line">enabled=1</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.nju.edu.cn/ceph/keys/release.asc</span><br><span class="line"></span><br><span class="line">[ceph-source]</span><br><span class="line">name=Ceph <span class="built_in">source</span> packages</span><br><span class="line">baseurl=https://mirrors.nju.edu.cn/ceph/rpm-squid/el9/SRPMS</span><br><span class="line">enabled=0</span><br><span class="line">priority=2</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://mirrors.nju.edu.cn/ceph/keys/release.asc</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="Updating-and-generating-the-cache-for-the-dnf-package-manager"><a href="#Updating-and-generating-the-cache-for-the-dnf-package-manager" class="headerlink" title="Updating and generating the cache for the dnf package manager"></a>Updating and generating the cache for the dnf package manager</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf makecache</span><br></pre></td></tr></table></figure>
+
+<h3 id="Installing-the-necessary-software-packages"><a href="#Installing-the-necessary-software-packages" class="headerlink" title="Installing the necessary software packages"></a>Installing the necessary software packages</h3><ul>
+<li>Python 3</li>
+<li>Systemd</li>
+<li>Podman</li>
+<li>Chrony</li>
+<li>LVM2</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install podman chrony lvm2 systemd python3 bash-completion wget curl epel-release -y</span><br></pre></td></tr></table></figure>
+
+<p>It may update critical components like systemd, so please <strong><code>restart</code></strong> the server after the installation.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+
+<h3 id="Enabling-NTP-synchronization"><a href="#Enabling-NTP-synchronization" class="headerlink" title="Enabling NTP synchronization"></a>Enabling NTP synchronization</h3><p>By default, it syncs from public network sources, but you can specify your own time source. Here, I use <em><strong>ntp.aliyun.com</strong></em>.</p>
+<p>Edit the configuration file and add the following line <code>pool ntp.aliyun.com iburst</code> at the very beginning.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/chrony.conf</span><br><span class="line"><span class="comment"># Use public servers from the pool.ntp.org project.</span></span><br><span class="line"><span class="comment"># Please consider joining the pool (https://www.pool.ntp.org/join.html).</span></span><br><span class="line">pool ntp.aliyun.com iburst</span><br><span class="line">pool 2.rocky.pool.ntp.org iburst</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>After editing the <code>/etc/chrony.conf</code> file, please set the <code>chronyd.service</code> to start automatically at boot and take effect immediately.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> chronyd --now</span><br><span class="line">systemctl restart chronyd</span><br></pre></td></tr></table></figure>
+
+<h3 id="Installing-cephadm"><a href="#Installing-cephadm" class="headerlink" title="Installing cephadm"></a>Installing cephadm</h3><p>Installing the cephadm tool is sufficient, but I also install the <code>ceph-common</code> package to execute various Ceph commands like ceph and rados directly on the host. Since Ceph is deployed in a containerized manner with cephadm, these commands are not available on the host by default. By installing <code>ceph-common</code>, you can avoid logging into the container each time, making it more efficient.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install cephadm ceph-common -y</span><br></pre></td></tr></table></figure>
+
+<p>Up to this point, all prerequisites have been completed.</p>
+<hr>
+<h2 id="Deploying-a-new-ceph-cluster"><a href="#Deploying-a-new-ceph-cluster" class="headerlink" title="Deploying a new ceph cluster"></a>Deploying a new ceph cluster</h2><p>Cephadm bootstrap is the first step in initializing a Ceph cluster. It creates a small initial Ceph cluster by bootstrapping, which includes a monitor (mon) and a manager (mgr). This is the foundational step for the entire Ceph cluster deployment and management process.</p>
+<p>The <code>cephadm bootstrap</code> command will perform the following actions:</p>
+<ul>
+<li><p>Create a monitor (mon) and a manager (mgr) <code>daemon</code> on the local host for the new cluster.</p>
+</li>
+<li><p>Generate a new SSH key for the Ceph cluster and add it to the root user’s <code>/root/.ssh/authorized_keys</code> file.</p>
+</li>
+<li><p>Write a copy of the public key to the <code>/etc/ceph/ceph.pub</code> file.</p>
+</li>
+<li><p>Write a minimal configuration file to <code>/etc/ceph/ceph.conf</code>, which is used for communication with the Ceph daemons.</p>
+</li>
+<li><p>Write a copy of the client.admin administrator (privileged) key to the <code>/etc/ceph/ceph.client.admin.keyring</code> file.</p>
+</li>
+<li><p>Add the _admin label to the bootstrap host. By default, any host with this label will also receive copies of the <code>/etc/ceph/ceph.conf</code> and <code>/etc/ceph/ceph.client.admin.keyring</code> files.</p>
+</li>
+</ul>
+<p>If the hostname is <strong><u>Fully Qualified Domain Name</u></strong>(<code>FQDN</code>), you need to add the specific parameter: <code>--allow-fqdn-hostname</code>.</p>
+<p>P.S. FQDN format could be like that, for example: <code>host.example.com.</code></p>
+<p>host name: <code>host</code></p>
+<p>domain name: <code>example.com</code></p>
+<p>root domain: <code>.</code> (Omitted in daily use)</p>
+<p>If you are doing a <strong><u>single-node</u></strong> deployment, you need to add the specific parameter: <code>--single-host-defaults</code>. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cephadm bootstrap --mon-ip 172.16.173.129 --single-host-defaults --initial-dashboard-user admin --initial-dashboard-password Sunhaoyang --dashboard-password-noupdate --allow-fqdn-hostname</span><br></pre></td></tr></table></figure>
+
+<p>This deployment uses a <strong><u>multi-node</u></strong> setup.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cephadm bootstrap --mon-ip 172.16.173.129 --initial-dashboard-user admin --initial-dashboard-password Sunhaoyang --dashboard-password-noupdate --allow-fqdn-hostname</span><br></pre></td></tr></table></figure>
+
+<p>More than these parameters, all usage of all parameters could be checked by using <code>cephadm bootstrap --help</code>.</p>
+<ul>
+<li><p><code>--mon-ip</code> specifies the IP address of the monitor (mon) that will be created during the bootstrap process. This is the IP address of the host where the initial MON daemon will run.</p>
+</li>
+<li><p><code>--initial-dashboard-user</code> sets the username for the Ceph dashboard’s initial administrative user. In this case, the username will be admin.</p>
+</li>
+<li><p><code>--initial-dashboard-password</code> specifies the password for the initial administrative user of the Ceph dashboard. The password will be set to Sunhaoyang.</p>
+</li>
+<li><p><code>--dashboard-password-noupdate</code> prevents the Ceph cluster from automatically updating the dashboard password after the bootstrap process. This ensures the password specified in <code>--initial-dashboard-password</code> remains unchanged.</p>
+</li>
+<li><p><code>--allow-fqdn-hostname</code> allows the use of a Fully Qualified Domain Name (FQDN) as the hostname for the Ceph cluster’s initial node. This is useful when the hostname includes domain information, such as ceph.example.com.</p>
+</li>
+</ul>
+<p>Finally, the installation console output looks like this.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Ceph Dashboard is now available at:</span><br><span class="line"></span><br><span class="line">             URL: https://ceph001.haoyang.cn:8443/</span><br><span class="line">            User: admin</span><br><span class="line">        Password: Sunhaoyang</span><br><span class="line">...</span><br><span class="line">Bootstrap complete.</span><br></pre></td></tr></table></figure>
+
+<p>You could not use the promption <code>URL</code> to visit the front-end ceph website, because you did not set the resolution in your local <code>/etc/hosts</code> file. While, you could use IP address + port to visit it directly, such as: <a target="_blank" rel="noopener" href="https://172.16.173.129:8443/">https://172.16.173.129:8443/</a>.</p>
+<p>When you are opening the website, you may be reminded that the website is unsafe. Now, you need to agree with it by clicking <code>advanced</code> button and then clicking <code>continue</code> button.</p>
+<p><img src="/../images/dashboard_yellow.png" alt="ceph_dashboard_yellow"></p>
+<p>As shown in the image, the page has already prompted us to expand the cluster, and there is a yellow warning next to the dashboard icon in the top left corner. Next, let’s add some disks to the cluster.</p>
+<h2 id="Deploying-OSD-resources"><a href="#Deploying-OSD-resources" class="headerlink" title="Deploying OSD resources"></a>Deploying OSD resources</h2><p>In Ceph, OSD (Object Storage Daemon) is one of the essential components of the storage cluster. Its main responsibilities include storing data, handling data replication, recovery, backfilling, and rebalancing operations.</p>
+<p>Key Concepts of Ceph OSD:</p>
+<ul>
+<li><p>Data Storage:</p>
+<p>OSDs are responsible for storing data objects. Each OSD usually corresponds to a physical storage device, such as a hard drive or SSD.</p>
+</li>
+<li><p>Data Replication:</p>
+<p>To ensure high availability and durability, OSDs replicate data among themselves. Ceph uses the CRUSH algorithm to determine the placement of data.</p>
+</li>
+<li><p>Data Recovery:</p>
+<p>When an OSD fails or goes offline, the cluster automatically recovers data from other OSDs and replicates it to new OSDs.</p>
+</li>
+<li><p>Backfilling and Rebalancing:</p>
+<p>Backfilling refers to redistributing data after an OSD is restored or new OSDs are added to ensure data is evenly distributed.</p>
+<p>Rebalancing ensures load balancing across OSDs to prevent overloading certain OSDs.</p>
+</li>
+<li><p>Monitoring and Management:</p>
+<p>OSDs use a heartbeat mechanism to report their status to the Ceph cluster, ensuring cluster health and consistency.</p>
+</li>
+</ul>
+<p>Having understood Ceph OSDs, let’s proceed to add some OSDs to the cluster to complete the expansion of the Ceph cluster.</p>
+<p>Based on the <a href="#Deployment-Plan-Table">Deployment Plan Table</a>, you have already added four disks in total for each node. </p>
+<p>Excluding the partation used for installing the operating system, there are three remaining disks: <code>nvme0n2</code>, <code>nvme0n3</code> and <code>nvme0n4</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# lsblk</span><br><span class="line">NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS</span><br><span class="line">sr0          11:0    1  1024M  0 rom</span><br><span class="line">nvme0n1     259:0    0   500G  0 disk</span><br><span class="line">├─nvme0n1p1 259:1    0   600M  0 part /boot/efi</span><br><span class="line">├─nvme0n1p2 259:2    0     1G  0 part /boot</span><br><span class="line">└─nvme0n1p3 259:3    0 498.4G  0 part</span><br><span class="line">  ├─rl-root 253:0    0 494.5G  0 lvm  /var/lib/containers/storage/overlay</span><br><span class="line">  │                                   /</span><br><span class="line">  └─rl-swap 253:1    0   3.9G  0 lvm  [SWAP]</span><br><span class="line">nvme0n2     259:4    0   500G  0 disk</span><br><span class="line">nvme0n3     259:5    0   500G  0 disk</span><br><span class="line">nvme0n4     259:6    0   500G  0 disk</span><br></pre></td></tr></table></figure>
+
+<p>Then, you could use these three remaining disks and add OSD daemon into the cluster.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch daemon add osd ceph001.haoyang.cn:/dev/nvme0n2</span><br><span class="line">Created osd(s) 0 on host &#x27;ceph001.haoyang.cn&#x27;</span><br><span class="line">[root@ceph001 ~]# ceph orch daemon add osd ceph001.haoyang.cn:/dev/nvme0n3</span><br><span class="line">Created osd(s) 1 on host &#x27;ceph001.haoyang.cn&#x27;</span><br><span class="line">[root@ceph001 ~]# ceph orch daemon add osd ceph001.haoyang.cn:/dev/nvme0n4</span><br><span class="line">Created osd(s) 2 on host &#x27;ceph001.haoyang.cn&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>Let’s check the list of OSD now.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph osd crush tree</span><br><span class="line">ID  CLASS  WEIGHT   TYPE NAME</span><br><span class="line">-1         1.46489  root default</span><br><span class="line">-3         1.46489      host ceph001</span><br><span class="line"> 0    ssd  0.48830          osd.0</span><br><span class="line"> 1    ssd  0.48830          osd.1</span><br><span class="line"> 2    ssd  0.48830          osd.2</span><br></pre></td></tr></table></figure>
+
+<p>If we manually add all the disks on each node one by one, it would be too tedious. Fortunately, we can use the parameter <code>--all-available-devices</code> to automatically detect and utilize all available storage devices in the system as OSDs. This simplifies the process of adding OSDs, eliminating the need to specify each device manually.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch apply osd --all-available-devices</span><br><span class="line">Scheduled osd.all-available-devices update...</span><br></pre></td></tr></table></figure>
+
+<h2 id="Add-new-hosts-to-the-cluster"><a href="#Add-new-hosts-to-the-cluster" class="headerlink" title="Add new hosts to the cluster"></a>Add new hosts to the cluster</h2><p><span style="color: red;">The New host must meet all the <a href="#Prerequisites">Prerequisites</a> of this article before it can be added to the cluster.</span></p>
+<p>Distribute the cluster’s SSH key to the authorized_keys file of the root user on all hosts to enable passwordless operations.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ssh-copy-id -f -i /etc/ceph/ceph.pub root@ceph001.haoyang.cn</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ssh-copy-id -f -i /etc/ceph/ceph.pub root@ceph002.haoyang.cn</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ssh-copy-id -f -i /etc/ceph/ceph.pub root@ceph003.haoyang.cn</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br></pre></td></tr></table></figure>
+
+<p>Lets’ check the current status of cluster’s host list.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host ls --detail</span><br><span class="line">HOST                ADDR         LABELS  STATUS  VENDOR/MODEL               CPU    RAM    HDD  SSD      NIC</span><br><span class="line">ceph001.haoyang.cn  172.16.173.129  _admin          VMware, Inc. (VMware20,1)  4C/4T  4 GiB  -    4/2.1TB  1</span><br><span class="line">1 hosts in cluster</span><br></pre></td></tr></table></figure>
+
+<p>When adding a host to a Ceph cluster, it is typically necessary to specify both the hostname and the IP address. This is because:</p>
+<ul>
+<li><p>Hostname: Ceph uses hostnames to identify nodes in the cluster. These hostnames must be unique and resolvable throughout the cluster (usually configured via &#x2F;etc&#x2F;hosts or DNS).</p>
+</li>
+<li><p>IP Address: The IP address is crucial for communication between Ceph nodes. Specifying the IP address ensures that Ceph knows how to communicate with the host, especially in environments with multiple network interfaces or complex network configurations.</p>
+</li>
+</ul>
+<p>After adding a host, <strong>the new host will automatically trigger the download of container images and the startup of containers</strong>, which might take some time to be ready. Additionally, since we previously configured automatic OSD addition, the disks on the new host will be automatically added to the cluster.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host add ceph002.haoyang.cn 172.16.173.130</span><br><span class="line">Added host &#x27;ceph002.haoyang.cn&#x27; with addr &#x27;172.16.173.130&#x27;</span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ceph orch host add ceph003.haoyang.cn 172.16.173.131</span><br><span class="line">Added host &#x27;ceph003.haoyang.cn&#x27; with addr &#x27;172.16.173.131&#x27;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@ceph001 ~]# ceph orch host ls --detail</span><br><span class="line">HOST                ADDR            LABELS  STATUS  VENDOR/MODEL                      CPU  RAM    HDD  SSD      NIC  </span><br><span class="line">ceph001.haoyang.cn  172.16.173.129  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph002.haoyang.cn  172.16.173.130  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph003.haoyang.cn  172.16.173.131                  VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">3 hosts in cluster</span><br></pre></td></tr></table></figure>
+
+<p>The container image download and container startup in the new host will take some time. You can use the command to check if all services are running normally.</p>
+<p>If everything is normal, all services will be in the “running” state.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch ps</span><br><span class="line">NAME                   HOST                PORTS             STATUS             REFRESHED  AGE  MEM USE  MEM LIM  VERSION  IMAGE ID      CONTAINER ID  </span><br><span class="line">alertmanager.ceph001   ceph001.haoyang.cn  *:9093,9094       running (-11706s)     9m ago  22h    19.4M        -  0.25.0   4d8d4d8334be  d7d85f0d5f90  </span><br><span class="line">ceph-exporter.ceph001  ceph001.haoyang.cn                    running (-11706s)     9m ago  22h    18.7M        -  19.2.0   fd3234b9d664  41365c9457ee  </span><br><span class="line">ceph-exporter.ceph002  ceph002.haoyang.cn                    running (-11708s)     7m ago  22h    5553k        -  19.2.0   fd3234b9d664  37efd9d7f4e1  </span><br><span class="line">ceph-exporter.ceph003  ceph003.haoyang.cn                    running (-11709s)     7m ago  22h    5666k        -  19.2.0   fd3234b9d664  5270951d5acd  </span><br><span class="line">crash.ceph001          ceph001.haoyang.cn                    running (-11706s)     9m ago  22h    6685k        -  19.2.0   fd3234b9d664  56d8da9604fa  </span><br><span class="line">crash.ceph002          ceph002.haoyang.cn                    running (-11707s)     7m ago  22h    6681k        -  19.2.0   fd3234b9d664  5fc552cacd65  </span><br><span class="line">crash.ceph003          ceph003.haoyang.cn                    running (-11709s)     7m ago  22h    6689k        -  19.2.0   fd3234b9d664  ffd2d7310ac6  </span><br><span class="line">grafana.ceph001        ceph001.haoyang.cn  *:3000            running (-11706s)     9m ago  22h    76.1M        -  9.4.12   f3e6303dba5e  fdf44407fb4c  </span><br><span class="line">mgr.ceph001.hkkqlh     ceph001.haoyang.cn  *:9283,8765,8443  running (-11706s)     9m ago  22h     551M        -  19.2.0   fd3234b9d664  7ba2eecea18b  </span><br><span class="line">mgr.ceph002.mldtvp     ceph002.haoyang.cn  *:8443,9283,8765  running (-11707s)     7m ago  22h     452M        -  19.2.0   fd3234b9d664  bdfd928dabf9  </span><br><span class="line">mon.ceph001            ceph001.haoyang.cn                    running (-11706s)     9m ago  22h     134M    2048M  19.2.0   fd3234b9d664  2bcdeda36a41  </span><br><span class="line">mon.ceph002            ceph002.haoyang.cn                    running (-11708s)     7m ago  22h     130M    2048M  19.2.0   fd3234b9d664  91486fa9f36b  </span><br><span class="line">mon.ceph003            ceph003.haoyang.cn                    running (-11709s)     7m ago  22h     129M    2048M  19.2.0   fd3234b9d664  345686a5334d  </span><br><span class="line">node-exporter.ceph001  ceph001.haoyang.cn  *:9100            running (-11706s)     9m ago  22h    14.7M        -  1.5.0    68cb0c05b3f2  9cbaabb099cc  </span><br><span class="line">node-exporter.ceph002  ceph002.haoyang.cn  *:9100            running (-11708s)     7m ago  22h    15.0M        -  1.5.0    68cb0c05b3f2  1b8fdb1f51c0  </span><br><span class="line">node-exporter.ceph003  ceph003.haoyang.cn  *:9100            running (-11709s)     7m ago  22h    12.6M        -  1.5.0    68cb0c05b3f2  0796493a5f8e  </span><br><span class="line">osd.0                  ceph001.haoyang.cn                    running (-11709s)     9m ago  22h    40.4M    4096M  19.2.0   fd3234b9d664  490045e69852  </span><br><span class="line">osd.1                  ceph001.haoyang.cn                    running (-11709s)     9m ago  22h    43.8M    4096M  19.2.0   fd3234b9d664  d0ce9e899dd7  </span><br><span class="line">osd.2                  ceph001.haoyang.cn                    running (-11709s)     9m ago  22h    54.2M    4096M  19.2.0   fd3234b9d664  c3678e3dc74e  </span><br><span class="line">osd.3                  ceph002.haoyang.cn                    running (4h)          7m ago   4h    50.6M    4096M  19.2.0   fd3234b9d664  8787bc6caa84  </span><br><span class="line">osd.4                  ceph003.haoyang.cn                    running (4h)          7m ago   4h    51.9M    4096M  19.2.0   fd3234b9d664  be6e18374b5a  </span><br><span class="line">osd.5                  ceph002.haoyang.cn                    running (4h)          7m ago   4h    49.2M    4096M  19.2.0   fd3234b9d664  1877027bdbab  </span><br><span class="line">osd.6                  ceph003.haoyang.cn                    running (4h)          7m ago   4h    47.6M    4096M  19.2.0   fd3234b9d664  8236520080e4  </span><br><span class="line">osd.7                  ceph003.haoyang.cn                    running (4h)          7m ago   4h    52.9M    4096M  19.2.0   fd3234b9d664  93ee38964a01  </span><br><span class="line">osd.8                  ceph002.haoyang.cn                    running (4h)          7m ago   4h    50.1M    4096M  19.2.0   fd3234b9d664  a737972f17c7  </span><br><span class="line">prometheus.ceph001     ceph001.haoyang.cn  *:9095            running (-11706s)     9m ago  22h    85.6M        -  2.43.0   77ee200e57dc  ce155b30e24f  </span><br></pre></td></tr></table></figure>
+
+<h2 id="Assigning-new-management-privileges"><a href="#Assigning-new-management-privileges" class="headerlink" title="Assigning new management privileges"></a>Assigning new management privileges</h2><p>For convenience in management, we will add <code>ceph002.haoyang.cn</code> as a management host.</p>
+<p>Before assigning management privileges, let’s take a look at the configuration files and keys of the <code>ceph002.haoyang.cn</code> host.</p>
+<p>Based on the information, there are no keys or configuration files present.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph002 ~]# ls /etc/ceph</span><br><span class="line">rbdmap</span><br></pre></td></tr></table></figure>
+
+<p>Similarly, without the appropriate permissions, it is not possible to retrieve cluster information.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph002 ~]# ceph -s</span><br><span class="line">Error initializing cluster client: ObjectNotFound(&#x27;RADOS object not found (error calling conf_read_file)&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>Let’s assign the <code>_admin</code> label to ceph002.haoyang.cn.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host label add ceph002.haoyang.cn _admin</span><br><span class="line">Added label _admin to host ceph002.haoyang.cn</span><br></pre></td></tr></table></figure>
+
+<p>Checking the current status of the cluster’s host list again.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph orch host ls --detail</span><br><span class="line">HOST                ADDR            LABELS  STATUS  VENDOR/MODEL                      CPU  RAM    HDD  SSD      NIC  </span><br><span class="line">ceph001.haoyang.cn  172.16.173.129  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph002.haoyang.cn  172.16.173.130  _admin          VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">ceph003.haoyang.cn  172.16.173.131                  VMware, Inc. VMware (VMware20,1)  N/A  4 GiB  -    4/2.1TB  1    </span><br><span class="line">3 hosts in cluster</span><br></pre></td></tr></table></figure>
+
+<p>Checking the keys or configuration files again in ceph002.haoyang.cn.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph002 ~]# ls /etc/ceph</span><br><span class="line">ceph.client.admin.keyring  ceph.conf  rbdmap</span><br></pre></td></tr></table></figure>
+
+<p>We can now confirm that <code>ceph002.haoyang.cn</code> has management privileges.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph002 ~]# ls /etc/ceph</span><br><span class="line">ceph.client.admin.keyring  ceph.conf  rbdmap</span><br></pre></td></tr></table></figure>
+
+<p> If the following command executes successfully, it indicates that it has successfully obtained the cluster information and the permissions are working correctly.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph002 ~]# ceph -s</span><br><span class="line">  cluster:</span><br><span class="line">    id:     365472d8-d815-11ef-90ff-000c29c84d93</span><br><span class="line">    health: HEALTH_OK</span><br><span class="line"> </span><br><span class="line">  services:</span><br><span class="line">    mon: 3 daemons, quorum ceph001,ceph002,ceph003 (age 4h)</span><br><span class="line">    mgr: ceph001.hkkqlh(active, since 4h), standbys: ceph002.mldtvp</span><br><span class="line">    osd: 9 osds: 9 up (since 4h), 9 in (since 4h)</span><br><span class="line"> </span><br><span class="line">  data:</span><br><span class="line">    pools:   1 pools, 1 pgs</span><br><span class="line">    objects: 2 objects, 449 KiB</span><br><span class="line">    usage:   244 MiB used, 4.4 TiB / 4.4 TiB avail</span><br><span class="line">    pgs:     1 active+clean</span><br></pre></td></tr></table></figure>
+
+<h2 id="Check-the-status-of-the-Ceph-cluster"><a href="#Check-the-status-of-the-Ceph-cluster" class="headerlink" title="Check the status of the Ceph cluster"></a>Check the status of the Ceph cluster</h2><p>Since we have added a new host and new OSDs to the cluster, the yellow status on the dashboard should have turned green.</p>
+<p><img src="/../images/dashboard_green.png" alt="ceph_dashboard_green"></p>
+<p>Finally, let’s use the command to check the cluster status!</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]# ceph -s</span><br><span class="line">  cluster:</span><br><span class="line">    id:     365472d8-d815-11ef-90ff-000c29c84d93</span><br><span class="line">    health: HEALTH_OK</span><br><span class="line"> </span><br><span class="line">  services:</span><br><span class="line">    mon: 3 daemons, quorum ceph001,ceph002,ceph003 (age 5h)</span><br><span class="line">    mgr: ceph001.hkkqlh(active, since 5h), standbys: ceph002.mldtvp</span><br><span class="line">    osd: 9 osds: 9 up (since 5h), 9 in (since 5h)</span><br><span class="line"> </span><br><span class="line">  data:</span><br><span class="line">    pools:   1 pools, 1 pgs</span><br><span class="line">    objects: 2 objects, 449 KiB</span><br><span class="line">    usage:   244 MiB used, 4.4 TiB / 4.4 TiB avail</span><br><span class="line">    pgs:     1 active+clean</span><br></pre></td></tr></table></figure>
+
+<p>With this, our ceph cluster deployment has been successfully completed!</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net/Cloud/Ceph/Deploying-the-ceph-cluster-by-cephadm/index.html">https://blog.sunhaoyang.net/Cloud/Ceph/Deploying-the-ceph-cluster-by-cephadm/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Ceph/">Ceph</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/Ceph.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/Language/English/20250123/index.html" title="2025/01/23 English accumulation"><img class="cover" src="https://blog.sunhaoyang.net/images/English.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">2025/01/23 English accumulation</div></div><div class="info-2"><div class="info-item-1">Here, I will document my understanding of how to accumulate knowledge in a new language (English). This is an ongoing process and requires time. However, with practice it becomes easier as you get better at reading comprehension speedily.</div></div></div></a><a class="pagination-related" href="/Tools/Markdown/Complete-Guide-to-Markdown-shortcuts-for-typora/index.html" title="Complete Guide to Markdown shortcuts for typora"><img class="cover" src="https://blog.sunhaoyang.net/images/Markdown.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Complete Guide to Markdown shortcuts for typora</div></div><div class="info-2"><div class="info-item-1">I will introduce the Markdown keyboard shortcuts in Typora. It is recommended to first read the Complete-Guide-to-Markdown-Features.md to understand how each feature is implemented before mastering the use of the shortcuts.</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/Cloud/Ceph/Introducing-Red-Hat-Ceph-Storage-Architecture/index.html" title="Ceph Series (Chapter 1): Introducing Red Hat Ceph Storage Architecture"><img class="cover" src="https://blog.sunhaoyang.net/images/Ceph.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-15</div><div class="info-item-2">Ceph Series (Chapter 1): Introducing Red Hat Ceph Storage Architecture</div></div><div class="info-2"><div class="info-item-1">Here, I will explain and introduce the basic conception of Red Hat Ceph Personas, that is the people who would use Ceph.</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Operations Development Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-Ceph"><span class="toc-number">1.</span> <span class="toc-text">What is Ceph?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deployment-Plan-Table"><span class="toc-number">2.</span> <span class="toc-text">Deployment Plan Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prerequisites"><span class="toc-number">3.</span> <span class="toc-text">Prerequisites</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-the-specified-hostname"><span class="toc-number">3.1.</span> <span class="toc-text">Setting the specified hostname</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Setting-the-resolution-between-the-cluster"><span class="toc-number">3.2.</span> <span class="toc-text">Setting the resolution between the cluster</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Configuring-the-dnf-software-repository"><span class="toc-number">3.3.</span> <span class="toc-text">Configuring the dnf software repository</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Updating-and-generating-the-cache-for-the-dnf-package-manager"><span class="toc-number">3.4.</span> <span class="toc-text">Updating and generating the cache for the dnf package manager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Installing-the-necessary-software-packages"><span class="toc-number">3.5.</span> <span class="toc-text">Installing the necessary software packages</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Enabling-NTP-synchronization"><span class="toc-number">3.6.</span> <span class="toc-text">Enabling NTP synchronization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Installing-cephadm"><span class="toc-number">3.7.</span> <span class="toc-text">Installing cephadm</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deploying-a-new-ceph-cluster"><span class="toc-number">4.</span> <span class="toc-text">Deploying a new ceph cluster</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deploying-OSD-resources"><span class="toc-number">5.</span> <span class="toc-text">Deploying OSD resources</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Add-new-hosts-to-the-cluster"><span class="toc-number">6.</span> <span class="toc-text">Add new hosts to the cluster</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Assigning-new-management-privileges"><span class="toc-number">7.</span> <span class="toc-text">Assigning new management privileges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Check-the-status-of-the-Ceph-cluster"><span class="toc-number">8.</span> <span class="toc-text">Check the status of the Ceph cluster</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Language/English/20250123/index.html" title="2025/01/23 English accumulation"><img src="https://blog.sunhaoyang.net/images/English.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/01/23 English accumulation"/></a><div class="content"><a class="title" href="/Language/English/20250123/index.html" title="2025/01/23 English accumulation">2025/01/23 English accumulation</a><time datetime="2025-01-23T05:23:01.000Z" title="Created 2025-01-23 13:23:01">2025-01-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Cloud/Ceph/Deploying-the-ceph-cluster-by-cephadm/index.html" title="Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm"><img src="https://blog.sunhaoyang.net/images/Ceph.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm"/></a><div class="content"><a class="title" href="/Cloud/Ceph/Deploying-the-ceph-cluster-by-cephadm/index.html" title="Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm">Ceph Series (Chapter 0): Deploying the ceph cluster by cephadm</a><time datetime="2025-01-22T11:32:07.000Z" title="Created 2025-01-22 19:32:07">2025-01-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Markdown/Complete-Guide-to-Markdown-shortcuts-for-typora/index.html" title="Complete Guide to Markdown shortcuts for typora"><img src="https://blog.sunhaoyang.net/images/Markdown.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Complete Guide to Markdown shortcuts for typora"/></a><div class="content"><a class="title" href="/Tools/Markdown/Complete-Guide-to-Markdown-shortcuts-for-typora/index.html" title="Complete Guide to Markdown shortcuts for typora">Complete Guide to Markdown shortcuts for typora</a><time datetime="2025-01-21T12:05:18.000Z" title="Created 2025-01-21 20:05:18">2025-01-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Markdown/Complete-Guide-to-Markdown-Features/index.html" title="Complete Guide to Markdown Features"><img src="https://blog.sunhaoyang.net/images/Markdown.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Complete Guide to Markdown Features"/></a><div class="content"><a class="title" href="/Tools/Markdown/Complete-Guide-to-Markdown-Features/index.html" title="Complete Guide to Markdown Features">Complete Guide to Markdown Features</a><time datetime="2025-01-18T11:07:44.000Z" title="Created 2025-01-18 19:07:44">2025-01-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Language/English/20250115/index.html" title="2025/01/15 English accumulation"><img src="https://blog.sunhaoyang.net/images/English.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/01/15 English accumulation"/></a><div class="content"><a class="title" href="/Language/English/20250115/index.html" title="2025/01/15 English accumulation">2025/01/15 English accumulation</a><time datetime="2025-01-15T07:30:44.000Z" title="Created 2025-01-15 15:30:44">2025-01-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <span>辽公网安备21029602001011号</span>
+</a>
+<a href="https://beian.miit.gov.cn/" target="_blank">
+  <span>辽ICP备2025048274号-1</span>
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
