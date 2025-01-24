@@ -132,6 +132,120 @@
       </tags>
   </entry>
   <entry>
+    <title>Scrum Guide(Part1 of 2)</title>
+    <url>//Management/Scrum/Scrum-Guide1/index.html</url>
+    <content><![CDATA[<h2 id="Icebreaking-topics"><a href="#Icebreaking-topics" class="headerlink" title="Icebreaking topics"></a>Icebreaking topics</h2><p>The evolution of agile management indeed shows how it has expanded and gained popularity across various industries over time.</p>
+<p>Here’s an analysis of agile management from the perspective of being a product of “involution” in China:</p>
+<table>
+<thead>
+<tr>
+<th align="center">2000</th>
+<th align="center">2005</th>
+<th align="center">2010</th>
+<th align="center">2015</th>
+<th align="center">2020</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">IT TELECOM(internet 2G)</td>
+<td align="center">GAMING(intranet 3G)</td>
+<td align="center">INTERNET(mobile internet 4G)</td>
+<td align="center">BANKING(Alibaba)</td>
+<td align="center">PHARMACY(COVID-19) FMCG(Tik Tok) AutoMobile(Tesla)</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p><code>2000: IT and Telecommunications Industry</code></p>
+<p>The origin of agile management can be traced back to the release of the Agile Manifesto in 2001. At that time, the IT and telecommunications industries were facing rapid technological changes and uncertain market demands. The traditional waterfall development model struggled to adapt. This led to the emergence of agile methods, such as Scrum and Extreme Programming (XP), aimed at improving development efficiency and adaptability.</p>
+</li>
+<li><p><code>2005: Gaming Industry</code></p>
+<p>The gaming industry’s demand for innovation and rapid iteration made agile methods a major trend. In game development, fast prototyping, quick incorporation of user feedback, and cross-department collaboration became critical. Agile methods helped teams manage complexity and shorten product development cycles.</p>
+</li>
+<li><p><code>2010: Internet Industry</code></p>
+<p>The explosive growth of the internet industry brought about fierce market competition. User experience, rapid product releases, and continuous iteration became key to survival. Agile management became the standard for internet companies, enabling small, incremental progress and frequent delivery to enhance user satisfaction and market responsiveness.</p>
+</li>
+<li><p><code>2015: Banking and Financial Industry</code></p>
+<p>Amid the wave of digital transformation, traditional financial institutions began to feel the competitive pressure from tech companies. To accelerate product development and adapt to regulatory changes, banks and financial organizations started adopting agile management methods, establishing innovation labs and implementing agile team collaboration to improve competitiveness.</p>
+</li>
+<li><p><code>2020: Pharmaceutical Industries</code></p>
+<p>The COVID-19 pandemic further drove the adoption of agile practices, especially in vaccine development and drug production, where rapid trials, real-time feedback, and cross-team collaboration became crucial.</p>
+</li>
+</ul>
+<p>Therefore, businesses transitioning to agile practices is not without reason. It is a means of surviving the pressures and challenges brought about by industry-wide “involution.” Survival of the fittest, as nature dictates, follows the law of natural selection.</p>
+<hr>
+<h2 id="Agile"><a href="#Agile" class="headerlink" title="Agile"></a>Agile</h2><h3 id="What-is-Agile"><a href="#What-is-Agile" class="headerlink" title="What is Agile?"></a>What is Agile?</h3><p><code>Agile</code> is essentially a mindset, a philosophy for responding flexibly to rapid changes, complexity, and uncertainty.</p>
+<h3 id="Methods"><a href="#Methods" class="headerlink" title="Methods"></a>Methods</h3><p>It includes various kind of methods: Kanban, Extreme Programming(XP), BDD, Scrum and so forth.</p>
+<h3 id="4-Values"><a href="#4-Values" class="headerlink" title="4 Values"></a>4 Values</h3><ul>
+<li><p><code>Individuals and interactions over processes and tools</code></p>
+<p>Our processes and tools should provide services for developers, for people. Effective processes and useful tools should provide convenience for our work.</p>
+<p>Effectiveness-oriented processes&#x2F;tools, rather than oversight-oriented processes&#x2F;tools. Please learn more in <a href="#taylorism">Taylorism</a>.</p>
+</li>
+<li><p><code>Working software over comprehensive documentation</code></p>
+<p>The best design documentation is actually the test cases.</p>
+<p>Substance over form, code over text.</p>
+</li>
+<li><p><code>Customer collaboration over contract negotiation</code></p>
+<p>We should strive for win-win cooperation, not adversarial negotiation.</p>
+<p>Let the other party make money first, and then we can make money.</p>
+</li>
+<li><p><code>Responding to change over following a plan</code></p>
+<p>We prefer plans in the form of actions (verbs) rather than in the form of nouns.</p>
+<p>Nothing is set in stone; the only constant is change.</p>
+</li>
+</ul>
+<h3 id="12-Principles"><a href="#12-Principles" class="headerlink" title="12 Principles"></a>12 Principles</h3><p>More detailed infomation, please follow the <a href="https://agilemanifesto.org/principles.html">agilemanifesto</a>.</p>
+<h3 id="Taylorism"><a href="#Taylorism" class="headerlink" title="Taylorism"></a>Taylorism</h3><p>It is so ridiculous to treat people as resources.</p>
+<p>The management in the IT and construction industries is lagging because both have been modeled after the management practices of the manufacturing industry.</p>
+<p>In 1890, Taylorism gave birth to terms like ‘bean counters,’ ‘minute men,’ ‘blue-collar workers,’ and ‘time sheets,’ all of which are associated with oversight-oriented practice. This only leads to the so-called power struggles and conflict between managers and workers.</p>
+<hr>
+<h2 id="Scrum"><a href="#Scrum" class="headerlink" title="Scrum"></a>Scrum</h2><p>Having introduced Agile, I will now focus on the Scrum methodology.</p>
+<h3 id="What-is-Scrum"><a href="#What-is-Scrum" class="headerlink" title="What is Scrum?"></a>What is Scrum?</h3><p><code>Scrum</code> originates from <code>rugby</code>.</p>
+<p><strong>Business Perspective: Quickly and continuously turning innovation into value.</strong></p>
+<p><strong>Managerial Perspective: Creating the maximum value with limited time and cost.</strong></p>
+<h3 id="3-Core-Practices"><a href="#3-Core-Practices" class="headerlink" title="3 Core Practices"></a>3 Core Practices</h3><ul>
+<li><p><code>Value Prioritisation</code></p>
+<p>Prioritising tasks based on the commercial value of the product.</p>
+</li>
+<li><p><code>Parallel Processes</code></p>
+<p>Bottlenecks and delays in a single process are addressed.</p>
+</li>
+<li><p><code>Superteam</code></p>
+<p>Eliminate collaboration dependencies and reduce waste of unused skills.</p>
+</li>
+</ul>
+<h3 id="Differences-between-Scrum-and-Waterfall"><a href="#Differences-between-Scrum-and-Waterfall" class="headerlink" title="Differences between Scrum and Waterfall"></a>Differences between Scrum and Waterfall</h3><p>The Project Management Triangle: Scope, Time, and Cost, all work together in a balanced way to impact quality.</p>
+<ul>
+<li><p><code>Scope</code></p>
+</li>
+<li><p><code>Time</code></p>
+</li>
+<li><p><code>cost</code></p>
+</li>
+<li><p><code>Quality</code></p>
+</li>
+</ul>
+<p>Different management approaches handle problems in different ways.</p>
+<ul>
+<li><p><code>Waterfall</code></p>
+<p>Fixed scope, compressed cost.</p>
+</li>
+<li><p><code>Scrum</code></p>
+<p>Maximize value with fixed cost.</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Prioritize doing the tasks that create the most value.</li>
+<li><input disabled="" type="checkbox"> Expanding the project scope while keeping the cost unchanged puts pressure on the team.</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Management</category>
+      </categories>
+      <tags>
+        <tag>Scrum</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker Series (Chapter 0): Installing docker-engine in Ubuntu</title>
     <url>//Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html</url>
     <content><![CDATA[<h2 id="What-is-Docker"><a href="#What-is-Docker" class="headerlink" title="What is Docker?"></a>What is Docker?</h2><p>The name <code>Docker</code> is derived from the term used in maritime shipping, referring to <code>dockworkers</code>. It serves as a metaphorical representation.</p>
