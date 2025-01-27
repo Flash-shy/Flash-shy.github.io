@@ -1,6 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker Series (Chapter 2): Creating and Using containers</title>
+    <url>//Cloud/Docker/Creating-and-using-containers/index.html</url>
+    <content><![CDATA[<blockquote>
+<p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to create and use Docker images, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Building-and-using-images/index.html">Docker Series (Chapter 1): Building and using images</a>.</p>
+</blockquote>
+<p>Alright, let’s continue learning the following Chapter.</p>
+<h2 id="Best-Practices-for-Building-Dockerfiles"><a href="#Best-Practices-for-Building-Dockerfiles" class="headerlink" title="Best Practices for Building Dockerfiles"></a>Best Practices for Building Dockerfiles</h2><ol>
+<li><p>Containers should be ephemeral&#x2F;temporary.</p>
+</li>
+<li><p>Avoid installing unnecessary packages.</p>
+</li>
+<li><p>Each container should have only one purpose.</p>
+</li>
+<li><p>Avoid having too many layers in a container.</p>
+</li>
+<li><p>Multi-line sorting.</p>
+</li>
+<li><p>Leveraging cache.</p>
+</li>
+</ol>
+<p>Let me list an example here.</p>
+<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Base image</span></span><br><span class="line"><span class="keyword">FROM</span> httpd</span><br><span class="line"><span class="comment"># The person who creates and maintains it</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> Haoyang Sun</span><br><span class="line"><span class="comment"># RUN command to execute</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">echo</span> hello container &gt; \</span></span><br><span class="line"><span class="language-bash">/usr/local/apache2/htdocs/index.html</span></span><br><span class="line"><span class="comment"># expose port as 80</span></span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">80</span></span><br><span class="line"><span class="comment"># Define the working directory</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /usr/local/apache2/htdocs</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s use the Dockerfile to create a new image here.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker build -t web:v1 .</span><br><span class="line">[+] Building 14.4s (8/8) FINISHED                                docker:default</span><br><span class="line"> =&gt; [internal] load build definition from Dockerfile                       0.0s</span><br><span class="line"> =&gt; =&gt; transferring dockerfile: 189B                                       0.0s</span><br><span class="line"> =&gt; WARN: MaintainerDeprecated: Maintainer instruction is deprecated in f  0.0s</span><br><span class="line"> =&gt; [internal] load metadata for docker.io/library/httpd:latest            4.8s</span><br><span class="line"> =&gt; [auth] library/httpd:pull token for registry-1.docker.io               0.0s</span><br><span class="line"> =&gt; [internal] load .dockerignore                                          0.0s</span><br><span class="line"> =&gt; =&gt; transferring context: 2B                                            0.0s</span><br><span class="line"> =&gt; [1/3] FROM docker.io/library/httpd:latest@sha256:437b9f7d469dd606fa6d  8.9s</span><br><span class="line"> =&gt; =&gt; resolve docker.io/library/httpd:latest@sha256:437b9f7d469dd606fa6d  0.0s</span><br><span class="line"> =&gt; =&gt; sha256:3b71e7157e7a19c02c985d0962e01b5bbda6e329b24 2.10kB / 2.10kB  0.0s</span><br><span class="line"> =&gt; =&gt; sha256:c14eb63a15a0449b7f25117f57bc1846c023cd706769acb 145B / 145B  1.7s</span><br><span class="line"> =&gt; =&gt; sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d 32B / 32B  0.5s</span><br><span class="line"> =&gt; =&gt; sha256:437b9f7d469dd606fa6d2a5f9a3be55fe3af7e0c6 10.16kB / 10.16kB  0.0s</span><br><span class="line"> =&gt; =&gt; sha256:f7d8bafbd9a9fc570c19628411a8441e8dc6697aa43 7.88kB / 7.88kB  0.0s</span><br><span class="line"> =&gt; =&gt; sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b5 28.21MB / 28.21MB  7.1s</span><br><span class="line"> =&gt; =&gt; sha256:abbcd5aab3664cf64a964a4c608f66689db8bcfe8ab 4.20MB / 4.20MB  4.9s</span><br><span class="line"> =&gt; =&gt; sha256:04e5e6c6b4973d97b8b076a550d50ef5ddbfc6d12 26.06MB / 26.06MB  8.4s</span><br><span class="line"> =&gt; =&gt; sha256:7f5fb3689eaee4c87c2455a8e061d6bb52da300369b0325 293B / 293B  5.4s</span><br><span class="line"> =&gt; =&gt; extracting sha256:af302e5c37e9dc1dbe2eadc8f5059d82a914066b541b0d1a  0.6s</span><br><span class="line"> =&gt; =&gt; extracting sha256:c14eb63a15a0449b7f25117f57bc1846c023cd706769acb8  0.0s</span><br><span class="line"> =&gt; =&gt; extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6  0.0s</span><br><span class="line"> =&gt; =&gt; extracting sha256:abbcd5aab3664cf64a964a4c608f66689db8bcfe8abea5b9  0.1s</span><br><span class="line"> =&gt; =&gt; extracting sha256:04e5e6c6b4973d97b8b076a550d50ef5ddbfc6d125439f26  0.3s</span><br><span class="line"> =&gt; =&gt; extracting sha256:7f5fb3689eaee4c87c2455a8e061d6bb52da300369b03257  0.0s</span><br><span class="line"> =&gt; [2/3] RUN echo hello container &gt;   /usr/local/apache2/htdocs/index.ht  0.5s</span><br><span class="line"> =&gt; [3/3] WORKDIR /usr/local/apache2/htdocs                                0.0s</span><br><span class="line"> =&gt; exporting to image                                                     0.1s</span><br><span class="line"> =&gt; =&gt; exporting layers                                                    0.0s</span><br><span class="line"> =&gt; =&gt; writing image sha256:e30e7b98cd48deef0229fbdea27d499b039bf06f2bf3c  0.0s</span><br><span class="line"> =&gt; =&gt; naming to docker.io/library/web:v1                                  0.0s</span><br><span class="line"></span><br><span class="line"> 1 warning found (use docker --debug to expand):</span><br><span class="line"> - MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 3)</span><br></pre></td></tr></table></figure>
+
+<p>After building the iamge called: web:v1, let’s check the list of images.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED         SIZE</span><br><span class="line">web                                                                                                      v1        e30e7b98cd48   7 seconds ago   148MB</span><br><span class="line">ubuntu                                                                                                   20.04     9df6d6105df2   5 months ago    72.8MB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<h2 id="Best-Practices-for-naming-the-image"><a href="#Best-Practices-for-naming-the-image" class="headerlink" title="Best Practices for naming the image"></a>Best Practices for naming the image</h2><p>Obviously, We successfully creating a new images about 7 seconds ago. The image’s name is web and its tag is v1. Its size is about 148MB.</p>
+<p>So, what is the reason we could quickly find the image we want?</p>
+<h3 id="Image-naming-format"><a href="#Image-naming-format" class="headerlink" title="Image naming format"></a>Image naming format</h3><p><code>REPOSITORY+TAG</code>. It is recommended to use <code>version number</code> as the naming convention.</p>
+<p>A simple and clear image naming format allows users to quickly identify the image they need without the need for testing.</p>
+<h3 id="Explanation-of-the-‘latest’-tag-and-its-usage"><a href="#Explanation-of-the-‘latest’-tag-and-its-usage" class="headerlink" title="Explanation of the ‘latest’ tag and its usage"></a>Explanation of the ‘latest’ tag and its usage</h3><p>If <code>no tag</code> is specified when building the image, the default <code>latest</code> tag will be used.</p>
+<p>Therefore, when you see ‘latest’ as the tag of an image, it does not necessarily mean that this is the latest version. It simply means that no tag was specified when the image was created, and nothing more.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker build -t web .</span><br><span class="line">[+] Building 2.4s (8/8) FINISHED                                                                                                                                               docker:default</span><br><span class="line"> =&gt; [internal] load build definition from Dockerfile                                                                                                                                     0.0s</span><br><span class="line"> =&gt; =&gt; transferring dockerfile: 189B                                                                                                                                                     0.0s</span><br><span class="line"> =&gt; WARN: MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 3)                                                                                    0.0s</span><br><span class="line"> =&gt; [internal] load metadata for docker.io/library/httpd:latest                                                                                                                          2.3s</span><br><span class="line"> =&gt; [auth] library/httpd:pull token for registry-1.docker.io                                                                                                                             0.0s</span><br><span class="line"> =&gt; [internal] load .dockerignore                                                                                                                                                        0.0s</span><br><span class="line"> =&gt; =&gt; transferring context: 2B                                                                                                                                                          0.0s</span><br><span class="line"> =&gt; [1/3] FROM docker.io/library/httpd:latest@sha256:437b9f7d469dd606fa6d2a5f9a3be55fe3af7e0c66e0329da8c14b291ae0d31c                                                                    0.0s</span><br><span class="line"> =&gt; CACHED [2/3] RUN echo hello container &gt;   /usr/local/apache2/htdocs/index.html                                                                                                       0.0s</span><br><span class="line"> =&gt; CACHED [3/3] WORKDIR /usr/local/apache2/htdocs                                                                                                                                       0.0s</span><br><span class="line"> =&gt; exporting to image                                                                                                                                                                   0.0s</span><br><span class="line"> =&gt; =&gt; exporting layers                                                                                                                                                                  0.0s</span><br><span class="line"> =&gt; =&gt; writing image sha256:e30e7b98cd48deef0229fbdea27d499b039bf06f2bf3c1d137230e5266cd40a5                                                                                             0.0s</span><br><span class="line"> =&gt; =&gt; naming to docker.io/library/web                                                                                                                                                   0.0s</span><br><span class="line"></span><br><span class="line"> 1 warning found (use docker --debug to expand):</span><br><span class="line"> - MaintainerDeprecated: Maintainer instruction is deprecated in favor of using label (line 3)</span><br></pre></td></tr></table></figure>
+
+<p>It is visibly that each period of creating the same image is <code>zero</code>.</p>
+<p>Here is the function of <code>cache</code>. Because I have already creating the same image before, it may reuse the cache this time.</p>
+<p>Therefore, it will dramatically shorten the creating time.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker images</span><br><span class="line">REPOSITORY                                                                                               TAG       IMAGE ID       CREATED          SIZE</span><br><span class="line">web                                                                                                      latest    e30e7b98cd48   15 minutes ago   148MB</span><br><span class="line">web                                                                                                      v1        e30e7b98cd48   15 minutes ago   148MB</span><br><span class="line">ubuntu                                                                                                   20.04     9df6d6105df2   5 months ago     72.8MB</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>We could find there are two images, both of them are called web and the image id are the same. The difference is <code>tag</code>, this time I did not add the tag after the image name.</p>
+<p>Therefore, the default tag is <code>latest</code>.</p>
+<h2 id="Basic-commands-about-images"><a href="#Basic-commands-about-images" class="headerlink" title="Basic commands about images"></a>Basic commands about images</h2><ul>
+<li><code>docker build -t image_name:tag_name .</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t web:v1 .</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>docker commit container_name image_name:tag_name</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker commit web web:v2</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>docker save image_name:tag_name -o compression_name.tar</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker save web:v2 -o web_v2.tar</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>docker load -i compression_name</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">scp web_v2.tar user@ip:/path/to/images</span><br><span class="line">docker load -i web_v2.tar</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-Methods-of-creating-containers-with-image"><a href="#2-Methods-of-creating-containers-with-image" class="headerlink" title="2 Methods of creating containers with image"></a>2 Methods of creating containers with image</h2><p>As we discuss in <a href="https://blog.sunhaoyang.net/Cloud/Docker/Building-and-using-images/index.html">Docker Series (Chapter 1): Building and using images</a>, there are two methods to create a container by using an image.</p>
+<ul>
+<li><p><code>docker run</code></p>
+<p><strong>docker run</strong> is a basic Docker command used to directly start a new container. It is ideal for running a container individually to perform simple tasks or experiments.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d -p 8080:80 --name my-container nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>docker compose</code></p>
+<p><strong>docker-compose</strong> is a tool used to define and manage <code>multi-container</code> Docker applications.</p>
+<p>It configures services, networks, volumes, and more through a <code>docker-compose.yaml</code> file. docker-compose is ideal for managing applications made up of multiple containers, simplifying the configuration and startup of containers.</p>
+<p>It is used for one-click start, stop, and management of multiple containers.</p>
+<p>So, <code>docker-compose</code> builds on top of <code>docker run</code>, providing a more efficient and manageable way to handle multiple containers. It is especially useful for managing microservices architectures in development, testing, and production environments.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">Feature</th>
+<th align="center">docker run</th>
+<th align="center">docker-compose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>Use Case</strong></td>
+<td align="center">Single container, simple tasks or testing</td>
+<td align="center">Multiple containers, complex applications, service dependencies management</td>
+</tr>
+<tr>
+<td align="center"><strong>Configuration Method</strong></td>
+<td align="center">Configured through command-line arguments</td>
+<td align="center">Defined through the <code>docker-compose.yml</code> file with multiple containers, networks, volumes, etc.</td>
+</tr>
+<tr>
+<td align="center"><strong>Start Multiple Containers</strong></td>
+<td align="center">Need to start each container individually</td>
+<td align="center">Use <code>docker-compose up</code> to start all containers at once</td>
+</tr>
+<tr>
+<td align="center"><strong>Service Dependency Management</strong></td>
+<td align="center">Manually manage dependencies between containers</td>
+<td align="center">Define dependencies between containers in the <code>docker-compose.yml</code> file</td>
+</tr>
+<tr>
+<td align="center"><strong>Port Mapping</strong></td>
+<td align="center">Manually map ports, set individually for each container</td>
+<td align="center">Unified port mapping management for multiple containers in the <code>docker-compose.yml</code> file</td>
+</tr>
+<tr>
+<td align="center"><strong>File Management</strong></td>
+<td align="center">No file configuration, relies on command-line arguments</td>
+<td align="center">Uses docker-compose.yml file for centralized configuration and service management</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Scrum Guide (Part2 of 2)</title>
     <url>//Management/Scrum/Scrum-Guide2/index.html</url>
     <content><![CDATA[<p>After completing the <a href="https://blog.sunhaoyang.net/Management/Scrum/Scrum-Guide1/index.html">Scrum Guide (Part1 of 2)</a>, I will further explore the structure of Lean and Scrum, along with other related aspects in this chapter.</p>
