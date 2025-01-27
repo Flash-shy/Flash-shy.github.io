@@ -36,25 +36,21 @@
 <p>-t: Allocate a pseudo-TTY (terminal) for the container, so you can see the output and interact with the container. These two flags are usually used together, meaning you want to enter the container and interact with it.</p>
 </li>
 <li><p>–name&#x3D;memfailed</p>
+<p>Assigns a name to the container. In this case, the container is named memfailed. This allows you to reference the container by its name rather than its ID in future commands.</p>
+</li>
+<li><p>-m 500M</p>
+<p>Limits the container’s maximum memory usage to 500MB. If the container exceeds this limit, it will be killed, and an “Out of Memory” (OOM) error will occur.</p>
+</li>
+<li><p>progrium&#x2F;stress</p>
+<p>Specifies the Docker image to run. In this case, it’s the progrium&#x2F;stress image, which contains the stress tool that can be used to generate load on the system.</p>
+</li>
+<li><p>–vm 1</p>
+<p>This means that the stress tool will start one virtual memory load (vm) process. The number 1 indicates that one such process will be started.</p>
+</li>
+<li><p>–vm-bytes 700M</p>
+<p>The –vm-bytes parameter specifies the amount of memory to allocate for each virtual memory load process. In this case, it is set to 700MB. Therefore, the stress tool will attempt to allocate 700MB of virtual memory for the load process.</p>
 </li>
 </ol>
-<p>Assigns a name to the container. In this case, the container is named memfailed. This allows you to reference the container by its name rather than its ID in future commands.</p>
-<ol start="3">
-<li>-m 500M</li>
-</ol>
-<p>Limits the container’s maximum memory usage to 500MB. If the container exceeds this limit, it will be killed, and an “Out of Memory” (OOM) error will occur.</p>
-<ol start="4">
-<li>progrium&#x2F;stress</li>
-</ol>
-<p>Specifies the Docker image to run. In this case, it’s the progrium&#x2F;stress image, which contains the stress tool that can be used to generate load on the system.</p>
-<ol start="5">
-<li>–vm 1</li>
-</ol>
-<p>This means that the stress tool will start one virtual memory load (vm) process. The number 1 indicates that one such process will be started.</p>
-<ol start="6">
-<li>–vm-bytes 700M</li>
-</ol>
-<p>The –vm-bytes parameter specifies the amount of memory to allocate for each virtual memory load process. In this case, it is set to 700MB. Therefore, the stress tool will attempt to allocate 700MB of virtual memory for the load process.</p>
 <p>It is clear for us why the result is different. 400M is legal, 700M is illegal.</p>
 <p>Therefore, we set the parameter <code>-m</code> or <code>--memory</code> works to our containers.</p>
 <h2 id="Managing-CPU-Quotas"><a href="#Managing-CPU-Quotas" class="headerlink" title="Managing CPU Quotas"></a>Managing CPU Quotas</h2><p>By default, all containers can use the same CPU resources without any restrictions.</p>
