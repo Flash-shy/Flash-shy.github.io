@@ -1,0 +1,322 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Docker Series (Chapter 3): Managing-Container-Resources | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="This article mainly introduces memory quotas, CPU quotas, and disk quotas for containers.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Series (Chapter 3): Managing-Container-Resources">
+<meta property="og:url" content="https://blog.sunhaoyang.net/Cloud/Docker/Managing-container-resources/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="This article mainly introduces memory quotas, CPU quotas, and disk quotas for containers.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/Docker.png">
+<meta property="article:published_time" content="2025-01-27T05:46:50.000Z">
+<meta property="article:modified_time" content="2025-01-27T07:24:09.762Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/Docker.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://blog.sunhaoyang.net/Cloud/Docker/Managing-container-resources/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Docker Series (Chapter 3): Managing-Container-Resources',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Docker Series (Chapter 3): Managing-Container-Resources</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Docker Series (Chapter 3): Managing-Container-Resources</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-01-27T05:46:50.000Z" title="Created 2025-01-27 13:46:50">2025-01-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-01-27T07:24:09.762Z" title="Updated 2025-01-27 15:24:09">2025-01-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Cloud/">Cloud</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>8mins</span></span></div></div></div><article class="container post-content" id="article-container"><blockquote>
+<p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to create and use Docker images, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Building-and-using-images/index.html">Docker Series (Chapter 1): Building and using images</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to create and use Docker containers, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Creating-and-using-containers/index.html">Docker Series (Chapter 2): Creating and Using containers</a>.</p>
+</blockquote>
+<p>Up to now, you could install the docker-engine in Ubuntu operating system, pull docker images from public&#x2F;private image repositories, develop Dockerfile, use the Dockerfile to create containers and use some command to do some execution interacting with containers.</p>
+<p>However, do you have some ideas about how are the resources of a created container bound? How much memory, how much disk, and what are the allocated IOPS?</p>
+<p>In this Chapter3, let’s find the answer.</p>
+<h2 id="Memory-Quotas"><a href="#Memory-Quotas" class="headerlink" title="Memory Quotas"></a>Memory Quotas</h2><h3 id="Identifying-issues-by-observing-memory-usage"><a href="#Identifying-issues-by-observing-memory-usage" class="headerlink" title="Identifying issues by observing memory usage"></a>Identifying issues by observing memory usage</h3><p>At first, let me create two containers.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name=http1 httpd</span><br><span class="line">9871abf3948eeec881498356073c4ce2b11c1631d533a92ce44be64b088af880</span><br><span class="line"></span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name=http2 httpd</span><br><span class="line">92cfd46a822b69bdc55fc1460e8698a79a4af7382cda9b038b45654017aef0a2</span><br></pre></td></tr></table></figure>
+
+<p>Then, let’s observe the memory size of each container.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it http1 grep MemTotal /proc/meminfo</span><br><span class="line">MemTotal:       32741384 kB</span><br><span class="line"></span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it http2 grep MemTotal /proc/meminfo</span><br><span class="line">MemTotal:       32741384 kB</span><br></pre></td></tr></table></figure>
+
+<p>Finally, let’s check the memory size of local physical machine.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ free -h</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:           31Gi       7.5Gi       1.7Gi        13Gi        22Gi       9.2Gi</span><br><span class="line">Swap:          31Gi       335Mi        31Gi</span><br></pre></td></tr></table></figure>
+
+<p>Based on the hands-on exercise just now, it is obviously that <code>the memory allocation for each container equals the total memory of the physical host</code>. This means better performance, but it also means that as business demands increase, resource contention may occur. This is something that should generally be avoided during operational planning.</p>
+<h3 id="Managing-memory-quotas"><a href="#Managing-memory-quotas" class="headerlink" title="Managing memory quotas"></a>Managing memory quotas</h3><p>We could use <code>-m</code> or <code>--memory</code> parameter to specify the limitation of memory usage, to allocate the memory quotas to containers.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -it --name=memlimit -m 500M progrium/stress \</span><br><span class="line">--vm 1 --vm-bytes 400M</span><br><span class="line">stress: dbug: [1] using backoff sleep of 3000us</span><br><span class="line">stress: info: [1] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd</span><br><span class="line">stress: dbug: [1] --&gt; hogvm worker 1 [8] forked</span><br><span class="line">stress: dbug: [8] allocating 524288000 bytes ...</span><br><span class="line">stress: dbug: [8] touching bytes in strides of 4096 bytes ...</span><br><span class="line">stress: dbug: [8] freed 524288000 bytes</span><br><span class="line">stress: dbug: [8] allocating 524288000 bytes ...</span><br><span class="line">stress: dbug: [8] touching bytes in strides of 4096 bytes ...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -it --name=memfailed -m 500M progrium/stress \</span><br><span class="line">--vm 1 --vm-bytes 700M</span><br><span class="line">stress: info: [1] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd</span><br><span class="line">stress: dbug: [1] using backoff sleep of 3000us</span><br><span class="line">stress: dbug: [1] --&gt; hogvm worker 1 [8] forked</span><br><span class="line">stress: dbug: [8] allocating 734003200 bytes ...</span><br><span class="line">stress: dbug: [8] touching bytes in strides of 4096 bytes ...</span><br><span class="line">stress: FAIL: [1] (416) &lt;-- worker 8 got signal 9</span><br><span class="line">stress: WARN: [1] (418) now reaping child worker processes</span><br><span class="line">stress: FAIL: [1] (422) kill error: No such process</span><br><span class="line">stress: FAIL: [1] (452) failed run completed in 0s</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>-it</p>
+<p>-i: Keep the container’s standard input (stdin) open, allowing you to interact with the container.</p>
+<p>-t: Allocate a pseudo-TTY (terminal) for the container, so you can see the output and interact with the container. These two flags are usually used together, meaning you want to enter the container and interact with it.</p>
+</li>
+<li><p>–name&#x3D;memfailed</p>
+</li>
+</ol>
+<p>Assigns a name to the container. In this case, the container is named memfailed. This allows you to reference the container by its name rather than its ID in future commands.</p>
+<ol start="3">
+<li>-m 500M</li>
+</ol>
+<p>Limits the container’s maximum memory usage to 500MB. If the container exceeds this limit, it will be killed, and an “Out of Memory” (OOM) error will occur.</p>
+<ol start="4">
+<li>progrium&#x2F;stress</li>
+</ol>
+<p>Specifies the Docker image to run. In this case, it’s the progrium&#x2F;stress image, which contains the stress tool that can be used to generate load on the system.</p>
+<ol start="5">
+<li>–vm 1</li>
+</ol>
+<p>This means that the stress tool will start one virtual memory load (vm) process. The number 1 indicates that one such process will be started.</p>
+<ol start="6">
+<li>–vm-bytes 700M</li>
+</ol>
+<p>The –vm-bytes parameter specifies the amount of memory to allocate for each virtual memory load process. In this case, it is set to 700MB. Therefore, the stress tool will attempt to allocate 700MB of virtual memory for the load process.</p>
+<p>It is clear for us why the result is different. 400M is legal, 700M is illegal.</p>
+<p>Therefore, we set the parameter <code>-m</code> or <code>--memory</code> works to our containers.</p>
+<h2 id="Managing-CPU-Quotas"><a href="#Managing-CPU-Quotas" class="headerlink" title="Managing CPU Quotas"></a>Managing CPU Quotas</h2><p>By default, all containers can use the same CPU resources without any restrictions.</p>
+<p>Similar to memory, when the CPU demand of a container increases, it will lead to CPU resource contention. <code>However, unlike memory, where an absolute amount is specified, CPU allocation is done by specifying a relative weight.</code></p>
+<p>The <code>--cpu-shares parameter</code> is used to allocate CPU resources.</p>
+<p><code>By default, this value is set to 1024</code>.</p>
+<p><code>Note that when the workload in the current container is idle, other containers have the right to use its idle CPU cycles, which ensures the performance of the workloads.</code></p>
+<blockquote>
+<p>CPU resource limits only take effect when the physical machine’s resources are insufficient, and the allocation is based on priority. When other containers are idle, the busy containers can utilize all available CPU resources.</p>
+</blockquote>
+<h2 id="Managing-I-O-Quotas"><a href="#Managing-I-O-Quotas" class="headerlink" title="Managing I&#x2F;O Quotas"></a>Managing I&#x2F;O Quotas</h2><p>We could use the parameter <code>--blkio-weight 300</code> to set the limitation of I&#x2F;O quotas.</p>
+<p>Under normal circumstances, a container with a weight of 600 will have twice the I&#x2F;O capacity compared to one with a weight of 300. You can test the I&#x2F;O performance using the following command.</p>
+<p>In actual tests, there is no resource contention. <code>This setting will only be reflected during I/O contention.</code> So, 600 weight is faster than 300 weight, but it is not twice the I&#x2F;O capacity.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name 600io --blkio-weight 600 httpd</span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it 600io /bin/bash</span><br><span class="line">root@fda33d6184a5:/usr/local/apache2# time dd if=/dev/zero of=test.out bs=1M count=10240</span><br><span class="line">10240+0 records in</span><br><span class="line">10240+0 records out</span><br><span class="line">10737418240 bytes (11 GB, 10 GiB) copied, 35.8148 s, 300 MB/s</span><br><span class="line"></span><br><span class="line">real 0m35.959s</span><br><span class="line">user 0m0.011s</span><br><span class="line">sys 0m14.162s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name 300io --blkio-weight 300 httpd</span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it 300io /bin/bash</span><br><span class="line">root@7d406deec8ac:/usr/local/apache2# time dd if=/dev/zero of=test.out bs=1M count=10240</span><br><span class="line">10240+0 records in</span><br><span class="line">10240+0 records out</span><br><span class="line">10737418240 bytes (11 GB, 10 GiB) copied, 44.8088 s, 240 MB/s</span><br><span class="line"></span><br><span class="line">real 0m44.897s</span><br><span class="line">user 0m0.025s</span><br><span class="line">sys 0m16.777s</span><br></pre></td></tr></table></figure>
+
+<h2 id="The-underlying-implementation-of-resource-limits"><a href="#The-underlying-implementation-of-resource-limits" class="headerlink" title="The underlying implementation of resource limits"></a>The underlying implementation of resource limits</h2><p>Linux uses <code>cgroups</code> to allocate CPU, memory, and I&#x2F;O resource quotas for processes.</p>
+<p>We can view the resource quotas for containers through the settings under <code>/sys/fs/cgroup/</code>.</p>
+<p>In Linux, cgroups (control groups) allow you to manage and allocate resources to processes. For Docker containers, cgroups are used to enforce resource limitations like CPU usage, memory consumption, and disk I&#x2F;O. The resource settings for these containers can be viewed in the &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F; directory, where cgroup-related files and parameters are exposed.</p>
+<p>You can find specific resource limit details for a container by navigating to directories under &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F; that correspond to the container’s cgroup, and checking the values for CPU, memory, and I&#x2F;O usage.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it http1 /bin/bash</span><br><span class="line">root@9871abf3948e:/usr/local/apache2# ls /sys/fs/cgroup/</span><br><span class="line">blkio  cpu  cpu,cpuacct  cpuacct  cpuset  devices  freezer  hugetlb  memory  misc  net_cls  net_cls,net_prio  net_prio perf_event  pids  rdma systemd</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@9871abf3948e:/usr/local/apache2# ls /sys/fs/cgroup/blkio/</span><br><span class="line">blkio.prio.class   blkio.throttle.io_service_bytes_recursive  blkio.throttle.read_bps_device   blkio.throttle.write_iops_device  notify_on_release</span><br><span class="line">blkio.reset_stats   blkio.throttle.io_serviced      blkio.throttle.read_iops_device  cgroup.clone_children        tasks</span><br><span class="line">blkio.throttle.io_service_bytes  blkio.throttle.io_serviced_recursive     blkio.throttle.write_bps_device  cgroup.procs</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net/Cloud/Docker/Managing-container-resources/index.html">https://blog.sunhaoyang.net/Cloud/Docker/Managing-container-resources/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Docker/">Docker</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/Docker.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/Cloud/Docker/Creating-and-using-containers/index.html" title="Docker Series (Chapter 2): Creating and Using containers"><img class="cover" src="https://blog.sunhaoyang.net/images/Docker.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Docker Series (Chapter 2): Creating and Using containers</div></div><div class="info-2"><div class="info-item-1">This article introduces how to create a container based on an existing images and manage container resources as well.</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/Cloud/Docker/Creating-and-using-containers/index.html" title="Docker Series (Chapter 2): Creating and Using containers"><img class="cover" src="https://blog.sunhaoyang.net/images/Docker.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-27</div><div class="info-item-2">Docker Series (Chapter 2): Creating and Using containers</div></div><div class="info-2"><div class="info-item-1">This article introduces how to create a container based on an existing images and manage container resources as well.</div></div></div></a><a class="pagination-related" href="/Cloud/Docker/Building-and-using-images/index.html" title="Docker Series (Chapter 1): Building and using images"><img class="cover" src="https://blog.sunhaoyang.net/images/Docker.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-24</div><div class="info-item-2">Docker Series (Chapter 1): Building and using images</div></div><div class="info-2"><div class="info-item-1">This article introduces how to build a docker image and how to use the image to create the docker container.</div></div></div></a><a class="pagination-related" href="/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html" title="Docker Series (Chapter 0): Installing docker-engine in Ubuntu"><img class="cover" src="https://blog.sunhaoyang.net/images/Docker.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-23</div><div class="info-item-2">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</div></div><div class="info-2"><div class="info-item-1">This article introduces the origins of Docker, its application scenarios, and the installation method in Ubuntu.</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">13</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Memory-Quotas"><span class="toc-number">1.</span> <span class="toc-text">Memory Quotas</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Identifying-issues-by-observing-memory-usage"><span class="toc-number">1.1.</span> <span class="toc-text">Identifying issues by observing memory usage</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Managing-memory-quotas"><span class="toc-number">1.2.</span> <span class="toc-text">Managing memory quotas</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Managing-CPU-Quotas"><span class="toc-number">2.</span> <span class="toc-text">Managing CPU Quotas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Managing-I-O-Quotas"><span class="toc-number">3.</span> <span class="toc-text">Managing I&#x2F;O Quotas</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#The-underlying-implementation-of-resource-limits"><span class="toc-number">4.</span> <span class="toc-text">The underlying implementation of resource limits</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Cloud/Docker/Managing-container-resources/index.html" title="Docker Series (Chapter 3): Managing-Container-Resources"><img src="https://blog.sunhaoyang.net/images/Docker.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker Series (Chapter 3): Managing-Container-Resources"/></a><div class="content"><a class="title" href="/Cloud/Docker/Managing-container-resources/index.html" title="Docker Series (Chapter 3): Managing-Container-Resources">Docker Series (Chapter 3): Managing-Container-Resources</a><time datetime="2025-01-27T05:46:50.000Z" title="Created 2025-01-27 13:46:50">2025-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Cloud/Docker/Creating-and-using-containers/index.html" title="Docker Series (Chapter 2): Creating and Using containers"><img src="https://blog.sunhaoyang.net/images/Docker.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker Series (Chapter 2): Creating and Using containers"/></a><div class="content"><a class="title" href="/Cloud/Docker/Creating-and-using-containers/index.html" title="Docker Series (Chapter 2): Creating and Using containers">Docker Series (Chapter 2): Creating and Using containers</a><time datetime="2025-01-27T00:55:24.000Z" title="Created 2025-01-27 08:55:24">2025-01-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Management/Scrum/Scrum-Guide2/index.html" title="Scrum Guide (Part2 of 2)"><img src="https://blog.sunhaoyang.net/images/Scrum.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Scrum Guide (Part2 of 2)"/></a><div class="content"><a class="title" href="/Management/Scrum/Scrum-Guide2/index.html" title="Scrum Guide (Part2 of 2)">Scrum Guide (Part2 of 2)</a><time datetime="2025-01-26T05:13:34.000Z" title="Created 2025-01-26 13:13:34">2025-01-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Cloud/Docker/Building-and-using-images/index.html" title="Docker Series (Chapter 1): Building and using images"><img src="https://blog.sunhaoyang.net/images/Docker.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker Series (Chapter 1): Building and using images"/></a><div class="content"><a class="title" href="/Cloud/Docker/Building-and-using-images/index.html" title="Docker Series (Chapter 1): Building and using images">Docker Series (Chapter 1): Building and using images</a><time datetime="2025-01-24T10:09:21.000Z" title="Created 2025-01-24 18:09:21">2025-01-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Language/English/20250124/index.html" title="2025/01/24 English accumulation"><img src="https://blog.sunhaoyang.net/images/English.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/01/24 English accumulation"/></a><div class="content"><a class="title" href="/Language/English/20250124/index.html" title="2025/01/24 English accumulation">2025/01/24 English accumulation</a><time datetime="2025-01-24T06:08:28.000Z" title="Created 2025-01-24 14:08:28">2025-01-24</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <span>辽公网安备21029602001011号</span>
+</a>
+<a href="https://beian.miit.gov.cn/" target="_blank">
+  <span>辽ICP备2025048274号-1</span>
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

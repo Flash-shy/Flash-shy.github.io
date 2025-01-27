@@ -1,6 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker Series (Chapter 3): Managing-Container-Resources</title>
+    <url>//Cloud/Docker/Managing-container-resources/index.html</url>
+    <content><![CDATA[<blockquote>
+<p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to create and use Docker images, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Building-and-using-images/index.html">Docker Series (Chapter 1): Building and using images</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to create and use Docker containers, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Creating-and-using-containers/index.html">Docker Series (Chapter 2): Creating and Using containers</a>.</p>
+</blockquote>
+<p>Up to now, you could install the docker-engine in Ubuntu operating system, pull docker images from public&#x2F;private image repositories, develop Dockerfile, use the Dockerfile to create containers and use some command to do some execution interacting with containers.</p>
+<p>However, do you have some ideas about how are the resources of a created container bound? How much memory, how much disk, and what are the allocated IOPS?</p>
+<p>In this Chapter3, let’s find the answer.</p>
+<h2 id="Memory-Quotas"><a href="#Memory-Quotas" class="headerlink" title="Memory Quotas"></a>Memory Quotas</h2><h3 id="Identifying-issues-by-observing-memory-usage"><a href="#Identifying-issues-by-observing-memory-usage" class="headerlink" title="Identifying issues by observing memory usage"></a>Identifying issues by observing memory usage</h3><p>At first, let me create two containers.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name=http1 httpd</span><br><span class="line">9871abf3948eeec881498356073c4ce2b11c1631d533a92ce44be64b088af880</span><br><span class="line"></span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name=http2 httpd</span><br><span class="line">92cfd46a822b69bdc55fc1460e8698a79a4af7382cda9b038b45654017aef0a2</span><br></pre></td></tr></table></figure>
+
+<p>Then, let’s observe the memory size of each container.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it http1 grep MemTotal /proc/meminfo</span><br><span class="line">MemTotal:       32741384 kB</span><br><span class="line"></span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it http2 grep MemTotal /proc/meminfo</span><br><span class="line">MemTotal:       32741384 kB</span><br></pre></td></tr></table></figure>
+
+<p>Finally, let’s check the memory size of local physical machine.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ free -h</span><br><span class="line">              total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:           31Gi       7.5Gi       1.7Gi        13Gi        22Gi       9.2Gi</span><br><span class="line">Swap:          31Gi       335Mi        31Gi</span><br></pre></td></tr></table></figure>
+
+<p>Based on the hands-on exercise just now, it is obviously that <code>the memory allocation for each container equals the total memory of the physical host</code>. This means better performance, but it also means that as business demands increase, resource contention may occur. This is something that should generally be avoided during operational planning.</p>
+<h3 id="Managing-memory-quotas"><a href="#Managing-memory-quotas" class="headerlink" title="Managing memory quotas"></a>Managing memory quotas</h3><p>We could use <code>-m</code> or <code>--memory</code> parameter to specify the limitation of memory usage, to allocate the memory quotas to containers.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -it --name=memlimit -m 500M progrium/stress \</span><br><span class="line">--vm 1 --vm-bytes 400M</span><br><span class="line">stress: dbug: [1] using backoff sleep of 3000us</span><br><span class="line">stress: info: [1] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd</span><br><span class="line">stress: dbug: [1] --&gt; hogvm worker 1 [8] forked</span><br><span class="line">stress: dbug: [8] allocating 524288000 bytes ...</span><br><span class="line">stress: dbug: [8] touching bytes in strides of 4096 bytes ...</span><br><span class="line">stress: dbug: [8] freed 524288000 bytes</span><br><span class="line">stress: dbug: [8] allocating 524288000 bytes ...</span><br><span class="line">stress: dbug: [8] touching bytes in strides of 4096 bytes ...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -it --name=memfailed -m 500M progrium/stress \</span><br><span class="line">--vm 1 --vm-bytes 700M</span><br><span class="line">stress: info: [1] dispatching hogs: 0 cpu, 0 io, 1 vm, 0 hdd</span><br><span class="line">stress: dbug: [1] using backoff sleep of 3000us</span><br><span class="line">stress: dbug: [1] --&gt; hogvm worker 1 [8] forked</span><br><span class="line">stress: dbug: [8] allocating 734003200 bytes ...</span><br><span class="line">stress: dbug: [8] touching bytes in strides of 4096 bytes ...</span><br><span class="line">stress: FAIL: [1] (416) &lt;-- worker 8 got signal 9</span><br><span class="line">stress: WARN: [1] (418) now reaping child worker processes</span><br><span class="line">stress: FAIL: [1] (422) kill error: No such process</span><br><span class="line">stress: FAIL: [1] (452) failed run completed in 0s</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>-it</p>
+<p>-i: Keep the container’s standard input (stdin) open, allowing you to interact with the container.</p>
+<p>-t: Allocate a pseudo-TTY (terminal) for the container, so you can see the output and interact with the container. These two flags are usually used together, meaning you want to enter the container and interact with it.</p>
+</li>
+<li><p>–name&#x3D;memfailed</p>
+</li>
+</ol>
+<p>Assigns a name to the container. In this case, the container is named memfailed. This allows you to reference the container by its name rather than its ID in future commands.</p>
+<ol start="3">
+<li>-m 500M</li>
+</ol>
+<p>Limits the container’s maximum memory usage to 500MB. If the container exceeds this limit, it will be killed, and an “Out of Memory” (OOM) error will occur.</p>
+<ol start="4">
+<li>progrium&#x2F;stress</li>
+</ol>
+<p>Specifies the Docker image to run. In this case, it’s the progrium&#x2F;stress image, which contains the stress tool that can be used to generate load on the system.</p>
+<ol start="5">
+<li>–vm 1</li>
+</ol>
+<p>This means that the stress tool will start one virtual memory load (vm) process. The number 1 indicates that one such process will be started.</p>
+<ol start="6">
+<li>–vm-bytes 700M</li>
+</ol>
+<p>The –vm-bytes parameter specifies the amount of memory to allocate for each virtual memory load process. In this case, it is set to 700MB. Therefore, the stress tool will attempt to allocate 700MB of virtual memory for the load process.</p>
+<p>It is clear for us why the result is different. 400M is legal, 700M is illegal.</p>
+<p>Therefore, we set the parameter <code>-m</code> or <code>--memory</code> works to our containers.</p>
+<h2 id="Managing-CPU-Quotas"><a href="#Managing-CPU-Quotas" class="headerlink" title="Managing CPU Quotas"></a>Managing CPU Quotas</h2><p>By default, all containers can use the same CPU resources without any restrictions.</p>
+<p>Similar to memory, when the CPU demand of a container increases, it will lead to CPU resource contention. <code>However, unlike memory, where an absolute amount is specified, CPU allocation is done by specifying a relative weight.</code></p>
+<p>The <code>--cpu-shares parameter</code> is used to allocate CPU resources.</p>
+<p><code>By default, this value is set to 1024</code>.</p>
+<p><code>Note that when the workload in the current container is idle, other containers have the right to use its idle CPU cycles, which ensures the performance of the workloads.</code></p>
+<blockquote>
+<p>CPU resource limits only take effect when the physical machine’s resources are insufficient, and the allocation is based on priority. When other containers are idle, the busy containers can utilize all available CPU resources.</p>
+</blockquote>
+<h2 id="Managing-I-O-Quotas"><a href="#Managing-I-O-Quotas" class="headerlink" title="Managing I&#x2F;O Quotas"></a>Managing I&#x2F;O Quotas</h2><p>We could use the parameter <code>--blkio-weight 300</code> to set the limitation of I&#x2F;O quotas.</p>
+<p>Under normal circumstances, a container with a weight of 600 will have twice the I&#x2F;O capacity compared to one with a weight of 300. You can test the I&#x2F;O performance using the following command.</p>
+<p>In actual tests, there is no resource contention. <code>This setting will only be reflected during I/O contention.</code> So, 600 weight is faster than 300 weight, but it is not twice the I&#x2F;O capacity.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name 600io --blkio-weight 600 httpd</span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it 600io /bin/bash</span><br><span class="line">root@fda33d6184a5:/usr/local/apache2# time dd if=/dev/zero of=test.out bs=1M count=10240</span><br><span class="line">10240+0 records in</span><br><span class="line">10240+0 records out</span><br><span class="line">10737418240 bytes (11 GB, 10 GiB) copied, 35.8148 s, 300 MB/s</span><br><span class="line"></span><br><span class="line">real 0m35.959s</span><br><span class="line">user 0m0.011s</span><br><span class="line">sys 0m14.162s</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker run -d --name 300io --blkio-weight 300 httpd</span><br><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it 300io /bin/bash</span><br><span class="line">root@7d406deec8ac:/usr/local/apache2# time dd if=/dev/zero of=test.out bs=1M count=10240</span><br><span class="line">10240+0 records in</span><br><span class="line">10240+0 records out</span><br><span class="line">10737418240 bytes (11 GB, 10 GiB) copied, 44.8088 s, 240 MB/s</span><br><span class="line"></span><br><span class="line">real 0m44.897s</span><br><span class="line">user 0m0.025s</span><br><span class="line">sys 0m16.777s</span><br></pre></td></tr></table></figure>
+
+<h2 id="The-underlying-implementation-of-resource-limits"><a href="#The-underlying-implementation-of-resource-limits" class="headerlink" title="The underlying implementation of resource limits"></a>The underlying implementation of resource limits</h2><p>Linux uses <code>cgroups</code> to allocate CPU, memory, and I&#x2F;O resource quotas for processes.</p>
+<p>We can view the resource quotas for containers through the settings under <code>/sys/fs/cgroup/</code>.</p>
+<p>In Linux, cgroups (control groups) allow you to manage and allocate resources to processes. For Docker containers, cgroups are used to enforce resource limitations like CPU usage, memory consumption, and disk I&#x2F;O. The resource settings for these containers can be viewed in the &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F; directory, where cgroup-related files and parameters are exposed.</p>
+<p>You can find specific resource limit details for a container by navigating to directories under &#x2F;sys&#x2F;fs&#x2F;cgroup&#x2F; that correspond to the container’s cgroup, and checking the values for CPU, memory, and I&#x2F;O usage.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:/HDD/learn/docker/apache2$ docker exec -it http1 /bin/bash</span><br><span class="line">root@9871abf3948e:/usr/local/apache2# ls /sys/fs/cgroup/</span><br><span class="line">blkio  cpu  cpu,cpuacct  cpuacct  cpuset  devices  freezer  hugetlb  memory  misc  net_cls  net_cls,net_prio  net_prio perf_event  pids  rdma systemd</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">root@9871abf3948e:/usr/local/apache2# ls /sys/fs/cgroup/blkio/</span><br><span class="line">blkio.prio.class   blkio.throttle.io_service_bytes_recursive  blkio.throttle.read_bps_device   blkio.throttle.write_iops_device  notify_on_release</span><br><span class="line">blkio.reset_stats   blkio.throttle.io_serviced      blkio.throttle.read_iops_device  cgroup.clone_children        tasks</span><br><span class="line">blkio.throttle.io_service_bytes  blkio.throttle.io_serviced_recursive     blkio.throttle.write_bps_device  cgroup.procs</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker Series (Chapter 2): Creating and Using containers</title>
     <url>//Cloud/Docker/Creating-and-using-containers/index.html</url>
     <content><![CDATA[<blockquote>
