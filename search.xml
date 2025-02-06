@@ -1,7 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Docker Series (Chapter 3): Managing-Container-Resources</title>
+    <title>&quot;Docker Series (Chapter 4): Introducing-Container-Network-and-Practising-Container-Data-Management&quot;</title>
+    <url>//Cloud/Docker/Introducing-container-network-and-practising-container-data-management/index.html</url>
+    <content><![CDATA[<blockquote>
+<p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to create and use Docker images, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Building-and-using-images/index.html">Docker Series (Chapter 1): Building and using images</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to create and use Docker containers, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Creating-and-using-containers/index.html">Docker Series (Chapter 2): Creating and Using containers</a>.</p>
+</blockquote>
+<blockquote>
+<p>For guidance on how to manage Docker resources, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Managing-container-resources/index.html">Docker Series (Chapter 3): Managing Container Resources</a>.</p>
+</blockquote>
+<p>This will be the final chapter of the Docker series. In this chapter, I will introduce the native networking and data management aspects of Docker containers.</p>
+<h2 id="Ice-breaking-topic"><a href="#Ice-breaking-topic" class="headerlink" title="Ice-breaking topic"></a>Ice-breaking topic</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run --rm -it centos /bin/bash</span><br></pre></td></tr></table></figure>
+
+<p>At first, let’s begin to create a container using the above command here.</p>
+<p>Then, we are trying to <code>ping</code> <em>&lt;<a href="http://www.baidu.com>">www.baidu.com&gt;</a></em> in the interactive interior terminal console in the container.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker run --rm -it centos /bin/bash</span><br><span class="line">Unable to find image &#x27;centos:latest&#x27; locally</span><br><span class="line">latest: Pulling from library/centos</span><br><span class="line">a1d0c7532777: Pull complete</span><br><span class="line">Digest: sha256:a27fd8080b517143cbbbab9dfb7c8571c40d67d534bbdee55bd6c473f432b177</span><br><span class="line">Status: Downloaded newer image for centos:latest</span><br><span class="line">[root@e82126d4b596 /]# ping www.baidu.com</span><br><span class="line">PING www.wshifen.com (119.63.197.139) 56(84) bytes of data.</span><br><span class="line">64 bytes from 119.63.197.139 (119.63.197.139): icmp_seq=1 ttl=47 time=83.3 ms</span><br><span class="line">64 bytes from 119.63.197.139 (119.63.197.139): icmp_seq=2 ttl=47 time=83.3 ms</span><br><span class="line">64 bytes from 119.63.197.139 (119.63.197.139): icmp_seq=3 ttl=47 time=83.2 ms</span><br><span class="line">64 bytes from 119.63.197.139 (119.63.197.139): icmp_seq=4 ttl=47 time=83.1 ms</span><br><span class="line">64 bytes from 119.63.197.139 (119.63.197.139): icmp_seq=5 ttl=47 time=83.1 ms</span><br><span class="line">64 bytes from 119.63.197.139 (119.63.197.139): icmp_seq=6 ttl=47 time=83.1 ms</span><br><span class="line">^C</span><br><span class="line">--- www.wshifen.com ping statistics ---</span><br><span class="line">6 packets transmitted, 6 received, 0% packet loss, time 5005ms</span><br><span class="line">rtt min/avg/max/mdev = 83.115/83.173/83.266/0.063 ms</span><br></pre></td></tr></table></figure>
+
+<p>It’s interesting we just use these parameters when creating the container.</p>
+<ul>
+<li><p><code>--rm</code>: This option tells Docker to automatically remove the container once it stops running. This is useful for keeping things clean when you’re running a container for a short-term task (like we are debugging or testing).</p>
+</li>
+<li><p><code>-i</code>: This option stands for <strong>interactive</strong>, which keeps the container’s standard input open. i is the abbreviation of the Capital letter in interactive.</p>
+</li>
+<li><p><code>-t</code>: This option allocates a pseudo-TTY (a terminal interface) for the container. This is what allows you to interact with the container via a command line.</p>
+</li>
+<li><p><code>centos</code>: This specifies the Docker image to use.</p>
+</li>
+<li><p><code>/bin/bash</code>: This is the command to run inside the container. It will start a bash shell session inside the CentOS container, allowing you to interact with it like you’re logged into a normal Linux system.</p>
+</li>
+</ul>
+<p>When we create a container, we haven’t attached a network interface card (NIC), nor have we set an IP address, let alone configured an external network route. So, how is it that our ping operation is successful?</p>
+<hr>
+<h2 id="Container-Original-Network"><a href="#Container-Original-Network" class="headerlink" title="Container Original Network"></a>Container Original Network</h2><p>Docker natively provides several types of networks. If we are not satisfied with the default networks, we can also create custom networks. The default networks are: none, bridge, and host. These networks are automatically created when Docker is installed. We can view them using the following command.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker network ls</span><br><span class="line">NETWORK ID     NAME      DRIVER    SCOPE</span><br><span class="line">1b42685dde7f   bridge    bridge    local</span><br><span class="line">610f1e7d2013   host      host      local</span><br><span class="line">11d5d9017fcd   none      null      local</span><br></pre></td></tr></table></figure>
+
+<h3 id="none-network"><a href="#none-network" class="headerlink" title="none network"></a>none network</h3><p>If a container uses the <code>none</code> network, it will not have a typical network interface card (NIC) as we generally understand it. Instead, it will only have the loopback (lo) network. To use this network, you simply need to specify <code>--network=none</code> when creating the container.</p>
+<p>Now, let’s think: What might be the use case for this network?</p>
+<p>The <code>none</code> network is a more <code>isolated</code> network, suitable for scenarios that require high security and no network connectivity. For instance, applications like <strong>receiving verification codes</strong> or <strong>generating random numbers on your phone</strong> could benefit from being placed on the ‘none’ network to prevent data from being intercepted.</p>
+<h3 id="host-network"><a href="#host-network" class="headerlink" title="host network"></a>host network</h3><p>The <code>host</code> network, on the other hand, is a network where a container shares the host’s network stack. You can specify this network using <code>--network=host</code> when creating the container. When a container is in host network mode, its network configuration is identical to that of the host machine. This means the container can see all the network interfaces of the host, and its hostname will match that of the host as well. The major advantage of using the host network is <code>its performance</code>, as it offers <code>high speed and excellent data transfer rates</code>. However, any ports already in use by the host are unavailable to the container.”</p>
+<h3 id="bridge-network"><a href="#bridge-network" class="headerlink" title="bridge network"></a>bridge network</h3><p>The <code>bridge</code> network is the <code>default network driver</code> used by Docker containers when no other network is specified. It creates a <code>private internal</code> network on the host system, and each container that uses this network can <code>communicate with other containers</code> on the same bridge network, as well as with the <code>host machine</code>.</p>
+<p>In a bridge network, Docker <code>automatically assigns a private IP address to each container</code>. Containers can talk to each other using these private IPs, but they <code>can&#39;t directly communicate with the external network</code> unless you configure port forwarding. To access services running inside a container from outside, you’d typically <code>map the container&#39;s internal ports to ports on the host machine</code>.</p>
+<h3 id="Key-Points-of-three-types-network"><a href="#Key-Points-of-three-types-network" class="headerlink" title="Key Points of three types network"></a>Key Points of three types network</h3><ul>
+<li><p><code>None Network</code>: Completely isolated with no external network access, ideal for high-security, non-networked tasks.</p>
+</li>
+<li><p><code>Host Network</code>: Shares the host machine’s network stack, offering high performance, but limits port usage since the host’s ports are already in use.</p>
+</li>
+<li><p><code>Bridge Network</code>:</p>
+<ul>
+<li><p><code>Isolation</code>: Containers are isolated from the outside world, but can communicate with each other within the same network.</p>
+</li>
+<li><p><code>Port Mapping</code>: If you want external access to a container’s services, you have to map its internal ports to the host machine’s ports.</p>
+</li>
+<li><p><code>Default Mode</code>: When you create a container without specifying a network, it will automatically use the bridge network.</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Container-Storage"><a href="#Container-Storage" class="headerlink" title="Container Storage"></a>Container Storage</h2><h3 id="The-Container-and-Layer"><a href="#The-Container-and-Layer" class="headerlink" title="The Container and Layer"></a>The Container and Layer</h3><p>The biggest difference between a container and an image lies in <code>the topmost writable layer</code>. Any data written or modified within the container is directly stored in this writable layer. This means that <code>when a container is deleted, the data in the writable layer is lost</code>. Although each container has its own distinct writable layer, the underlying image can be shared across multiple containers.</p>
+<blockquote>
+<p>The image picture here is based on <a href="https://docker-docs.uclv.cu/storage/storagedriver/#container-and-layers">the Official Website</a>.<br><img src="/./../images/sharing-layers.jpg" alt="sharing-layers"></p>
+</blockquote>
+<h3 id="Widely-Used-Storage-Drivers"><a href="#Widely-Used-Storage-Drivers" class="headerlink" title="Widely Used Storage Drivers"></a>Widely Used Storage Drivers</h3><p>When designing and using containers, the amount of data written to the container’s writable layer is usually very small. However, in operations, most of the data needs to be persistently stored. To address the volatility of the data in the writable layer, several storage drivers have been introduced in containers.</p>
+<p>The mainstream supported storage drivers currently include as below.</p>
+<blockquote>
+<p>Here, I referred to <a href="https://docker-docs.uclv.cu/storage/storagedriver/select-storage-driver/#supported-storage-drivers-per-linux-distribution">the Official Website</a> and created the following table.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">Linux distribution</th>
+<th align="center">Recommended storage drivers</th>
+<th align="center">Alternative drivers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Docker Engine - Community on Ubuntu</td>
+<td align="center">overlay2 or aufs (for Ubuntu 14.04 running on kernel 3.13)</td>
+<td align="center">overlay¹, devicemapper², zfs, vfs</td>
+</tr>
+<tr>
+<td align="center">Docker Engine - Community on Debian</td>
+<td align="center">overlay2 (Debian Stretch), aufs or devicemapper (older versions)</td>
+<td align="center">overlay¹, vfs</td>
+</tr>
+<tr>
+<td align="center">Docker Engine - Community on CentOS</td>
+<td align="center">overlay2</td>
+<td align="center">overlay¹, devicemapper², zfs, vfs</td>
+</tr>
+<tr>
+<td align="center">Docker Engine - Community on Fedora</td>
+<td align="center">overlay2</td>
+<td align="center">overlay¹, devicemapper², zfs, vfs</td>
+</tr>
+</tbody></table>
+<h3 id="Copy-on-write-Strategy"><a href="#Copy-on-write-Strategy" class="headerlink" title="Copy-on-write Strategy"></a>Copy-on-write Strategy</h3><blockquote>
+<p>More detailed information, please visit <a href="https://docker-docs.uclv.cu/storage/storagedriver/#the-copy-on-write-cow-strategy">the Official Website</a> here.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">Operation</th>
+<th align="center">Execution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Create files</td>
+<td align="center">A new file can only be added to the container layer.</td>
+</tr>
+<tr>
+<td align="center">Delete files</td>
+<td align="center">Following the container’s layered structure, Docker looks from top to bottom. When the file is found, the delete operation is recorded in the container layer. The actual implementation is that UnionFS creates a “whiteout” file in the container layer, which effectively “masks” the deleted file.</td>
+</tr>
+<tr>
+<td align="center">Modify files</td>
+<td align="center">Docker follows the container’s layered structure from top to bottom. Once the file is found, the data from the image layer is copied to the container layer for modification. The modified data is then saved in the container layer (using copy-on-write).</td>
+</tr>
+<tr>
+<td align="center">Read files</td>
+<td align="center">Docker follows the container’s layered structure from top to bottom when reading files.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="Data-Management"><a href="#Data-Management" class="headerlink" title="Data Management"></a>Data Management</h2><p>There are generally two methods for persisting data in containers:</p>
+<ol>
+<li>volume</li>
+<li>bind mount</li>
+</ol>
+<h3 id="Volume"><a href="#Volume" class="headerlink" title="Volume"></a>Volume</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker run -d --name volumetest -v /usr/local/apache2/htdocs httpd:latest</span><br><span class="line">6bd77a7a04bc9f0628135ccdf30d07f4e92f29cd631f9b5f54f196e7e04ebdd0</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ docker exec -it volumetest /bin/bash</span><br><span class="line">root@6bd77a7a04bc:/usr/local/apache2# touch sunhaoyangfile</span><br><span class="line">root@6bd77a7a04bc:/usr/local/apache2#</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ sudo find / -name sunhaoyangfile</span><br><span class="line">/var/lib/docker/overlay2/db6115d1b68b483e5a799e74aad3e51d1d4aa0fb7376916c38a09165e6ceaf21/diff/usr/local/apache2/sunhaoyangfile</span><br><span class="line">/var/lib/docker/overlay2/db6115d1b68b483e5a799e74aad3e51d1d4aa0fb7376916c38a09165e6ceaf21/merged/usr/local/apache2/sunhaoyangfile</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bind-Mount"><a href="#Bind-Mount" class="headerlink" title="Bind Mount"></a>Bind Mount</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker run -d --name volumetest2 -v /mnt:/usr/local/apache2/htdocs httpd:latest</span><br><span class="line">e0fd1f0d04f4875060a6a248b666662972625a491f2739ca1547ba678a8703fe</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ docker exec -it volumetest2 /bin/bash</span><br><span class="line">root@e0fd1f0d04f4:/usr/local/apache2# cd htdocs/</span><br><span class="line">root@e0fd1f0d04f4:/usr/local/apache2/htdocs# ls</span><br><span class="line">root@e0fd1f0d04f4:/usr/local/apache2/htdocs# echo sunhaoyang &gt; index.html</span><br><span class="line">root@e0fd1f0d04f4:/usr/local/apache2/htdocs#</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ ls -altF /mnt/</span><br><span class="line">total 12</span><br><span class="line">drwxr-xr-x  2 root root 4096 Feb  6 13:46 ./</span><br><span class="line">-rw-r--r--  1 root root   11 Feb  6 13:46 index.html</span><br><span class="line">drwxr-xr-x 25 root root 4096 Sep 13 19:40 ../</span><br></pre></td></tr></table></figure>
+
+<h2 id="Sharing-data-between-the-host-machine-and-the-container"><a href="#Sharing-data-between-the-host-machine-and-the-container" class="headerlink" title="Sharing data between the host machine and the container"></a>Sharing data between the host machine and the container</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker run -d -p 9000:80 -v /mnt:/usr/local/apache2/htdocs httpd:latest</span><br><span class="line">81026dd8cafb6279974c56eaea04defe849dedbcda7361f4b9c805f2a2825682</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ sudo cp index.html /mnt/index.html</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ curl http://127.0.0.1:9000</span><br><span class="line">Hello, world!</span><br><span class="line">shy@flash-shy:~$ cat index.html</span><br><span class="line">Hello, world!</span><br></pre></td></tr></table></figure>
+
+<h2 id="Sharing-data-between-containers"><a href="#Sharing-data-between-containers" class="headerlink" title="Sharing data between containers"></a>Sharing data between containers</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">shy@flash-shy:~$ docker run -d --name share01 -v /mnt:/usr/local/apache2/htdocs httpd:latest</span><br><span class="line">35a5398e8dde088dc17740115abcd9b3ab84b4db2363588c0dd7445c5856a251</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ docker run -d --name share02 -v /mnt:/usr/local/apache2/htdocs httpd:latest</span><br><span class="line">f97301cbca77fda7b6e9127acc78577d6c2d23d52e71a7e16b90bf30629e7a78</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ sudo cp index.html /mnt/index.html</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ docker inspect -f &#x27;&#123;&#123;range .NetworkSettings.Networks&#125;&#125;&#123;&#123;.IPAddress&#125;&#125;&#123;&#123;end&#125;&#125;&#x27; share01</span><br><span class="line">172.17.0.3</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ docker inspect -f &#x27;&#123;&#123;range .NetworkSettings.Networks&#125;&#125;&#123;&#123;.IPAddress&#125;&#125;&#123;&#123;end&#125;&#125;&#x27; share02</span><br><span class="line">172.17.0.4</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ curl http://172.17.0.3</span><br><span class="line">Hello, world!</span><br><span class="line"></span><br><span class="line">shy@flash-shy:~$ curl http://172.17.0.4</span><br><span class="line">Hello, world!</span><br></pre></td></tr></table></figure>
+
+<h2 id="Key-Points-about-sharing-data"><a href="#Key-Points-about-sharing-data" class="headerlink" title="Key Points about sharing data"></a>Key Points about sharing data</h2><ul>
+<li><p>Sharing data between the host machine and the container:</p>
+<ul>
+<li><p>bind mount: <code>Mount a directory or file from the host machine into the container.</code></p>
+</li>
+<li><p>volume: <code>Copy data from the host machine to the container&#39;s volume by using the cp command to copy the required data into the volume&#39;s directory.</code></p>
+</li>
+</ul>
+</li>
+<li><p>Sharing data between containers:</p>
+<ul>
+<li><p>bind mount: <code>Mount a directory or file from the host machine into multiple containers.</code></p>
+</li>
+<li><p>volume: <code>Mount a volume into multiple containers.</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Congratulations to you!</p>
+<p>Up to now, I have already introduced all basic knowledge about docker to you.</p>
+<p>That’s all I want to discuss here, thank you for your patience~</p>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20250205-English-accumulation</title>
+    <url>//Language/English/20250205/index.html</url>
+    <content><![CDATA[<ul>
+<li><p><strong>subtle</strong>: It refers to something that is delicate, understated, or not immediately obvious. It’s often used to describe things that are complex or nuanced but don’t make an obvious or loud impression. Here’s an example sentence: <code>She has a subtle sense of humor, often making witty remarks that go unnoticed at first but leave you thinking and laughing later.</code></p>
+</li>
+<li><p><strong>understated</strong>: It refers to something that is presented in a restrained or modest way, often deliberately avoiding excessive decoration or emphasis. It’s used to describe things that are elegant or impressive in a subtle, non-showy manner. Here’s an example sentence: <code>The interior of the restaurant was beautifully understated, with minimal decoration and soft lighting that created a calm, inviting atmosphere.</code></p>
+</li>
+<li><p><strong>delicate</strong>: It’s about something that needs to be treated with care, whether it’s a physical object, a situation, or a person’s feelings. Here’s an example sentence: <code>The delicate fabric of the dress shimmered in the light, and she handled it with great care to avoid damaging it.</code></p>
+</li>
+<li><p><strong>let alone</strong>: It is a phrase used to emphasize that something is even less likely or more extreme than the previous statement. It’s typically used when you’re talking about something that would be more surprising or difficult to do, in comparison to a previous, simpler action or condition. <code>[Negative statement], let alone [something more extreme].</code> Here’s an example sentence: <code>He can&#39;t even swim, let alone dive.</code><br>let alone” with a verb, the verb is typically in its <strong>original (base) form</strong> (i.e., the infinitive without “to”).</p>
+</li>
+<li><p><strong>native</strong>: It refers to something that is originally from or naturally associated with a particular place, environment, or system. Here’s an example sentence: <code>The kangaroo is native to Australia, meaning it is naturally found only in that region.</code></p>
+</li>
+<li><p><strong>identical</strong>: It means <strong>exactly the same in every way, without any differences</strong> as well as <strong>completely matching or alike in appearance, characteristics, or nature</strong>. Here’s an example: <code>The two houses are identical, with the same layout, size, and colour.</code></p>
+</li>
+<li><p><strong>volatility</strong>: It refers to <strong>the tendency of something to change rapidly and unpredictably</strong> as well as <strong>the tendency of a substance to evaporate or turn into a gas at a relatively low temperature in a chemical or physical context</strong>. Here’s an example sentence: <code>The volatility of the stock market makes it difficult for investors to predict future trends.</code> What’s more, <code>The volatility of the liquid makes it dangerous to handle at high temperatures.</code></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Docker Series (Chapter 3): Managing Container Resources</title>
     <url>//Cloud/Docker/Managing-container-resources/index.html</url>
     <content><![CDATA[<blockquote>
 <p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
