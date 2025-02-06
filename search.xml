@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Docker Series (Chapter 4): Introducing-Container-Network-and-Practising-Container-Data-Management</title>
+    <title>Docker Series (Chapter 4/4): Introducing-Container-Network-and-Practising-Container-Data-Management</title>
     <url>//Cloud/Docker/Introducing-container-network-and-practising-container-data-management/index.html</url>
     <content><![CDATA[<blockquote>
 <p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
@@ -199,7 +199,7 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker Series (Chapter 3): Managing Container Resources</title>
+    <title>Docker Series (Chapter 3/4): Managing Container Resources</title>
     <url>//Cloud/Docker/Managing-container-resources/index.html</url>
     <content><![CDATA[<blockquote>
 <p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
@@ -282,7 +282,7 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker Series (Chapter 2): Creating and Using containers</title>
+    <title>Docker Series (Chapter 2/4): Creating and Using containers</title>
     <url>//Cloud/Docker/Creating-and-using-containers/index.html</url>
     <content><![CDATA[<blockquote>
 <p>For information on how to install Docker, please refer to: <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">Docker Series (Chapter 0): Installing docker-engine in Ubuntu</a>.</p>
@@ -805,7 +805,7 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker Series (Chapter 1): Building and using images</title>
+    <title>Docker Series (Chapter 1/4): Building and using images</title>
     <url>//Cloud/Docker/Building-and-using-images/index.html</url>
     <content><![CDATA[<h2 id="Overview-of-the-image"><a href="#Overview-of-the-image" class="headerlink" title="Overview of the image"></a>Overview of the image</h2><p>An image is a <code>read-only template</code> used to <code>create containers</code>. Typically, it includes some additional customizations.</p>
 <p>For example, we could build an image based on rocky operating system that directly includes some applications like Nginx, Apache or other programs during the image build process.</p>
@@ -1082,7 +1082,7 @@
       </tags>
   </entry>
   <entry>
-    <title>Docker Series (Chapter 0): Installing docker-engine in Ubuntu</title>
+    <title>Docker Series (Chapter 0/4): Installing docker-engine in Ubuntu</title>
     <url>//Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html</url>
     <content><![CDATA[<h2 id="What-is-Docker"><a href="#What-is-Docker" class="headerlink" title="What is Docker?"></a>What is Docker?</h2><p>The name <code>Docker</code> is derived from the term used in maritime shipping, referring to <code>dockworkers</code>. It serves as a metaphorical representation.</p>
 <p>In traditional shipping, goods are packed into standardized containers, enabling seamless transfer across different modes of transportation, such as trucks, trains, and ships. Similarly, Docker provides a <code>standardized container</code> that packages applications and all their dependencies together, allowing them to run efficiently and reliably across different environments, such as development, testing, and production. Docker is just one of the most commmon technical tools in the area of containerization. What’s more, such as: Podman, CRI-O, Containerd are also useful containerization tools.</p>
