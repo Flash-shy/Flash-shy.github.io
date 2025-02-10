@@ -1971,6 +1971,8 @@
 </blockquote>
 </li>
 </ul>
+<hr>
+<h2 id="The-Basic-Architecture"><a href="#The-Basic-Architecture" class="headerlink" title="The Basic Architecture"></a>The Basic Architecture</h2><p>Ceph Storage is essentially a distributed data object store, based on <code>RADOS</code>(Reliable Autonomic Distributed Object Storage), which provides highly reliable, scalable, and self-healing distributed object storage.</p>
 ]]></content>
       <categories>
         <category>Cloud</category>
