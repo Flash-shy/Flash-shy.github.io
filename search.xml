@@ -1,6 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>20250212-English-accumulation</title>
+    <url>//Language/English/20250212/index.html</url>
+    <content><![CDATA[<ul>
+<li><strong>on-premises</strong></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Artificial Intelligence Series (Chapter 0): Local Deployment of Large Models</title>
+    <url>//Artificial-Intelligence/Deepseek/Local-deployment-of-large-models/index.html</url>
+    <content><![CDATA[<h2 id="The-Ice-breaking-Topic"><a href="#The-Ice-breaking-Topic" class="headerlink" title="The Ice-breaking Topic"></a>The Ice-breaking Topic</h2><p>Why should we try to deploy the AI Models in my local environment?</p>
+<ol>
+<li><code>Data Privacy and Security</code></li>
+</ol>
+<ul>
+<li><p>Protecting Sensitive Data: When dealing with sensitive data (such as healthcare, finance, or personal privacy), deploying AI models locally can prevent data from being uploaded to the cloud, thereby reducing the risk of data breaches.</p>
+</li>
+<li><p>Compliance Requirements: Some industries have stringent regulations regarding data storage and processing, such as the GDPR in Europe, which encourages businesses to deploy AI models locally.</p>
+</li>
+</ul>
+<ol start="2">
+<li><code>Latency and Performance</code></li>
+</ol>
+<ul>
+<li><p>Reducing Network Latency: Deploying models locally can reduce the latency associated with data transmission, particularly for applications that require real-time or low-latency processing, such as autonomous driving or video surveillance.</p>
+</li>
+<li><p>High-Performance Computing: Local deployment allows full utilisation of local hardware resources, providing higher computational performance. The cloud may face limitations in bandwidth and computational resources, while local hardware can be optimised and tailored to the specific needs of the task.</p>
+</li>
+</ul>
+<ol start="3">
+<li><code>Cost Control</code></li>
+</ol>
+<ul>
+<li><p>Avoiding Cloud Service Costs: While cloud computing is flexible, it can become costly over the long term. Especially in scenarios with high computational and storage needs, local deployment can help businesses reduce their reliance on cloud resources and lower costs.</p>
+</li>
+<li><p>On-Demand Hardware Expansion: Businesses can purchase appropriate hardware resources as needed, avoiding the fixed costs of cloud service providers.</p>
+</li>
+</ul>
+<ol start="4">
+<li><code>Control and Customisation</code></li>
+</ol>
+<ul>
+<li><p>Complete Control: Deploying AI models locally ensures full control over both hardware and software, allowing businesses to customise and optimise the deployment environment to meet specific needs.</p>
+</li>
+<li><p>Flexibility: Companies have the freedom to choose the computing platform (e.g., GPU, TPU, CPU) and system architecture, enabling finer-grained optimisation.</p>
+</li>
+</ul>
+<ol start="5">
+<li><code>Offline Operation and High Availability</code></li>
+</ol>
+<ul>
+<li><p>No Reliance on the Internet: For certain application scenarios (such as remote areas or offshore platforms), local deployment ensures that the system continues to function without an internet connection.</p>
+</li>
+<li><p>High Availability: Local deployment reduces dependence on external cloud service providers, helping businesses avoid disruptions caused by network issues or cloud service outages.</p>
+</li>
+</ul>
+<ol start="6">
+<li><code>Environment Adaptation</code></li>
+</ol>
+<ul>
+<li><p>Optimising Hardware Resources: AI models deployed locally can be optimised according to the specific hardware environment (e.g., dedicated GPUs or custom hardware accelerators).</p>
+</li>
+<li><p>Reducing Shared Cloud Resources: Cloud platforms often share resources among multiple customers, which can lead to performance fluctuations. Local deployment can avoid this resource contention.</p>
+</li>
+</ul>
+<hr>
+<h2 id="Deploying-Large-Models-in-local"><a href="#Deploying-Large-Models-in-local" class="headerlink" title="Deploying Large Models in local"></a>Deploying Large Models in local</h2><p>Here, I would like to introduce how to deploy <code>ollama</code> by using docker.</p>
+<p>In fact, there are many methods to deploy.</p>
+<p>Eg. Install in pysical machine by using <code>curl</code> command in Linux, Download compressions and unzip the packages to install in Windows&#x2F;MacOS operating system. What’s more, you could install ollama by <code>pip</code> as well.</p>
+<p>More detailed information, please visit <a href="https://github.com/ollama/ollama">the ollama GitHub</a>.</p>
+<h3 id="Deploying-the-Ollama"><a href="#Deploying-the-Ollama" class="headerlink" title="Deploying the Ollama"></a>Deploying the Ollama</h3><p>The official <a href="https://hub.docker.com/r/ollama/ollama">Ollama Docker image</a> ollama&#x2F;ollama is available on Docker Hub.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># CPU Only</span></span><br><span class="line">docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama</span><br></pre></td></tr></table></figure>
+
+<p>About the docker knowledge, I have already introduced before. You could review <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">here</a>.</p>
+<p>After pulling the image from DockerHub, you could use the command <code>ollama -v</code> to check the version of the current ollama.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check the version of ollama</span></span><br><span class="line">ollama -v</span><br></pre></td></tr></table></figure>
+
+<h3 id="Pulling-the-models-from-ollama-library"><a href="#Pulling-the-models-from-ollama-library" class="headerlink" title="Pulling the models from ollama library"></a>Pulling the models from ollama library</h3><p>There are plenty of models you could pull from <a href="https://ollama.com/search">the ollama library</a>.</p>
+<blockquote>
+<p>Please refer to your own server’s performance and configuration to choose the model.</p>
+</blockquote>
+<p>Eg. <code>12 cores CPU + 32 GB Memory</code> &#x3D;&gt; <code>deepseek-r1:8b</code> is recommended.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># pul the model from the ollama library</span></span><br><span class="line">ollama pull deepseek-r1:8b</span><br><span class="line"></span><br><span class="line"><span class="comment"># pull and run the model in local</span></span><br><span class="line">ollama run deepseek-r1:8b</span><br></pre></td></tr></table></figure>
+
+<p>If you pulled the model successfully, you could use the command <code>ollama list(ls)</code> to confirm the result.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ollama list/ls</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Interact-with-the-local-models"><a href="#Interact-with-the-local-models" class="headerlink" title="Interact with the local models"></a>Interact with the local models</h2><p>There are two ways to interact with local models.</p>
+<ul>
+<li><p>Use the <code>ollama run</code> command in CLI.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ollama run [the model name:tag]</span><br></pre></td></tr></table></figure>
+<p>It will guide you in the CLI. You could use <code>ctrl+d</code> or <code>/bye</code> to quit the interaction in CLI.</p>
+</li>
+<li><p>Visit and question in front-end website <code>open-webui</code>.</p>
+<ul>
+<li><p>Deploying the <code>open-webui</code> in docker.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># If Ollama is on your computer, use this command</span></span><br><span class="line">docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main</span><br><span class="line"></span><br><span class="line"><span class="comment"># If Ollama is on a Different Server, use this command</span></span><br><span class="line">docker run -d -p 3000:8080 -e OLLAMA_BASE_URL=https://example.com -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Deploying the <code>open-webui</code> by <code>pip</code>.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install</span></span><br><span class="line">pip install open-webui</span><br><span class="line"></span><br><span class="line"><span class="comment"># Execute</span></span><br><span class="line">open-webui serve </span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>By the way, Deploying in docker is recommended.</p>
+</li>
+</ul>
+<hr>
+<h2 id="Login-and-Question-offline"><a href="#Login-and-Question-offline" class="headerlink" title="Login and Question offline"></a>Login and Question offline</h2><p>The final step for you here is to login the open-webui website and let’s question!</p>
+<p>You could use <code>http://ip:port</code> or <code>http://localhost:port</code> to visit your local UI.</p>
+<p>Set the administrator (name + email + password) and then you could login.</p>
+<p>Selecting the various types of models you’ve already downloaded in local.</p>
+<p>You could also select more than one model and compare the results at the same time.</p>
+<p>Congratulations to you! Now you can have a good time experimenting with large models locally ：）</p>
+]]></content>
+      <categories>
+        <category>Artificial Intelligence</category>
+      </categories>
+      <tags>
+        <tag>Deepseek</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker Series (Chapter 4/4): Introducing Container Network and Practising Container Data Management</title>
     <url>//Cloud/Docker/Introducing-container-network-and-practising-container-data-management/index.html</url>
     <content><![CDATA[<blockquote>
@@ -1971,6 +2098,8 @@
 </blockquote>
 </li>
 </ul>
+<hr>
+<h2 id="The-Basic-Architecture"><a href="#The-Basic-Architecture" class="headerlink" title="The Basic Architecture"></a>The Basic Architecture</h2><p>Ceph Storage is essentially a distributed data object store, based on <code>RADOS</code>(Reliable Autonomic Distributed Object Storage), which provides highly reliable, scalable, and self-healing distributed object storage.</p>
 ]]></content>
       <categories>
         <category>Cloud</category>
