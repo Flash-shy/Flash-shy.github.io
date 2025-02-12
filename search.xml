@@ -1,6 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>20250212-English-accumulation</title>
+    <url>//Language/English/20250212/index.html</url>
+    <content><![CDATA[<ul>
+<li><strong>on-premises</strong></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Artificial Intelligence Series (Chapter 0): Local Deployment of Large Models</title>
+    <url>//Artificial-Intelligence/Deepseek/Local-deployment-of-large-models/index.html</url>
+    <content><![CDATA[<h2 id="The-Ice-breaking-Topic"><a href="#The-Ice-breaking-Topic" class="headerlink" title="The Ice-breaking Topic"></a>The Ice-breaking Topic</h2><p>Why should we try to deploy the AI Models in my local environment?</p>
+<ol>
+<li><code>Data Privacy and Security</code></li>
+</ol>
+<ul>
+<li><p>Protecting Sensitive Data: When dealing with sensitive data (such as healthcare, finance, or personal privacy), deploying AI models locally can prevent data from being uploaded to the cloud, thereby reducing the risk of data breaches.</p>
+</li>
+<li><p>Compliance Requirements: Some industries have stringent regulations regarding data storage and processing, such as the GDPR in Europe, which encourages businesses to deploy AI models locally.</p>
+</li>
+</ul>
+<ol start="2">
+<li><code>Latency and Performance</code></li>
+</ol>
+<ul>
+<li><p>Reducing Network Latency: Deploying models locally can reduce the latency associated with data transmission, particularly for applications that require real-time or low-latency processing, such as autonomous driving or video surveillance.</p>
+</li>
+<li><p>High-Performance Computing: Local deployment allows full utilisation of local hardware resources, providing higher computational performance. The cloud may face limitations in bandwidth and computational resources, while local hardware can be optimised and tailored to the specific needs of the task.</p>
+</li>
+</ul>
+<ol start="3">
+<li><code>Cost Control</code></li>
+</ol>
+<ul>
+<li><p>Avoiding Cloud Service Costs: While cloud computing is flexible, it can become costly over the long term. Especially in scenarios with high computational and storage needs, local deployment can help businesses reduce their reliance on cloud resources and lower costs.</p>
+</li>
+<li><p>On-Demand Hardware Expansion: Businesses can purchase appropriate hardware resources as needed, avoiding the fixed costs of cloud service providers.</p>
+</li>
+</ul>
+<ol start="4">
+<li><code>Control and Customisation</code></li>
+</ol>
+<ul>
+<li><p>Complete Control: Deploying AI models locally ensures full control over both hardware and software, allowing businesses to customise and optimise the deployment environment to meet specific needs.</p>
+</li>
+<li><p>Flexibility: Companies have the freedom to choose the computing platform (e.g., GPU, TPU, CPU) and system architecture, enabling finer-grained optimisation.</p>
+</li>
+</ul>
+<ol start="5">
+<li><code>Offline Operation and High Availability</code></li>
+</ol>
+<ul>
+<li><p>No Reliance on the Internet: For certain application scenarios (such as remote areas or offshore platforms), local deployment ensures that the system continues to function without an internet connection.</p>
+</li>
+<li><p>High Availability: Local deployment reduces dependence on external cloud service providers, helping businesses avoid disruptions caused by network issues or cloud service outages.</p>
+</li>
+</ul>
+<ol start="6">
+<li><code>Environment Adaptation</code></li>
+</ol>
+<ul>
+<li><p>Optimising Hardware Resources: AI models deployed locally can be optimised according to the specific hardware environment (e.g., dedicated GPUs or custom hardware accelerators).</p>
+</li>
+<li><p>Reducing Shared Cloud Resources: Cloud platforms often share resources among multiple customers, which can lead to performance fluctuations. Local deployment can avoid this resource contention.</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Artificial Intelligence</category>
+      </categories>
+      <tags>
+        <tag>Deepseek</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Docker Series (Chapter 4/4): Introducing Container Network and Practising Container Data Management</title>
     <url>//Cloud/Docker/Introducing-container-network-and-practising-container-data-management/index.html</url>
     <content><![CDATA[<blockquote>
