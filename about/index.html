@@ -211,7 +211,7 @@
           </div>
           <ul class="card-category-list" id="aside-cat-list">
             <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Artificial-Intelligence/"><span class="card-category-list-name">Artificial Intelligence</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Cloud/"><span class="card-category-list-name">Cloud</span><span class="card-category-list-count">7</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Language/"><span class="card-category-list-name">Language</span><span class="card-category-list-count">5</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Management/"><span class="card-category-list-name">Management</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Tools/"><span class="card-category-list-name">Tools</span><span class="card-category-list-count">2</span></a></li>
-          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/English/" style="font-size: 1.45em; color: rgb(148, 86, 50);">English</a><a href="/tags/Deepseek/" style="font-size: 1.15em; color: rgb(149, 50, 50);">Deepseek</a><a href="/tags/Ceph/" style="font-size: 1.3em; color: rgb(84, 50, 196);">Ceph</a><a href="/tags/Markdown/" style="font-size: 1.3em; color: rgb(60, 131, 50);">Markdown</a><a href="/tags/Docker/" style="font-size: 1.45em; color: rgb(50, 60, 52);">Docker</a><a href="/tags/Scrum/" style="font-size: 1.3em; color: rgb(50, 100, 110);">Scrum</a></div></div><div class="card-widget card-archives">
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/English/" style="font-size: 1.45em; color: rgb(117, 56, 50);">English</a><a href="/tags/Deepseek/" style="font-size: 1.15em; color: rgb(87, 165, 156);">Deepseek</a><a href="/tags/Ceph/" style="font-size: 1.3em; color: rgb(65, 50, 50);">Ceph</a><a href="/tags/Markdown/" style="font-size: 1.3em; color: rgb(150, 50, 163);">Markdown</a><a href="/tags/Docker/" style="font-size: 1.45em; color: rgb(159, 107, 199);">Docker</a><a href="/tags/Scrum/" style="font-size: 1.3em; color: rgb(99, 120, 50);">Scrum</a></div></div><div class="card-widget card-archives">
     <div class="item-headline">
       <i class="fas fa-archive"></i>
       <span>Archives</span>
@@ -246,7 +246,7 @@
     const countELement = document.getElementById('twikoo-count')
     if(!countELement) return
     twikoo.getCommentsCount({
-      envId: 'https://twikoo-alpha-five.vercel.app/',
+      envId: 'https://twikoo.sunhaoyang.net/',
       region: '',
       urls: [window.location.pathname],
       includeReply: false
@@ -260,7 +260,7 @@
   const init = (el = document, path = location.pathname) => {
     twikoo.init({
       el: el.querySelector('#twikoo-wrap'),
-      envId: 'https://twikoo-alpha-five.vercel.app/',
+      envId: 'https://twikoo.sunhaoyang.net/',
       region: '',
       onCommentLoaded: () => {
         btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
@@ -362,7 +362,7 @@
   const getComment = ele => {
     const runTwikoo = () => {
       twikoo.getRecentComments({
-        envId: 'https://twikoo-alpha-five.vercel.app/',
+        envId: 'https://twikoo.sunhaoyang.net/',
         region: '',
         pageSize: 6,
         includeReply: true
