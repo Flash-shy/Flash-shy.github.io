@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Ansible Series Chapter1: Developing Playbooks with Ansible Automation Platform 2</title>
+    <url>//Linux/Ansible/Deploying-playbooks-with-ansible-automation-platform2/index.html</url>
+    <content><![CDATA[<h2 id="Introduction-to-Red-Hat-Ansible-Automation-Platform-2"><a href="#Introduction-to-Red-Hat-Ansible-Automation-Platform-2" class="headerlink" title="Introduction to Red Hat Ansible Automation Platform 2"></a>Introduction to Red Hat Ansible Automation Platform 2</h2><h3 id="What-is-the-Red-Hat-Ansible-Automaion-Platform2"><a href="#What-is-the-Red-Hat-Ansible-Automaion-Platform2" class="headerlink" title="What is the Red Hat Ansible Automaion Platform2?"></a>What is the Red Hat Ansible Automaion Platform2?</h3><p>An enterprise-grade automation platform that offers a complete set of integrated automation tools and resources. </p>
+<p>It provides a new level of customisation and control, delivering a higher standard of automation experience.</p>
+<h3 id="What-could-you-do-with-Ansible-Automation-Platform2"><a href="#What-could-you-do-with-Ansible-Automation-Platform2" class="headerlink" title="What could you do with Ansible Automation Platform2?"></a>What could you do with Ansible Automation Platform2?</h3><ul>
+<li><p>Accelerating business outcomes through automation</p>
+</li>
+<li><p>Achieving automation in team collaboration and orchestration</p>
+</li>
+<li><p>Realising automation for scalable growth and innovation</p>
+</li>
+</ul>
+<h2 id="The-components-of-Ansible-Automation-Platform2"><a href="#The-components-of-Ansible-Automation-Platform2" class="headerlink" title="The components of Ansible Automation Platform2"></a>The components of Ansible Automation Platform2</h2><h3 id="Ansible-Core"><a href="#Ansible-Core" class="headerlink" title="Ansible Core"></a>Ansible Core</h3><p>Ansible Core is the <code>core</code> component of the Ansible project, primarily responsible for automation configuration management, application deployment, and task execution.</p>
+<p>It provides the basic functionality to run Ansible Playbooks.</p>
+<h3 id="Ansible-Content-Collections"><a href="#Ansible-Content-Collections" class="headerlink" title="Ansible Content Collections"></a>Ansible Content Collections</h3><p><code>Modules</code>, <code>roles</code>, and <code>plugins</code> form a <code>collection</code> of resources.</p>
+<h3 id="Automation-Content-Navigator"><a href="#Automation-Content-Navigator" class="headerlink" title="Automation Content Navigator"></a>Automation Content Navigator</h3><ul>
+<li><p>Introducing the <code>new top-level tool</code>, <code>ansible-navigator</code>, for developing and testing Ansible Playbooks. This tool replaces and extends several commands, including the <code>ansible-playbook</code> command.</p>
+</li>
+<li><p><code>Running playbooks in containers</code> separates the control node running Ansible from the automation execution environment.</p>
+</li>
+</ul>
+<h3 id="Automation-Execution-Environments-EE"><a href="#Automation-Execution-Environments-EE" class="headerlink" title="Automation Execution Environments(EE)"></a>Automation Execution Environments(EE)</h3><p>EE is a container image that includes <code>Ansible Core</code>, <code>Ansible Content Collections</code>, and any <code>required Python libraries</code> for running playbooks.</p>
+<p><img src="/../images/EE.png" alt="User experience: Adapting execution environments to your needs"></p>
+<ul>
+<li><p><code>ansible-builder</code>: This command is used to create an image. </p>
+<p>Eg. We use <code>Dockerfile</code> to build up an image in docker-engine. While, we use <code>Containerfile</code> in podman. Depend on what kind of container management tool do you use.</p>
+</li>
+<li><p><code>ansible-navigator</code>: This command will run the playbook in EE.</p>
+<p>Eg. <code>sunhaoyang.yml</code> is the playbook you could specify in the command. While, you could use the option <code>--eei</code> to specify the execution environment as you want at the same time.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ansible-navigator run sunhaoyang.yml -m stdout --eei ee-supported-rhel8:latest</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Automation-Controller"><a href="#Automation-Controller" class="headerlink" title="Automation Controller"></a>Automation Controller</h3><ul>
+<li><p>The Automation Controller, previously known as Red Hat Ansible <code>Tower (Open source:AWX)</code>, provides a <code>central location</code> for running playbooks. It offers a <code>web UI</code> and <code>REST API</code>, which can be used for configuring, running, and evaluating automation jobs.</p>
+</li>
+<li><p>The new Automation Controller <code>separates the control node from the automation execution environment</code>.</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ansible</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>20250212-English-accumulation</title>
     <url>//Language/English/20250212/index.html</url>
     <content><![CDATA[<ul>
@@ -72,6 +118,68 @@
 <li><p>Reducing Shared Cloud Resources: Cloud platforms often share resources among multiple customers, which can lead to performance fluctuations. Local deployment can avoid this resource contention.</p>
 </li>
 </ul>
+<hr>
+<h2 id="Deploying-Large-Models-in-local"><a href="#Deploying-Large-Models-in-local" class="headerlink" title="Deploying Large Models in local"></a>Deploying Large Models in local</h2><p>Here, I would like to introduce how to deploy <code>ollama</code> by using docker.</p>
+<p>In fact, there are many methods to deploy.</p>
+<p>Eg. Install in pysical machine by using <code>curl</code> command in Linux, Download compressions and unzip the packages to install in Windows&#x2F;MacOS operating system. What’s more, you could install ollama by <code>pip</code> as well.</p>
+<p>More detailed information, please visit <a href="https://github.com/ollama/ollama">the ollama GitHub</a>.</p>
+<h3 id="Deploying-the-Ollama"><a href="#Deploying-the-Ollama" class="headerlink" title="Deploying the Ollama"></a>Deploying the Ollama</h3><h4 id="Deploying-in-docker"><a href="#Deploying-in-docker" class="headerlink" title="Deploying in docker"></a>Deploying in docker</h4><p>The official <a href="https://hub.docker.com/r/ollama/ollama">Ollama Docker image</a> ollama&#x2F;ollama is available on Docker Hub.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># CPU Only</span></span><br><span class="line">docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama</span><br></pre></td></tr></table></figure>
+
+<p>About the docker knowledge, I have already introduced before. You could review <a href="https://blog.sunhaoyang.net/Cloud/Docker/Installing-docker-engine-in-Ubuntu/index.html">here</a>.</p>
+<p>After pulling the image from DockerHub, you could use the command <code>ollama -v</code> to check the version of the current ollama.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check the version of ollama</span></span><br><span class="line">ollama -v</span><br></pre></td></tr></table></figure>
+
+<h4 id="Deploying-in-the-physical-machine"><a href="#Deploying-in-the-physical-machine" class="headerlink" title="Deploying in the physical machine"></a>Deploying in the physical machine</h4><p>Different operating system has different methods to deploy ollama in physical.</p>
+<p>Here, in this case we will use <code>curl</code> command for local deployment in Linux OS.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Download the deploy script from the official website and execute the installation shell</span></span><br><span class="line">curl -fsSL https://ollama.com/install.sh | sh</span><br></pre></td></tr></table></figure>
+
+<p>After completing the download process, you could check the status of ollama service.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Use the systemctl command to check the service status</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl status ollama</span><br></pre></td></tr></table></figure>
+
+<p>Similarly, you could use the command <code>ollama -v</code> to check the version of ollama you have installed.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Check the version of ollama</span></span><br><span class="line">ollama -v</span><br></pre></td></tr></table></figure>
+
+<p>For even more information about downloading ollama, please refer to <a href="https://ollama.com/download">the official website</a>.</p>
+<h3 id="Pulling-the-models-from-ollama-library"><a href="#Pulling-the-models-from-ollama-library" class="headerlink" title="Pulling the models from ollama library"></a>Pulling the models from ollama library</h3><p>There are plenty of models you could pull from <a href="https://ollama.com/search">the ollama library</a>.</p>
+<blockquote>
+<p>Please refer to your own server’s performance and configuration to choose the model.</p>
+</blockquote>
+<p>Eg. <code>12 cores CPU + 32 GB Memory</code> &#x3D;&gt; <code>deepseek-r1:8b</code> is recommended.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Pull the model from the ollama library</span></span><br><span class="line">ollama pull deepseek-r1:8b</span><br><span class="line"></span><br><span class="line"><span class="comment"># Pull and run the model in local</span></span><br><span class="line">ollama run deepseek-r1:8b</span><br></pre></td></tr></table></figure>
+
+<p>If you pulled the model successfully, you could use the command <code>ollama list(ls)</code> to confirm the result.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ollama list/ls</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="Interact-with-the-local-models"><a href="#Interact-with-the-local-models" class="headerlink" title="Interact with the local models"></a>Interact with the local models</h2><p>There are two ways to interact with local models.</p>
+<ul>
+<li><p>Use the <code>ollama run</code> command in CLI.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ollama run [the model name:tag]</span><br></pre></td></tr></table></figure>
+
+<p>It will guide you in the CLI. You could use <code>ctrl+d</code> or <code>/bye</code> to quit the interaction in CLI.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Run the LLM in local as you specifiy</span></span><br><span class="line">ollama run deepseek-r1:8b</span><br><span class="line">&gt;&gt;&gt; Send a message (/? <span class="keyword">for</span> <span class="built_in">help</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Visit and question in front-end website <code>open-webui</code>.</p>
+<ul>
+<li><p>Deploying the <code>open-webui</code> in docker.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># If Ollama is on your computer, use this command</span></span><br><span class="line">docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main</span><br><span class="line"></span><br><span class="line"><span class="comment"># If Ollama is on a Different Server, use this command</span></span><br><span class="line">docker run -d -p 3000:8080 -e OLLAMA_BASE_URL=https://example.com -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Deploying the <code>open-webui</code> by <code>pip</code>.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Install</span></span><br><span class="line">pip install open-webui</span><br><span class="line"></span><br><span class="line"><span class="comment"># Execute</span></span><br><span class="line">open-webui serve </span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>By the way, Deploying in docker is recommended.</p>
+</li>
+</ul>
+<hr>
+<h2 id="Login-and-Question-offline"><a href="#Login-and-Question-offline" class="headerlink" title="Login and Question offline"></a>Login and Question offline</h2><p>The final step for you here is to login the open-webui website and let’s question!</p>
+<p>You could use <code>http://ip:port</code> or <code>http://localhost:port</code> to visit your local UI.</p>
+<p>Set the administrator (name + email + password) and then you could login.</p>
+<p>Selecting the various types of models you’ve already downloaded in local.</p>
+<p>You could also select more than one model and compare the results at the same time.</p>
+<p>The demo representation is shown as below.</p>
+<p><img src="/../images/open-webui.png" alt="Local open-webui"></p>
+<p>Congratulations to you! Now you can have a good time experimenting with large models locally ：）</p>
 ]]></content>
       <categories>
         <category>Artificial Intelligence</category>
