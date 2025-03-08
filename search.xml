@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>2025/03/08 English accumulation</title>
+    <url>//Language/English/20250308/index.html</url>
+    <content><![CDATA[<ul>
+<li><p><strong>accomplishment</strong>: It refers to something successfully completed or achieved, often through effort, skill, or perseverance. It can describe a notable achievement in a particular field, a personal success, or even a refined skill or ability. E.g. <code>Speaking multiple languages is an impressive accomplishment.</code></p>
+</li>
+<li><p><strong>savor&#x2F;savour</strong>: It means to fully enjoy or appreciate something, especially a taste, smell, or experience. It often implies taking one’s time to relish and delight in the moment. E.g. <code>Savour the moment—you’ve worked hard for this success.</code></p>
+</li>
+<li><p><strong>catapult</strong>: It refers to propel something or someone suddenly and forcefully into motion or a new situation. E.g. <code>The film’s success catapulted the young actor to fame.</code></p>
+</li>
+<li><p><strong>anniversary</strong>: I refers to the annual recurrence of a significant date, marking an event that happened in a previous year. It is commonly used for celebrations or commemorations. E.g. <code>They celebrated their tenth wedding anniversary with a holiday in Italy.</code></p>
+</li>
+<li><p><strong>outlast</strong>: <code>outlast</code> is a verb meaning to endure or last longer than something or someone else. It implies surpassing in duration, resilience, or survival. E.g. <code>These sturdy boots will outlast cheaper alternatives.</code></p>
+</li>
+<li><p><strong>innovation</strong>: <code>innovation</code> refers to the introduction of new ideas, methods, or products, often involving improvement or creativity. It can apply to technology, business, science, or any field where progress is made through new developments. E.g. <code>Innovation is key to staying ahead in a competitive market.</code></p>
+</li>
+<li><p><strong>pressing need for</strong>: It refers to an urgent or immediate requirement for something. It emphasises the importance and necessity of taking swift action. E.g. <code>After the storm, there was a pressing need for emergency supplies and assistance.</code></p>
+</li>
+<li><p><strong>mainstay</strong>: <code>mainstay</code> refers to something or someone that is the most important or essential part of a system, organisation, or group, providing support and stability. E.g. <code>Agriculture is the mainstay of the country’s economy.</code></p>
+</li>
+<li><p><strong>be humbled by</strong>: <code>to be humbled by</code> means to feel a deep sense of modesty, gratitude, or humility due to an experience, recognition, or comparison. It often implies being moved or gaining perspective, especially when faced with something inspiring, overwhelming, or greater than oneself. E.g. <code>He was humbled by the generosity of the community after the disaster.</code></p>
+</li>
+<li><p><strong>hindsight</strong>: <code>hindsight</code> refers to the understanding or realisation of a situation or event after it has happened, often with the benefit of knowing the outcome. It is commonly used to reflect on past decisions or actions. E.g. <code>Hindsight is a wonderful thing, but at the time, we did what we thought was best.</code></p>
+</li>
+<li><p><strong>no-nonsense</strong>: <code>no-nonsense</code> describes a practical, straightforward, and efficient approach to something, without unnecessary fuss or distractions. It is often used to describe people, attitudes, or methods that are serious, direct, and focused on getting things done. E.g. <code>His no-nonsense approach to problem-solving made him highly respected.</code></p>
+</li>
+<li><p><strong>mentors</strong>: <code>mentors</code> are experienced and knowledgeable individuals who provide guidance, support, and advice to less experienced people, often in a professional, academic, or personal development context. A mentor helps someone grow by sharing wisdom, offering encouragement, and providing constructive feedback. E.g. <code>Good mentors can make a significant difference in a young professional’s development.</code></p>
+</li>
+<li><p><strong>dedication</strong>: <code>dedication</code> refers to the quality of being committed or devoted to a particular task, cause, or person. It often implies hard work, persistence, and focus in achieving goals or supporting something important. E.g. <code>The success of the project is a testament to the team’s dedication and effort.</code></p>
+</li>
+<li><p><strong>departure</strong>: <code>departure</code> refers to the act of leaving or moving away from a place, situation, or position. It can also refer to the moment or event when someone or something departs. E.g. <code>The departure of the flight has been delayed due to bad weather.</code></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Ansible Series Chapter3: Implementing Recommended Ansible Practices</title>
     <url>//Linux/Ansible/implementing-recommended-ansible-practices/index.html</url>
     <content><![CDATA[<h2 id="The-Effectiveness-of-Ansible"><a href="#The-Effectiveness-of-Ansible" class="headerlink" title="The Effectiveness of Ansible"></a>The Effectiveness of Ansible</h2><p>As you work with more advanced features and larger, more complex projects, it becomes more difficult to manage and maintain Ansible Playbooks, or to use them effectively.</p>
