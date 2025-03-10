@@ -1,0 +1,549 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Ansible Series Chapter3: Implementing Recommended Ansible Practices | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Demonstrate and describe commonly recommended practices for developing and maintaining effective Ansible automation solutions.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible Series Chapter3: Implementing Recommended Ansible Practices">
+<meta property="og:url" content="https://blog.sunhaoyang.net/Linux/Ansible/implementing-recommended-ansible-practices/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="Demonstrate and describe commonly recommended practices for developing and maintaining effective Ansible automation solutions.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/Ansible.png">
+<meta property="article:published_time" content="2025-03-06T15:31:53.000Z">
+<meta property="article:modified_time" content="2025-03-07T03:01:06.230Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="Ansible">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/Ansible.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://blog.sunhaoyang.net/Linux/Ansible/implementing-recommended-ansible-practices/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Ansible Series Chapter3: Implementing Recommended Ansible Practices',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Ansible Series Chapter3: Implementing Recommended Ansible Practices</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Ansible Series Chapter3: Implementing Recommended Ansible Practices</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-03-06T15:31:53.000Z" title="Created 2025-03-06 23:31:53">2025-03-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-03-07T03:01:06.230Z" title="Updated 2025-03-07 11:01:06">2025-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>7mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">Comments:</span><a href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h2 id="The-Effectiveness-of-Ansible"><a href="#The-Effectiveness-of-Ansible" class="headerlink" title="The Effectiveness of Ansible"></a>The Effectiveness of Ansible</h2><p>As you work with more advanced features and larger, more complex projects, it becomes more difficult to manage and maintain Ansible Playbooks, or to use them effectively.</p>
+<p>To paraphrase Ansible developer Jeff Geerling, using Ansible effectively relies on three key practices:</p>
+<ul>
+<li><p>Keeping things simple</p>
+</li>
+<li><p>Staying organized</p>
+</li>
+<li><p>Testing often</p>
+</li>
+</ul>
+<h3 id="Keeping-things-simple"><a href="#Keeping-things-simple" class="headerlink" title="Keeping things simple"></a>Keeping things simple</h3><ul>
+<li><p>Keeping Your Playbooks Readable</p>
+<ol>
+<li><p>Add Comments: Ensure that playbooks and tasks include meaningful comments to improve readability and maintainability.</p>
+</li>
+<li><p>   Use Blank Lines to Separate Logic: Insert blank lines between logical sections to enhance clarity.</p>
+</li>
+<li><p>   Always Name Plays and Tasks Meaningfully: Every play and task should have a clear and descriptive name to convey its purpose.</p>
+</li>
+<li><p>Maintain a Consistent Style: Use a uniform coding style, including consistent indentation, variable naming conventions, and structured comments.</p>
+</li>
+<li><p>   Leverage Roles for Efficiency: Utilize roles to modularize and organize automation tasks efficiently.</p>
+</li>
+<li><p>   Stick to Native YAML Syntax: Avoid writing parameters in a single line—use proper YAML formatting to ensure readability and maintainability.</p>
+</li>
+</ol>
+<p>The following syntax is <code>easier</code> for most people to read:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">installed</span> <span class="string">and</span> <span class="string">updated</span></span><br><span class="line">  <span class="attr">ansible.builtin.yum:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">postfix</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">latest</span></span><br><span class="line">  <span class="attr">notify:</span> <span class="string">update_postfix</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">running</span></span><br><span class="line">  <span class="attr">ansible.builtin.service:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">postfix</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">started</span></span><br></pre></td></tr></table></figure>
+
+<p>Use native YAML syntax, not the “folded” syntax. For example, the following example is <code>not a recommended format</code>:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">installed</span> <span class="string">and</span> <span class="string">updated</span></span><br><span class="line">  <span class="attr">ansible.builtin.yum:</span> <span class="string">name=postfix</span> <span class="string">state=latest</span></span><br><span class="line">  <span class="attr">notify:</span> <span class="string">restart_postfix</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">running</span></span><br><span class="line">  <span class="attr">ansible.builtin.service:</span> <span class="string">name=postfix</span> <span class="string">state=started</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Use Existing Modules</p>
+<ol>
+<li><p>When writing a new playbook, start with a <code>basic playbook</code> and, if possible, a <code>static inventory</code>. Use <code>ansible.builtin.debug</code> tasks as stubs as you build your design. When your playbook functions as expected, break up your playbook into smaller, logical components by using <code>imports</code> and <code>includes</code>.</p>
+</li>
+<li><p>Ansible playbooks are designed to be idempotent, meaning that running the same playbook multiple times should produce the same result without unintended changes. </p>
+<p> It is easier to make your playbook idempotent and easier to maintain if you use the modules designed for a specific task.</p>
+<p> However, using the following modules can break idempotency:</p>
+<ul>
+<li><code>ansible.builtin.command</code></li>
+<li><code>ansible.builtin.shell</code></li>
+<li><code>ansible.builtin.raw</code></li>
+</ul>
+</li>
+<li><p>Many modules have a default state or other variables that control what they do. For example, the yum module currently assumes that the package you name should be <code>present</code> in most cases.</p>
+</li>
+</ol>
+</li>
+<li><p>Adhering to a Standard Style</p>
+<p>Consider having a standard “style” that your team follows when writing Ansible projects. For example:</p>
+<ol>
+<li><p>How many spaces do you indent? </p>
+</li>
+<li><p>How do you want vertical white space used? </p>
+</li>
+<li><p>How should tasks, plays, roles, and variables be named? </p>
+</li>
+<li><p>What should get commented on and how?</p>
+</li>
+</ol>
+<p>Having a consistent standard can help improve maintainability and readability.</p>
+</li>
+</ul>
+<h3 id="Staying-Organized"><a href="#Staying-Organized" class="headerlink" title="Staying Organized"></a>Staying Organized</h3><ul>
+<li><p>Following Conventions for Naming Variables</p>
+<ol>
+<li><p>Variable names should <code>clarify contents</code>.</p>
+</li>
+<li><p>When defining role variables, it is best to <code>prefix them with the role name</code> to avoid conflicts and improve clarity. If the name of your role is myapp then prefix your variables with myapp_ so that you can easily identify them from variables in other roles and the playbook.</p>
+</li>
+<li><p>Use <code>descriptive variables</code>, such as apache_tls_port rather than a less explanatory variable such as p. In roles, it is a good practice to prefix role variables with the role name.</p>
+</li>
+</ol>
+</li>
+<li><p>Standardizing the Project Structure</p>
+<p>Use a consistent pattern when structuring the files of your Ansible project on a file system. The following is a good example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── dbservers.yml</span><br><span class="line">├── inventories/</span><br><span class="line">│ ├── prod/</span><br><span class="line">│ │ ├── group_vars/</span><br><span class="line">│ │ ├── host_vars/</span><br><span class="line">│ │ └── inventory/</span><br><span class="line">│ └── stage/</span><br><span class="line">│ ├── group_vars/</span><br><span class="line">│ ├── host_vars/</span><br><span class="line">│ └── inventory/</span><br><span class="line">├── roles/</span><br><span class="line">│ └── std_server/</span><br><span class="line">├── site.yml</span><br><span class="line">├── storage.yml</span><br><span class="line">└── webservers.yml</span><br></pre></td></tr></table></figure>
+
+<p>One of the playbook structure benefits is that you can divide up your extensive playbook into smaller files to make it more readable. Those smaller playbooks can contain plays for a specific purpose that you can run independently.</p>
+</li>
+<li><p>Using Dynamic Inventories</p>
+<ol>
+<li><p>Using Dynamic Inventory。</p>
+</li>
+<li><p>Dynamic inventory is particularly powerful when integrated with cloud providers, container platforms, and virtual machine management systems.</p>
+</li>
+<li><p>If dynamic inventory is not an option, other tools can be used to dynamically construct groups or gather additional information.</p>
+</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Generate</span> <span class="string">dynamic</span> <span class="string">groups</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Generate</span> <span class="string">dynamic</span> <span class="string">groups</span> <span class="string">based</span> <span class="string">on</span> <span class="string">architecture</span></span><br><span class="line">      <span class="attr">ansible.builtin.group_by:</span></span><br><span class="line">        <span class="attr">key:</span> <span class="string">arch_&quot;&#123;&#123;</span> <span class="string">ansible_facts[&#x27;architecture&#x27;]</span> <span class="string">&#125;&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Configure</span> <span class="string">x86_64</span> <span class="string">systems</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">arch_x86_64</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">First</span> <span class="string">task</span> <span class="string">for</span> <span class="string">x86_64</span> <span class="string">configuration</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Taking Advantage of Groups</p>
+<ol>
+<li><p>Geographical: Differentiate hosts from different regions, countries, continents, or data centers.</p>
+</li>
+<li><p>Environmental: Differentiate hosts dedicated to different stages of the software lifecycle, including development, staging, testing, and production.</p>
+</li>
+<li><p>Sites or services: Group hosts that offer or link to a subset of functions, such as a specific website, an application, or a subset of features.</p>
+</li>
+</ol>
+</li>
+<li><p>Reusing Content with Collections and Roles</p>
+<p>Roles and collections help keep playbooks simple and enable code reuse across different projects, reducing workload. When necessary, you can also create a custom automation execution environment.</p>
+<p>Common Sources for Collections and Roles:</p>
+<ul>
+<li>Red Hat Official Website</li>
+<li>Ansible Galaxy</li>
+<li>GitHub</li>
+<li>   Internal Company Repository</li>
+</ul>
+</li>
+<li><p>Running Playbooks Centrally </p>
+<p>Consider using a <code>dedicated control node</code> to run all Ansible Playbooks from a single location. Ideally, an Automation <code>Controller</code> should be used.</p>
+<p>The reason is simple: Ansible requires control over the managed hosts. Frequently changing the control node may lead to Playbook execution failures or security issues.</p>
+</li>
+</ul>
+<h3 id="Performing-Regular-Testing"><a href="#Performing-Regular-Testing" class="headerlink" title="Performing Regular Testing"></a>Performing Regular Testing</h3><ul>
+<li><p>Test Your Playbooks and Tasks Regularly During Development</p>
+<ol>
+<li><p>When confirming the success of a task, validate the task’s actual result rather than relying solely on the module’s return code.</p>
+</li>
+<li><p>In addition to using the <code>debug</code> module, you can also utilise the <code>uri</code> module to check whether web-based services are functioning correctly.</p>
+ <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Start</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">  <span class="attr">ansible.builtin.service:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">    <span class="attr">status:</span> <span class="string">started</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">web</span> <span class="string">site</span> <span class="string">from</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">  <span class="attr">ansible.builtin.uri:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">http://&#123;&#123;</span> <span class="string">ansible_fqdn</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">return_content:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">register:</span> <span class="string">example_webpage</span></span><br><span class="line">  <span class="attr">failed_when:</span> <span class="string">example_webpage.status</span> <span class="type">!=</span> <span class="number">200</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>Implement Recovery and Rollback with block&#x2F;rescue</p>
+<p>The block directive is useful for grouping tasks. When combined with the rescue directive, it helps in recovering from errors or failures, making it an effective approach for implementing recovery and rollback mechanisms.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">block:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">web</span> <span class="string">site</span> <span class="string">from</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">    <span class="attr">ansible.builtin.uri:</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">http://&#123;&#123;</span> <span class="string">ansible_fqdn</span> <span class="string">&#125;&#125;</span></span><br><span class="line">      <span class="attr">return_content:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">register:</span> <span class="string">example_webpage</span></span><br><span class="line">    <span class="attr">failed_when:</span> <span class="string">example_webpage.status</span> <span class="type">!=</span> <span class="number">200</span></span><br><span class="line"></span><br><span class="line"><span class="attr">rescue:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Restart</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">    <span class="attr">ansible.builtin.service:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">      <span class="attr">status:</span> <span class="string">restarted</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Using Test Tools</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-navigator run playbook --syntax-check -m stdout</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Analyzing the Playbooks</p>
+<ul>
+<li><p>ansible-lint </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-lint xxx.yaml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yamllint</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ yamllint xxx.yaml</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>Testing with New Versions</p>
+<p>Regularly test your playbooks and automation workflows against newer versions of Ansible Core. This ensures compatibility and helps identify potential issues before upgrading your production environment.</p>
+<p>If your playbook displays warnings or deprecation messages during execution, you should pay attention to them and make the necessary adjustments.</p>
+<p>When a feature in Ansible Core is deprecated or changed, a deprecation notice is provided <code>four minor versions</code> in advance before it is removed or modified.</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net/Linux/Ansible/implementing-recommended-ansible-practices/index.html">https://blog.sunhaoyang.net/Linux/Ansible/implementing-recommended-ansible-practices/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Ansible/">Ansible</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/Ansible.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/Language/English/20250308/index.html" title="2025/03/08 English accumulation"><img class="cover" src="https://blog.sunhaoyang.net/images/English.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">2025/03/08 English accumulation</div></div><div class="info-2"><div class="info-item-1">Here, I will document my understanding of how to accumulate knowledge in a new language (English). This is an ongoing process and requires time. However, with practice it becomes easier as you get better at reading comprehension speedily.</div></div></div></a><a class="pagination-related" href="/Linux/Ansible/the-introduction-of-ansible-navigator/index.html" title="Ansible Series Chapter2: The introduction of ansible-navigator"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Ansible Series Chapter2: The introduction of ansible-navigator</div></div><div class="info-2"><div class="info-item-1">This article primarily introduces knowledge related to ansible-navigator.</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-08</div><div class="info-item-2">Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections</div></div><div class="info-2"><div class="info-item-1">I'll describe how Ansible Content Collections are used to distribute modules and plug-ins, and create plays that use content from them.</div></div></div></a><a class="pagination-related" href="/Linux/Ansible/the-introduction-of-ansible-navigator/index.html" title="Ansible Series Chapter2: The introduction of ansible-navigator"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-05</div><div class="info-item-2">Ansible Series Chapter2: The introduction of ansible-navigator</div></div><div class="info-2"><div class="info-item-1">This article primarily introduces knowledge related to ansible-navigator.</div></div></div></a><a class="pagination-related" href="/Linux/Ansible/the-introduction-of-ansible-automation-platform2/index.html" title="Ansible Series Chapter1: The introduction of Ansible Automation Platform 2(RHAAP2)"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-22</div><div class="info-item-2">Ansible Series Chapter1: The introduction of Ansible Automation Platform 2(RHAAP2)</div></div><div class="info-2"><div class="info-item-1">This article primarily introduces knowledge related to componets of Ansible Automation Platform 2.</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#The-Effectiveness-of-Ansible"><span class="toc-number">1.</span> <span class="toc-text">The Effectiveness of Ansible</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Keeping-things-simple"><span class="toc-number">1.1.</span> <span class="toc-text">Keeping things simple</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Staying-Organized"><span class="toc-number">1.2.</span> <span class="toc-text">Staying Organized</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Performing-Regular-Testing"><span class="toc-number">1.3.</span> <span class="toc-text">Performing Regular Testing</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Linux/NGINX_1.Deploying-NGINX/index.html" title="NGINX Series Chapter1: Deploying NGINX"><img src="https://blog.sunhaoyang.net/images/Nginx.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NGINX Series Chapter1: Deploying NGINX"/></a><div class="content"><a class="title" href="/Linux/NGINX_1.Deploying-NGINX/index.html" title="NGINX Series Chapter1: Deploying NGINX">NGINX Series Chapter1: Deploying NGINX</a><time datetime="2025-03-10T06:20:45.000Z" title="Created 2025-03-10 14:20:45">2025-03-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"/></a><div class="content"><a class="title" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections">Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections</a><time datetime="2025-03-08T15:42:39.000Z" title="Created 2025-03-08 23:42:39">2025-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Language/English/20250308/index.html" title="2025/03/08 English accumulation"><img src="https://blog.sunhaoyang.net/images/English.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/03/08 English accumulation"/></a><div class="content"><a class="title" href="/Language/English/20250308/index.html" title="2025/03/08 English accumulation">2025/03/08 English accumulation</a><time datetime="2025-03-08T14:28:35.000Z" title="Created 2025-03-08 22:28:35">2025-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter3: Implementing Recommended Ansible Practices"/></a><div class="content"><a class="title" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices">Ansible Series Chapter3: Implementing Recommended Ansible Practices</a><time datetime="2025-03-06T15:31:53.000Z" title="Created 2025-03-06 23:31:53">2025-03-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/the-introduction-of-ansible-navigator/index.html" title="Ansible Series Chapter2: The introduction of ansible-navigator"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter2: The introduction of ansible-navigator"/></a><div class="content"><a class="title" href="/Linux/Ansible/the-introduction-of-ansible-navigator/index.html" title="Ansible Series Chapter2: The introduction of ansible-navigator">Ansible Series Chapter2: The introduction of ansible-navigator</a><time datetime="2025-03-05T15:35:12.000Z" title="Created 2025-03-05 23:35:12">2025-03-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://blog.sunhaoyang.net/images/footer_background.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/gonganbeian.png" alt="公安备案" style="vertical-align:middle; width:16px; heigh:16px;"> 辽公网安备21029602001011号
+</a>
+<a href="https://beian.miit.gov.cn/" rel="noreferrer" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/icpbeian.png" alt="ICP备案" style="vertical-align:middle; width:16px; height:16px;"> 辽ICP备2025048274号-1
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[Image]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[Link]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[Code]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[Code]') // replace code      
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'src'
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}"></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += 'No comments'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.sunhaoyang.net/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "Unable to retrieve comments, please check the configuration"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="/pluginsSrc/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="/pluginsSrc/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

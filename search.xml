@@ -1,8 +1,624 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Ansible Series Chapter1: Developing Playbooks with Ansible Automation Platform 2</title>
-    <url>//Linux/Ansible/Deploying-playbooks-with-ansible-automation-platform2/index.html</url>
+    <title>NGINX Series Chapter1: Deploying NGINX</title>
+    <url>/Linux/NGINX_1.Deploying-NGINX/index.html</url>
+    <content><![CDATA[<h2 id="Deployment-Plan-Table"><a href="#Deployment-Plan-Table" class="headerlink" title="Deployment Plan Table"></a>Deployment Plan Table</h2><table>
+<thead>
+<tr>
+<th>Operating System</th>
+<th>IP</th>
+<th>NGINX Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rocky9.5(x86_64)</td>
+<td>192.168.225.32</td>
+<td>1.26.3</td>
+</tr>
+</tbody></table>
+<p>Here, I’ll only introduce how to install nginx by <code>the rpm repository</code>. As to the build-install method, I’ll introduce in the later chapter.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><h3 id="Preparing-the-software-repository"><a href="#Preparing-the-software-repository" class="headerlink" title="Preparing the software repository"></a>Preparing the software repository</h3><p>I would like to add a new repository in the path <code>/etc/yum.repos.d/nginx.repo</code>.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/yum.repos.d/nginx.repo &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">[nginx]</span></span><br><span class="line"><span class="string">name=nginx repo</span></span><br><span class="line"><span class="string">baseurl=http://nginx.org/packages/centos/9/x86_64/</span></span><br><span class="line"><span class="string">gpgcheck=0</span></span><br><span class="line"><span class="string">enabled=1</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Generating-the-index-of-repository"><a href="#Generating-the-index-of-repository" class="headerlink" title="Generating the index of repository"></a>Generating the index of repository</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# dnf makecache</span><br><span class="line">nginx repo                                     8.7 kB/s | 2.9 kB     00:00</span><br><span class="line">Rocky Linux 9 - BaseOS                         4.8 kB/s | 4.1 kB     00:00</span><br><span class="line">Rocky Linux 9 - BaseOS                         1.0 MB/s | 2.3 MB     00:02</span><br><span class="line">Rocky Linux 9 - AppStream                      1.8 kB/s | 4.5 kB     00:02</span><br><span class="line">Rocky Linux 9 - AppStream                      8.4 MB/s | 8.5 MB     00:01</span><br><span class="line">Rocky Linux 9 - Extras                         3.7 kB/s | 2.9 kB     00:00</span><br><span class="line">Rocky Linux 9 - Extras                          15 kB/s |  16 kB     00:01</span><br><span class="line">Metadata cache created.</span><br></pre></td></tr></table></figure>
+
+<p>&#96;&#96; Installing NGINX</p>
+<p>Similarly, you can install nginx using the following command in RockyLinux terminal : <code>sudo yum -y install nginx</code> . After installation is complete it will be available for use via http.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# dnf install nginx -y</span><br><span class="line">...</span><br><span class="line">==============================================================================================================================================================================================================</span><br><span class="line"> Package                                       Architecture                                   Version                                                     Repository                                     Size</span><br><span class="line">==============================================================================================================================================================================================================</span><br><span class="line">Installing:</span><br><span class="line"> nginx                                         x86_64                                         2:1.26.2-2.el9.ngx                                          nginx                                         996 k</span><br><span class="line"></span><br><span class="line">Transaction Summary</span><br><span class="line">==============================================================================================================================================================================================================</span><br><span class="line">Install  1 Package</span><br><span class="line"></span><br><span class="line">Total download size: 996 k</span><br><span class="line">Installed size: 3.3 M</span><br><span class="line">Downloading Packages:</span><br><span class="line">nginx-1.26.3-2.el9.ngx.x86_64.rpm                                                                                                                                             428 kB/s | 996 kB     00:02</span><br><span class="line">--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</span><br><span class="line">Installed:</span><br><span class="line">  nginx-2:1.26.3-2.el9.ngx.x86_64</span><br><span class="line">...</span><br><span class="line">Complete!</span><br><span class="line">[root@localhost ~]#</span><br></pre></td></tr></table></figure>
+
+<h2 id="Preparing-the-test-webpage"><a href="#Preparing-the-test-webpage" class="headerlink" title="Preparing the test webpage"></a>Preparing the test webpage</h2><p>NGINX has been installed, so let’s test whether it can serve a webpage. By default, NGINX requires us to place web pages in the <code>/usr/share/nginx/html</code> directory, with the homepage named either <code>index.html</code> or <code>index.htm</code>.</p>
+<p>I have prepared a homepage with the content: <strong>“Hello nginx, I’m Haoyang Sun!”</strong>.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# echo &quot;Hello nginx, I&#x27;m Haoyang Sun!&quot; &gt; /usr/share/nginx/html/index.html</span><br><span class="line">[root@localhost ~]# cat /usr/share/nginx/html/index.html</span><br><span class="line">Hello nginx, I&#x27;m Haoyang Sun!</span><br></pre></td></tr></table></figure>
+
+<h2 id="Enabling-and-starting-the-service"><a href="#Enabling-and-starting-the-service" class="headerlink" title="Enabling and starting the service"></a>Enabling and starting the service</h2><p>Here, we use the <code>enable</code> <code>--now</code> syntax to perform both the enable and start operations on the NGINX service.</p>
+<p>This ensures that the NGINX service starts immediately and is configured to launch automatically on boot.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# systemctl enable nginx --now</span><br><span class="line">Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.</span><br></pre></td></tr></table></figure>
+
+<p>Check the status of nginx service.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# systemctl status nginx</span><br><span class="line">● nginx.service - nginx - high performance web server</span><br><span class="line">     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: disabled)</span><br><span class="line">     Active: active (running) since Sun 2025-03-09 23:47:45 EDT; 3h 2min ago</span><br><span class="line">       Docs: http://nginx.org/en/docs/</span><br><span class="line">    Process: 21534 ExecStart=/usr/sbin/nginx -c $&#123;conffile&#125; (code=exited, status=0/SUCCESS)</span><br><span class="line">   Main PID: 21535 (nginx)</span><br><span class="line">      Tasks: 5 (limit: 47268)</span><br><span class="line">     Memory: 5.1M</span><br><span class="line">        CPU: 16ms</span><br><span class="line">     CGroup: /system.slice/nginx.service</span><br><span class="line">             ├─21535 &quot;nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx.conf&quot;</span><br><span class="line">             ├─21536 &quot;nginx: worker process&quot;</span><br><span class="line">             ├─21537 &quot;nginx: worker process&quot;</span><br><span class="line">             ├─21538 &quot;nginx: worker process&quot;</span><br><span class="line">             └─21539 &quot;nginx: worker process&quot;</span><br><span class="line"></span><br><span class="line">Mar 09 23:47:45 localhost.localdomain systemd[1]: Starting nginx - high performance web serv&gt;</span><br><span class="line">Mar 09 23:47:45 localhost.localdomain systemd[1]: Started nginx - high performance web serve&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Opening-the-firewall"><a href="#Opening-the-firewall" class="headerlink" title="Opening the firewall"></a>Opening the firewall</h2><p>To allow access to the NGINX service, configure the firewall accordingly.</p>
+<p>This ensures that incoming traffic can reach the web server.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# firewall-cmd --add-service=http --permanent</span><br><span class="line">success</span><br><span class="line">[root@localhost ~]# firewall-cmd --reload</span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+
+<h2 id="Visiting-the-test-webpage"><a href="#Visiting-the-test-webpage" class="headerlink" title="Visiting the test webpage"></a>Visiting the test webpage</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# curl http://192.168.225.32</span><br><span class="line">Hello nginx, I&#x27;m Haoyang Sun!</span><br></pre></td></tr></table></figure>
+
+<h2 id="Gracefully-reloading-NGINX"><a href="#Gracefully-reloading-NGINX" class="headerlink" title="Gracefully reloading NGINX"></a>Gracefully reloading NGINX</h2><p>To apply configuration changes without interrupting active connections, use a graceful reload.</p>
+<p>This ensures that NGINX reloads its settings smoothly without downtime.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>Sending the <code>reload</code> signal to reload the configuration files without interrupting active connections.</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections</title>
+    <url>//Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html</url>
+    <content><![CDATA[<h2 id="Explanation-of-Ansible-Content-Collections"><a href="#Explanation-of-Ansible-Content-Collections" class="headerlink" title="Explanation of Ansible Content Collections"></a>Explanation of Ansible Content Collections</h2><h3 id="Introductions"><a href="#Introductions" class="headerlink" title="Introductions"></a>Introductions</h3><p>What Are Ansible Content Collections?</p>
+<p>Ansible Content Collections are a structured approach within the Ansible ecosystem for organising and distributing automation resources. </p>
+<p>They bundle together <code>modules</code>, <code>plugins</code>, <code>roles</code>, <code>documentation</code>, and other <code>related files</code> into a reusable and independently managed unit, allowing users to easily access and utilise the necessary resources.</p>
+<p>Core Components of a Content Collection:</p>
+<ul>
+<li><p>Modules: Small scripts that perform specific tasks, such as managing files or installing software.</p>
+</li>
+<li><p>   Plugins: Pluggable components that extend Ansible’s functionality, such as callback plugins or filter plugins.</p>
+</li>
+<li><p>   Roles: Structured directories used to organise and reuse automation tasks.</p>
+</li>
+<li><p>   Documentation and Examples: Includes usage guides, YAML example files, and other resources to help users understand and implement the collection effectively.</p>
+</li>
+</ul>
+<h3 id="Advantages"><a href="#Advantages" class="headerlink" title="Advantages"></a>Advantages</h3><ul>
+<li><p>Modularity and Decoupling: Separates resources from the Ansible core, allowing independent updates.</p>
+</li>
+<li><pre><code>Ease of Distribution and Management: Enables quick installation and management of collections using the ansible-galaxy command.
+</code></pre>
+</li>
+<li><pre><code>Namespace Support: Utilises the namespace.collection_name structure to prevent naming conflicts.
+</code></pre>
+</li>
+<li><pre><code>Community-Driven: Developers and organisations can share content collections, fostering the growth of the open-source ecosystem.
+</code></pre>
+</li>
+</ul>
+<h3 id="Differences-Between-Using-Content-Collections-and-the-Traditional-Approach"><a href="#Differences-Between-Using-Content-Collections-and-the-Traditional-Approach" class="headerlink" title="Differences Between Using Content Collections and the Traditional Approach"></a>Differences Between Using Content Collections and the Traditional Approach</h3><p>Before the introduction of Ansible Content Collections, Ansible relied on role directory structures and core module packages.</p>
+<p>This traditional approach had several limitations:</p>
+<ul>
+<li><p>Difficult Module Updates: All modules were bundled with the Ansible core version, meaning that updating a module required upgrading the entire Ansible version.</p>
+</li>
+<li><p>Lack of Flexibility: Roles and modules were managed separately, requiring users to handle multiple independent resources manually.</p>
+</li>
+</ul>
+<p>In contrast, Content Collections unify these resources by packaging modules, plugins, roles, and documentation into a single, standalone distribution unit. This design eliminates the limitations of the traditional approach, making automation more modular, flexible, and easier to manage.</p>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>Why Are Namespaces Needed?</p>
+<p>To make it easier to specify collections and their contents by name, collection names are organized into <code>namespaces</code>.</p>
+<p>The introduction of namespaces helps prevent conflicts and improve organisation when managing Ansible content.</p>
+<p>In the early stages of Ansible’s development, all modules, plugins, and roles were structured in a flat manner, leading to several issues:</p>
+<ul>
+<li><p>Naming Conflicts: Different developers might create modules or roles with the same name, causing conflicts and confusion.</p>
+</li>
+<li><p>Difficult Organisation and Management: As the Ansible ecosystem expanded, the growing number of resources became harder to manage without a structured hierarchy.</p>
+</li>
+</ul>
+<p>With namespaces, Ansible creates separate logical spaces for different sources, such as individual developers or organisations. Using the structure namespace.collection_name.module_name, resources are ensured to <code>be unique</code> while also improving code readability and maintainability.</p>
+<p>The namespace is the first part of a collection name. For example, all the collections that the Ansible <code>community maintain</code> are in the community namespace, and have names such as<br><code>community.crypto</code>, <code>community.postgresql</code>, and <code>community.rabbitmq</code>. Collections that <code>Red Hat maintain</code> and support might use the redhat namespace, and have names such as <code>redhat.rhv</code>, <code>redhat.satellite</code>, and <code>redhat.insights</code>. </p>
+<p>Names of namespaces are limited to <code>ASCII lowercase letters</code>, <code>numbers</code>, and <code>underscores</code>, must be <code>at least two characters long</code>, and <code>must not start with an underscore</code>.</p>
+<h3 id="Accessing-Ansible-Content-Collection-Documentation"><a href="#Accessing-Ansible-Content-Collection-Documentation" class="headerlink" title="Accessing Ansible Content Collection Documentation"></a>Accessing Ansible Content Collection Documentation</h3><p>Use the <code>ansible-navigator collections</code> command to list the collections available in automation execution environments.  Type a colon before the collection number, you could check the number x line available module. Enter the module number to access its documentation.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  Name                    Version Shadowed Type      Path</span><br><span class="line">0│amazon.aws              3.2.0   False    contained /usr/share/ansible/collec</span><br><span class="line">1│ansible.builtin         2.13.3  False    contained /usr/lib/python3.9/site-p</span><br><span class="line">2│ansible.controller      4.2.1   False    contained /usr/share/ansible/collec</span><br><span class="line">3│ansible.netcommon       3.0.0   False    contained /usr/share/ansible/collec</span><br><span class="line">4│ansible.network         1.2.0   False    contained /usr/share/ansible/collec</span><br><span class="line">5│ansible.posix           1.3.0   False    contained /usr/share/ansible/collec</span><br><span class="line">6│ansible.security        1.0.0   False    contained /usr/share/ansible/collec</span><br><span class="line">7│ansible.utils           2.6.1   False    contained /usr/share/ansible/collec</span><br><span class="line">8│ansible.windows         1.9.0   False    contained /usr/share/ansible/collec</span><br><span class="line">9│ansible.yang            1.0.0   False    contained /usr/share/ansible/collec</span><br></pre></td></tr></table></figure>
+
+<p>Use the following command to display the help documentation in plain text format:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ansible-navigator doc &lt;module_name&gt; -m stdout</span><br></pre></td></tr></table></figure>
+
+<p>E.g.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-navigator doc redhat.insights.insights_register \</span><br><span class="line">&gt; --mode stdout</span><br><span class="line">&gt; REDHAT.INSIGHTS.INSIGHTS_REGISTER    (/usr/share/ansible/collections/ansible_&gt;</span><br><span class="line"></span><br><span class="line">        This module will check the current registration status,</span><br><span class="line">        unregister if needed, and then register the insights client</span><br><span class="line">        (and update the display_name if needed)</span><br><span class="line"></span><br><span class="line">OPTIONS (= is mandatory):</span><br><span class="line"></span><br><span class="line">- display_name</span><br><span class="line">        This option is here to enable registering with a display_name</span><br><span class="line">        outside of using a configuration file. Some may be used to</span><br><span class="line">        doing it this way so I left this in as an optional parameter.</span><br><span class="line">        [Default: (null)]</span><br><span class="line">        type: str</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Using-Ansible-Content-Collections-in-Playbooks"><a href="#Using-Ansible-Content-Collections-in-Playbooks" class="headerlink" title="Using Ansible Content Collections in Playbooks"></a>Using Ansible Content Collections in Playbooks</h3><p>To use a module or a role from a collection, refer to it with its <code>fully qualified collection name</code> (FQCN).<br>For example, use redhat.insights.insights_register to refer to the insights_register module.</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Register</span> <span class="string">new</span> <span class="string">systems</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">db.example.com</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Ensure</span> <span class="string">the</span> <span class="string">new</span> <span class="string">system</span> <span class="string">is</span> <span class="string">registered</span> <span class="string">with</span> <span class="string">Red</span> <span class="string">Hat</span> <span class="string">Insights</span></span><br><span class="line">      <span class="attr">redhat.insights.insights_register:</span></span><br><span class="line">        <span class="attr">state:</span> <span class="string">present</span></span><br><span class="line">        <span class="attr">force_reregister:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>The play in the following playbook uses the organizations role from the redhat.satellite collection.</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Add</span> <span class="string">the</span> <span class="string">test</span> <span class="string">organizations</span> <span class="string">to</span> <span class="string">Red</span> <span class="string">Hat</span> <span class="string">Satellite</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">localhost</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Ensure</span> <span class="string">the</span> <span class="string">organizations</span> <span class="string">exist</span></span><br><span class="line">      <span class="attr">ansible.builtin.include_role:</span></span><br><span class="line">        <span class="attr">name:</span> <span class="string">redhat.satellite.organizations</span></span><br><span class="line">      <span class="attr">vars:</span></span><br><span class="line">        <span class="attr">satellite_server_url:</span> <span class="string">https://sat.example.com</span></span><br><span class="line">        <span class="attr">satellite_username:</span> <span class="string">admin</span></span><br><span class="line">        <span class="attr">satellite_password:</span> <span class="string">Sup3r53cr3t</span></span><br><span class="line">        <span class="attr">satellite_organizations:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test1</span></span><br><span class="line">            <span class="attr">label:</span> <span class="string">tst1</span></span><br><span class="line">            <span class="attr">state:</span> <span class="string">present</span></span><br></pre></td></tr></table></figure>
+
+<p>Many Ansible Content Collections also use this <code>redirection mechanism</code> to translate old short names into Fully Qualified Collection Names (FQCN). </p>
+<p>For example, the acl module is now part of the ansible.posix collection, and it uses ansible.posix.acl as its FQCN.</p>
+<h3 id="Using-the-Built-in-Ansible-Content-Collection"><a href="#Using-the-Built-in-Ansible-Content-Collection" class="headerlink" title="Using the Built-in Ansible Content Collection"></a>Using the Built-in Ansible Content Collection</h3><p>Ansible always includes a special collection named ansible.builtin. This collection includes a set of common modules, such as <code>copy</code>, <code>template</code>, <code>file</code>, <code>yum</code>, <code>command</code>, and <code>service</code>.</p>
+<p>You can use the <code>short names</code> of these modules in your playbooks. For example, you can use <code>file</code> to refer to the <code>ansible.builtin.file</code> module. </p>
+<p>However, Red Hat recommends that you use the FQCN notation to prevent conflicts with collections that might use the same module names.</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ansible</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>2025/03/08 English accumulation</title>
+    <url>//Language/English/20250308/index.html</url>
+    <content><![CDATA[<ul>
+<li><p><strong>accomplishment</strong>: It refers to something successfully completed or achieved, often through effort, skill, or perseverance. It can describe a notable achievement in a particular field, a personal success, or even a refined skill or ability. E.g. <code>Speaking multiple languages is an impressive accomplishment.</code></p>
+</li>
+<li><p><strong>savor&#x2F;savour</strong>: It means to fully enjoy or appreciate something, especially a taste, smell, or experience. It often implies taking one’s time to relish and delight in the moment. E.g. <code>Savour the moment—you’ve worked hard for this success.</code></p>
+</li>
+<li><p><strong>catapult</strong>: It refers to propel something or someone suddenly and forcefully into motion or a new situation. E.g. <code>The film’s success catapulted the young actor to fame.</code></p>
+</li>
+<li><p><strong>anniversary</strong>: I refers to the annual recurrence of a significant date, marking an event that happened in a previous year. It is commonly used for celebrations or commemorations. E.g. <code>They celebrated their tenth wedding anniversary with a holiday in Italy.</code></p>
+</li>
+<li><p><strong>outlast</strong>: <code>outlast</code> is a verb meaning to endure or last longer than something or someone else. It implies surpassing in duration, resilience, or survival. E.g. <code>These sturdy boots will outlast cheaper alternatives.</code></p>
+</li>
+<li><p><strong>innovation</strong>: <code>innovation</code> refers to the introduction of new ideas, methods, or products, often involving improvement or creativity. It can apply to technology, business, science, or any field where progress is made through new developments. E.g. <code>Innovation is key to staying ahead in a competitive market.</code></p>
+</li>
+<li><p><strong>pressing need for</strong>: It refers to an urgent or immediate requirement for something. It emphasises the importance and necessity of taking swift action. E.g. <code>After the storm, there was a pressing need for emergency supplies and assistance.</code></p>
+</li>
+<li><p><strong>mainstay</strong>: <code>mainstay</code> refers to something or someone that is the most important or essential part of a system, organisation, or group, providing support and stability. E.g. <code>Agriculture is the mainstay of the country’s economy.</code></p>
+</li>
+<li><p><strong>be humbled by</strong>: <code>to be humbled by</code> means to feel a deep sense of modesty, gratitude, or humility due to an experience, recognition, or comparison. It often implies being moved or gaining perspective, especially when faced with something inspiring, overwhelming, or greater than oneself. E.g. <code>He was humbled by the generosity of the community after the disaster.</code></p>
+</li>
+<li><p><strong>hindsight</strong>: <code>hindsight</code> refers to the understanding or realisation of a situation or event after it has happened, often with the benefit of knowing the outcome. It is commonly used to reflect on past decisions or actions. E.g. <code>Hindsight is a wonderful thing, but at the time, we did what we thought was best.</code></p>
+</li>
+<li><p><strong>no-nonsense</strong>: <code>no-nonsense</code> describes a practical, straightforward, and efficient approach to something, without unnecessary fuss or distractions. It is often used to describe people, attitudes, or methods that are serious, direct, and focused on getting things done. E.g. <code>His no-nonsense approach to problem-solving made him highly respected.</code></p>
+</li>
+<li><p><strong>mentors</strong>: <code>mentors</code> are experienced and knowledgeable individuals who provide guidance, support, and advice to less experienced people, often in a professional, academic, or personal development context. A mentor helps someone grow by sharing wisdom, offering encouragement, and providing constructive feedback. E.g. <code>Good mentors can make a significant difference in a young professional’s development.</code></p>
+</li>
+<li><p><strong>dedication</strong>: <code>dedication</code> refers to the quality of being committed or devoted to a particular task, cause, or person. It often implies hard work, persistence, and focus in achieving goals or supporting something important. E.g. <code>The success of the project is a testament to the team’s dedication and effort.</code></p>
+</li>
+<li><p><strong>departure</strong>: <code>departure</code> refers to the act of leaving or moving away from a place, situation, or position. It can also refer to the moment or event when someone or something departs. E.g. <code>The departure of the flight has been delayed due to bad weather.</code></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ansible Series Chapter3: Implementing Recommended Ansible Practices</title>
+    <url>//Linux/Ansible/implementing-recommended-ansible-practices/index.html</url>
+    <content><![CDATA[<h2 id="The-Effectiveness-of-Ansible"><a href="#The-Effectiveness-of-Ansible" class="headerlink" title="The Effectiveness of Ansible"></a>The Effectiveness of Ansible</h2><p>As you work with more advanced features and larger, more complex projects, it becomes more difficult to manage and maintain Ansible Playbooks, or to use them effectively.</p>
+<p>To paraphrase Ansible developer Jeff Geerling, using Ansible effectively relies on three key practices:</p>
+<ul>
+<li><p>Keeping things simple</p>
+</li>
+<li><p>Staying organized</p>
+</li>
+<li><p>Testing often</p>
+</li>
+</ul>
+<h3 id="Keeping-things-simple"><a href="#Keeping-things-simple" class="headerlink" title="Keeping things simple"></a>Keeping things simple</h3><ul>
+<li><p>Keeping Your Playbooks Readable</p>
+<ol>
+<li><p>Add Comments: Ensure that playbooks and tasks include meaningful comments to improve readability and maintainability.</p>
+</li>
+<li><p>   Use Blank Lines to Separate Logic: Insert blank lines between logical sections to enhance clarity.</p>
+</li>
+<li><p>   Always Name Plays and Tasks Meaningfully: Every play and task should have a clear and descriptive name to convey its purpose.</p>
+</li>
+<li><p>Maintain a Consistent Style: Use a uniform coding style, including consistent indentation, variable naming conventions, and structured comments.</p>
+</li>
+<li><p>   Leverage Roles for Efficiency: Utilize roles to modularize and organize automation tasks efficiently.</p>
+</li>
+<li><p>   Stick to Native YAML Syntax: Avoid writing parameters in a single line—use proper YAML formatting to ensure readability and maintainability.</p>
+</li>
+</ol>
+<p>The following syntax is <code>easier</code> for most people to read:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">installed</span> <span class="string">and</span> <span class="string">updated</span></span><br><span class="line">  <span class="attr">ansible.builtin.yum:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">postfix</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">latest</span></span><br><span class="line">  <span class="attr">notify:</span> <span class="string">update_postfix</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">running</span></span><br><span class="line">  <span class="attr">ansible.builtin.service:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">postfix</span></span><br><span class="line">    <span class="attr">state:</span> <span class="string">started</span></span><br></pre></td></tr></table></figure>
+
+<p>Use native YAML syntax, not the “folded” syntax. For example, the following example is <code>not a recommended format</code>:</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">installed</span> <span class="string">and</span> <span class="string">updated</span></span><br><span class="line">  <span class="attr">ansible.builtin.yum:</span> <span class="string">name=postfix</span> <span class="string">state=latest</span></span><br><span class="line">  <span class="attr">notify:</span> <span class="string">restart_postfix</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Postfix</span> <span class="string">is</span> <span class="string">running</span></span><br><span class="line">  <span class="attr">ansible.builtin.service:</span> <span class="string">name=postfix</span> <span class="string">state=started</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Use Existing Modules</p>
+<ol>
+<li><p>When writing a new playbook, start with a <code>basic playbook</code> and, if possible, a <code>static inventory</code>. Use <code>ansible.builtin.debug</code> tasks as stubs as you build your design. When your playbook functions as expected, break up your playbook into smaller, logical components by using <code>imports</code> and <code>includes</code>.</p>
+</li>
+<li><p>Ansible playbooks are designed to be idempotent, meaning that running the same playbook multiple times should produce the same result without unintended changes. </p>
+<p> It is easier to make your playbook idempotent and easier to maintain if you use the modules designed for a specific task.</p>
+<p> However, using the following modules can break idempotency:</p>
+<ul>
+<li><code>ansible.builtin.command</code></li>
+<li><code>ansible.builtin.shell</code></li>
+<li><code>ansible.builtin.raw</code></li>
+</ul>
+</li>
+<li><p>Many modules have a default state or other variables that control what they do. For example, the yum module currently assumes that the package you name should be <code>present</code> in most cases.</p>
+</li>
+</ol>
+</li>
+<li><p>Adhering to a Standard Style</p>
+<p>Consider having a standard “style” that your team follows when writing Ansible projects. For example:</p>
+<ol>
+<li><p>How many spaces do you indent? </p>
+</li>
+<li><p>How do you want vertical white space used? </p>
+</li>
+<li><p>How should tasks, plays, roles, and variables be named? </p>
+</li>
+<li><p>What should get commented on and how?</p>
+</li>
+</ol>
+<p>Having a consistent standard can help improve maintainability and readability.</p>
+</li>
+</ul>
+<h3 id="Staying-Organized"><a href="#Staying-Organized" class="headerlink" title="Staying Organized"></a>Staying Organized</h3><ul>
+<li><p>Following Conventions for Naming Variables</p>
+<ol>
+<li><p>Variable names should <code>clarify contents</code>.</p>
+</li>
+<li><p>When defining role variables, it is best to <code>prefix them with the role name</code> to avoid conflicts and improve clarity. If the name of your role is myapp then prefix your variables with myapp_ so that you can easily identify them from variables in other roles and the playbook.</p>
+</li>
+<li><p>Use <code>descriptive variables</code>, such as apache_tls_port rather than a less explanatory variable such as p. In roles, it is a good practice to prefix role variables with the role name.</p>
+</li>
+</ol>
+</li>
+<li><p>Standardizing the Project Structure</p>
+<p>Use a consistent pattern when structuring the files of your Ansible project on a file system. The following is a good example:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── dbservers.yml</span><br><span class="line">├── inventories/</span><br><span class="line">│ ├── prod/</span><br><span class="line">│ │ ├── group_vars/</span><br><span class="line">│ │ ├── host_vars/</span><br><span class="line">│ │ └── inventory/</span><br><span class="line">│ └── stage/</span><br><span class="line">│ ├── group_vars/</span><br><span class="line">│ ├── host_vars/</span><br><span class="line">│ └── inventory/</span><br><span class="line">├── roles/</span><br><span class="line">│ └── std_server/</span><br><span class="line">├── site.yml</span><br><span class="line">├── storage.yml</span><br><span class="line">└── webservers.yml</span><br></pre></td></tr></table></figure>
+
+<p>One of the playbook structure benefits is that you can divide up your extensive playbook into smaller files to make it more readable. Those smaller playbooks can contain plays for a specific purpose that you can run independently.</p>
+</li>
+<li><p>Using Dynamic Inventories</p>
+<ol>
+<li><p>Using Dynamic Inventory。</p>
+</li>
+<li><p>Dynamic inventory is particularly powerful when integrated with cloud providers, container platforms, and virtual machine management systems.</p>
+</li>
+<li><p>If dynamic inventory is not an option, other tools can be used to dynamically construct groups or gather additional information.</p>
+</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Generate</span> <span class="string">dynamic</span> <span class="string">groups</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">all</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Generate</span> <span class="string">dynamic</span> <span class="string">groups</span> <span class="string">based</span> <span class="string">on</span> <span class="string">architecture</span></span><br><span class="line">      <span class="attr">ansible.builtin.group_by:</span></span><br><span class="line">        <span class="attr">key:</span> <span class="string">arch_&quot;&#123;&#123;</span> <span class="string">ansible_facts[&#x27;architecture&#x27;]</span> <span class="string">&#125;&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Configure</span> <span class="string">x86_64</span> <span class="string">systems</span></span><br><span class="line">  <span class="attr">hosts:</span> <span class="string">arch_x86_64</span></span><br><span class="line">  <span class="attr">tasks:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">First</span> <span class="string">task</span> <span class="string">for</span> <span class="string">x86_64</span> <span class="string">configuration</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Taking Advantage of Groups</p>
+<ol>
+<li><p>Geographical: Differentiate hosts from different regions, countries, continents, or data centers.</p>
+</li>
+<li><p>Environmental: Differentiate hosts dedicated to different stages of the software lifecycle, including development, staging, testing, and production.</p>
+</li>
+<li><p>Sites or services: Group hosts that offer or link to a subset of functions, such as a specific website, an application, or a subset of features.</p>
+</li>
+</ol>
+</li>
+<li><p>Reusing Content with Collections and Roles</p>
+<p>Roles and collections help keep playbooks simple and enable code reuse across different projects, reducing workload. When necessary, you can also create a custom automation execution environment.</p>
+<p>Common Sources for Collections and Roles:</p>
+<ul>
+<li>Red Hat Official Website</li>
+<li>Ansible Galaxy</li>
+<li>GitHub</li>
+<li>   Internal Company Repository</li>
+</ul>
+</li>
+<li><p>Running Playbooks Centrally </p>
+<p>Consider using a <code>dedicated control node</code> to run all Ansible Playbooks from a single location. Ideally, an Automation <code>Controller</code> should be used.</p>
+<p>The reason is simple: Ansible requires control over the managed hosts. Frequently changing the control node may lead to Playbook execution failures or security issues.</p>
+</li>
+</ul>
+<h3 id="Performing-Regular-Testing"><a href="#Performing-Regular-Testing" class="headerlink" title="Performing Regular Testing"></a>Performing Regular Testing</h3><ul>
+<li><p>Test Your Playbooks and Tasks Regularly During Development</p>
+<ol>
+<li><p>When confirming the success of a task, validate the task’s actual result rather than relying solely on the module’s return code.</p>
+</li>
+<li><p>In addition to using the <code>debug</code> module, you can also utilise the <code>uri</code> module to check whether web-based services are functioning correctly.</p>
+ <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Start</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">  <span class="attr">ansible.builtin.service:</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">    <span class="attr">status:</span> <span class="string">started</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">web</span> <span class="string">site</span> <span class="string">from</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">  <span class="attr">ansible.builtin.uri:</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">http://&#123;&#123;</span> <span class="string">ansible_fqdn</span> <span class="string">&#125;&#125;</span></span><br><span class="line">    <span class="attr">return_content:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">register:</span> <span class="string">example_webpage</span></span><br><span class="line">  <span class="attr">failed_when:</span> <span class="string">example_webpage.status</span> <span class="type">!=</span> <span class="number">200</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+<li><p>Implement Recovery and Rollback with block&#x2F;rescue</p>
+<p>The block directive is useful for grouping tasks. When combined with the rescue directive, it helps in recovering from errors or failures, making it an effective approach for implementing recovery and rollback mechanisms.</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">block:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Check</span> <span class="string">web</span> <span class="string">site</span> <span class="string">from</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">    <span class="attr">ansible.builtin.uri:</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">http://&#123;&#123;</span> <span class="string">ansible_fqdn</span> <span class="string">&#125;&#125;</span></span><br><span class="line">      <span class="attr">return_content:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">register:</span> <span class="string">example_webpage</span></span><br><span class="line">    <span class="attr">failed_when:</span> <span class="string">example_webpage.status</span> <span class="type">!=</span> <span class="number">200</span></span><br><span class="line"></span><br><span class="line"><span class="attr">rescue:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Restart</span> <span class="string">web</span> <span class="string">server</span></span><br><span class="line">    <span class="attr">ansible.builtin.service:</span></span><br><span class="line">      <span class="attr">name:</span> <span class="string">httpd</span></span><br><span class="line">      <span class="attr">status:</span> <span class="string">restarted</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Using Test Tools</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-navigator run playbook --syntax-check -m stdout</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Analyzing the Playbooks</p>
+<ul>
+<li><p>ansible-lint </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-lint xxx.yaml</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yamllint</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ yamllint xxx.yaml</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>Testing with New Versions</p>
+<p>Regularly test your playbooks and automation workflows against newer versions of Ansible Core. This ensures compatibility and helps identify potential issues before upgrading your production environment.</p>
+<p>If your playbook displays warnings or deprecation messages during execution, you should pay attention to them and make the necessary adjustments.</p>
+<p>When a feature in Ansible Core is deprecated or changed, a deprecation notice is provided <code>four minor versions</code> in advance before it is removed or modified.</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ansible</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ansible Series Chapter2: The introduction of ansible-navigator</title>
+    <url>//Linux/Ansible/the-introduction-of-ansible-navigator/index.html</url>
+    <content><![CDATA[<h2 id="Automation-Content-Navigator"><a href="#Automation-Content-Navigator" class="headerlink" title="Automation Content Navigator"></a>Automation Content Navigator</h2><p>Automation content navigator (ansible-navigator) is a new tool in Red Hat Ansible Automation Platform 2, and is designed to make it easier for you to write playbooks that can be<br>run in a reproducible manner. It combines the features formerly provided by <code>ansible-playbook</code>, <code>ansible-inventory</code>, <code>ansible-config</code>, and <code>ansible-doc</code> in one top-level interface.</p>
+<p>Automation content navigator offers a new <code>interactive mode</code> with a text-based user interface (<code>TUI</code>), and can also be run using the <code>--mode stdout</code> (or <code>-m stdout</code>) option to provide output in the original format used by the earlier tools.</p>
+<p>Here are its main features:</p>
+<ol>
+<li><p>Unified CLI Experience</p>
+<ul>
+<li><p>Replaces multiple Ansible commands (ansible-playbook, ansible-inventory, ansible-config, ansible-doc) with a single interface.</p>
+</li>
+<li><p>Provides a streamlined and consistent way to interact with Ansible.</p>
+</li>
+</ul>
+</li>
+<li><p>Containerized Execution</p>
+<ul>
+<li><p>Runs Ansible playbooks within a container, separating the control node from the execution environment.</p>
+</li>
+<li><p>Ensures compatibility across different Python versions and dependencies.</p>
+</li>
+<li><p>Reduces the need for local Ansible installations and dependencies.</p>
+</li>
+</ul>
+</li>
+<li><p>Interactive TUI (Text User Interface)</p>
+<ul>
+<li><p>Offers an interactive, user-friendly text-based interface.</p>
+</li>
+<li><p>Enables easier navigation through playbook results, inventory, and documentation.</p>
+</li>
+<li><p>Provides real-time insights into playbook execution.</p>
+</li>
+</ul>
+</li>
+<li><p>Enhanced Playbook Execution and Debugging</p>
+<ul>
+<li><p>Supports interactive viewing of playbook execution with detailed logs.</p>
+</li>
+<li><p>Allows users to explore playbook results step by step.</p>
+</li>
+<li><p>Helps in debugging with real-time feedback.</p>
+</li>
+</ul>
+</li>
+<li><p>Seamless Integration with Automation Hub</p>
+<ul>
+<li><p>Can access certified and private content collections from Automation Hub.</p>
+</li>
+<li><p>Helps manage and distribute automation content efficiently.</p>
+</li>
+</ul>
+</li>
+<li><p>Supports Various Execution Environments</p>
+<ul>
+<li><p>Works with Ansible execution environments (EEs), allowing flexibility in managing dependencies.</p>
+</li>
+<li><p>Users can switch between different execution environments as needed.</p>
+</li>
+</ul>
+</li>
+<li><p>Inventory and Documentation Management</p>
+<ul>
+<li><p>Provides easy access to inventory information with interactive views.</p>
+</li>
+<li><p>Enables browsing of Ansible documentation and content collections directly from the CLI.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>Compared with the original method, for example, to run a playbook with <code>ansible-playbook</code>, you might enter the following command:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-playbook -i inventory playbook.yml </span><br></pre></td></tr></table></figure>
+
+<p>Currently, You can use the <code>ansible-navigator</code> command to do the same thing and get output from the playbook in the same format, as follows:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-navigator run playbook.yml -i inventory -m stdout</span><br></pre></td></tr></table></figure>
+
+<p>However, if you <code>omit the -m stdout option</code> for the ansible-navigator command, it starts an <code>interactive mode</code> that summarizes the output of the playbook run in real time. This enables you to investigate the results in a TUI after the run completes.</p>
+<p><img src="/../images/ansible-navigator.png" alt="Output of a playbook run with automation content navigator"></p>
+<p>In the preceding image, you can see that ansible-navigator ran a playbook containing three plays. </p>
+<p>You can get more information about the tasks that were run by the first play by <code>pressing 0, or by typing :0</code> in ansible-navigator:</p>
+<p><img src="/../images/ansible-navigator1.png" alt="Output of a playbook run with automation content navigator"></p>
+<p>You can also get detailed information about particular tasks. In the preceding example, if you <code>press 2 or type :2</code>, then details of the “Ensure HAProxy is started and enabled” task are displayed, and you can use the arrow keys to scroll through the results:</p>
+<p><img src="/../images/ansible-navigator2.png" alt="Output of a playbook run with automation content navigator"></p>
+<p>To <code>go back</code> to previous pages or <code>exit</code> from ansible-navigator at the top-level page, <code>press Esc</code>.</p>
+<h2 id="Using-Automation-Execution-Environments-to-Improve-Portability"><a href="#Using-Automation-Execution-Environments-to-Improve-Portability" class="headerlink" title="Using Automation Execution Environments to Improve Portability"></a>Using Automation Execution Environments to Improve Portability</h2><p>Automation Execution Environments (EEs) enhance portability by providing a consistent and isolated environment for running Ansible automation. Here’s how they help:</p>
+<ol>
+<li><p>Consistency Across Different Systems</p>
+<ul>
+<li><p>EEs encapsulate Ansible, dependencies, and Python libraries into a container image.</p>
+</li>
+<li><p>Ensures that automation runs the same way across different environments, avoiding “works on my machine” issues.</p>
+</li>
+</ul>
+</li>
+<li><p>Simplified Dependency Management</p>
+<ul>
+<li><p>No need to install Ansible and its dependencies on each system manually.</p>
+</li>
+<li><p>Eliminates conflicts between different versions of Python and Ansible modules.</p>
+</li>
+</ul>
+</li>
+<li><p>Improved Reproducibility</p>
+<ul>
+<li><p>   Playbooks always run within a controlled, versioned environment.</p>
+</li>
+<li><p>   Ensures that automation behaves predictably across development, testing, and production.</p>
+</li>
+</ul>
+</li>
+<li><p>Seamless Collaboration</p>
+<ul>
+<li><p>   Teams can share predefined execution environments, reducing setup inconsistencies.</p>
+</li>
+<li><p>   Developers and operators can work with the same automation stack, minimizing configuration drift.</p>
+</li>
+</ul>
+</li>
+<li><p>Integration with Ansible Navigator</p>
+<ul>
+<li><p>   ansible-navigator uses execution environments to run playbooks, making automation portable and self-contained.</p>
+</li>
+<li><p>   Users can easily switch between different EEs to match specific automation needs.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>When you use <code>ansible-navigator</code> to run a playbook, and do not specify a particular automation execution environment, <code>ansible-navigator</code> automatically attempts to pull the default automation execution environment from <code>registry.redhat.io</code> if it is not already present on the system. For Red Hat Ansible Automation Platform 2.2, this default environment includes Ansible Core 2.13 and a standard set of Red Hat Ansible Certified Content Collections.</p>
+<p>By default, the ansible-navigator command in Ansible Automation Platform 2.2 attempts to download and use the container image available at <code>registry.redhat.io/ansible-automation-platform-22/ee-supported-rhel8:latest</code>s if the automation execution environment is not specified in some other way.</p>
+<p>You can also use the <code>--pull-policy (--pp)</code> option to control how ansible-navigator pulls container images. When the value of this option is set to <code>missing</code>, automation content navigator only pulls the container image if the image does not exist on the local system.</p>
+<blockquote>
+<p>Note:</p>
+<p>Depending on your container runtime, use the corresponding command to log in to the image registry.</p>
+<p>e.g. podman&#x2F;docker login <registry_url></p>
+</blockquote>
+<h2 id="Installing-ansible-navigator"><a href="#Installing-ansible-navigator" class="headerlink" title="Installing ansible-navigator"></a>Installing ansible-navigator</h2><p>Ansible is a <code>non-intrusive</code> automation platform, meaning it only needs to <code>be installed on the control node</code> without requiring any software or agents on managed nodes.</p>
+<blockquote>
+<p>Note: </p>
+<p>Installation requires <code>an active Red Hat subscription</code>, but in our environment, it is already pre-configured.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ <span class="built_in">sudo</span> yum -y install ansible-navigator</span><br></pre></td></tr></table></figure>
+
+<p>After installation, you also need to generate the <code>ansible.cfg</code> configuration file and the <code>ansible-navigator.yml</code> configuration file.</p>
+<ul>
+<li><p><code>ansible.cfg</code> is a crucial file that controls the core behavior of Ansible.</p>
+<p>ansible.cfg is the core configuration file for Ansible, used to define Ansible’s global behaviour. It mainly controls the execution of tasks, the method of connecting to remote hosts, and important parameters such as logging and role paths. This file is automatically read when running Ansible, and users can customise Ansible’s runtime environment through it.</p>
+<p>Main Functions:</p>
+<ul>
+<li><p>Inventory Configuration: Specifies the default path for the inventory file.</p>
+</li>
+<li><p>Connection Management: Configures SSH connection parameters, such as timeout and control path.</p>
+</li>
+<li><p>Log Management: Defines the location and format of log files to record the execution process.</p>
+</li>
+<li><p>Role and Module Paths: Configures the search paths for custom roles and modules, facilitating the extension of functionalities.</p>
+</li>
+</ul>
+<p>This file has a <code>high priority</code> and affects the operation of all Ansible tasks. It is the <code>core tool for controlling</code> Ansible’s behaviour.</p>
+</li>
+<li><p><code>ansible-navigator.yml</code> is a customization tool for configuring the Navigator interface and interactive experience.</p>
+<p>ansible-navigator.yml is a configuration file designed specifically for Ansible Navigator, used to control the interactive interface behaviour, execution environment, and the interaction with inventories and content collections. It is more focused on optimising the user experience and providing a <code>customised</code> operational approach.</p>
+<p>Main Functions:</p>
+<ul>
+<li><p>Interactive Mode: Specifies the operating mode of Navigator, such as interactive interface mode or standard output mode.</p>
+</li>
+<li><p>   Execution Environment: Defines whether to enable a containerised execution environment and configures the container image and runtime engine (e.g., Podman or Docker).</p>
+</li>
+<li><p>   Resource Management: Sets the default inventory file and playbook paths for quicker loading and usage.</p>
+</li>
+<li><p>   Logging and Debugging: Controls the location and level of detail for logging, making it easier for users to trace and troubleshoot issues.</p>
+</li>
+<li><p>   Interface Optimisation: Adjusts the behaviour and layout of the user interface to improve interaction efficiency.</p>
+</li>
+</ul>
+<p>This file’s settings focus more on <code>user experience</code>, mainly influencing the operation of the Navigator tool, rather than the core execution logic of Ansible.</p>
+</li>
+</ul>
+<p>These two files complement each other, providing a flexible and efficient automation environment for users.</p>
+<h2 id="Configuring-Authentication-to-Managed-Hosts"><a href="#Configuring-Authentication-to-Managed-Hosts" class="headerlink" title="Configuring Authentication to Managed Hosts"></a>Configuring Authentication to Managed Hosts</h2><p>Automation content navigator needs to be able to log in to managed hosts and gain <code>superuser privileges</code> on those hosts. The easiest way to implement this is by using <code>SSH key-based authentication</code> to an account that allows privilege escalation through sudo without a password.</p>
+<p>To begin with, you need to <code>generate an SSH key pair on the control node</code> for the automation user, and then <code>distribute the public key to the remote hosts</code>. This enables passwordless SSH authentication between the control node and the remote systems, where user is the remote user and host is one of the managed hosts.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ ssh-keygen</span><br><span class="line">[student@workstation ~]$ ssh-copy-id student@servera</span><br></pre></td></tr></table></figure>
+
+<p>Then configure ansible.cfg on the control node or have ansible.cfg in the current directory. Set a remote_user directive to the name of the user account you plan to use on the managed hosts in the [defaults] section of your Ansible configuration file on the control node.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/ansible/ansible.cfg</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ini"><table><tr><td class="code"><pre><span class="line"><span class="section">[defaults]</span></span><br><span class="line"><span class="attr">remote_user</span>=student</span><br></pre></td></tr></table></figure>
+
+<p>You need to configure sudo privilege escalation on all managed hosts.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ <span class="built_in">sudo</span> vim /etc/sudoers</span><br><span class="line">...</span><br><span class="line">student ALL=(ALL)       NOPASSWD: ALL</span><br></pre></td></tr></table></figure>
+
+<p>The main difference between <code>authenticating ansible-navigator and ansible-playbook</code> to managed hosts is that ansible-navigator runs the playbook inside a container that cannot access your ~&#x2F;.ssh directory. However, if you are running <code>ssh-agent</code> on your control node to store SSH private keys, when you run ansible-navigator it can automatically provide those keys to the execution environment.</p>
+<p>If you logged in to the control node through the graphical desktop environment, ssh-agent is automatically started and the ssh-add command is automatically run to add your private keys to the agent. If any of your SSH private keys are passphrase protected, you are prompted for the password after you log in. Authentication then automatically works for all terminals in that graphical login session.</p>
+<p>If you logged in to the control node through a text-based virtual console or remotely using ssh, you must start ssh-agent yourself by running the <code>eval $(ssh-agent)</code> command. In the same shell, you then run ssh-add and if necessary provide the passphrase for your private key. You can then run ansible-navigator in the same shell and authenticate.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[student@workstation ~]$ <span class="built_in">eval</span> $(ssh-agent)</span><br><span class="line">[student@workstation ~]$ ssh-add</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Earlier Ansible command</th>
+<th>Automation content navigator subcommand</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ansible-config</td>
+<td>ansible-navigator config</td>
+</tr>
+<tr>
+<td>ansible-doc</td>
+<td>ansible-navigator doc</td>
+</tr>
+<tr>
+<td>ansible-inventory</td>
+<td>ansible-navigator inventory</td>
+</tr>
+<tr>
+<td>ansible-playbook</td>
+<td>ansible-navigator run</td>
+</tr>
+</tbody></table>
+<p>Automation content navigator also provides additional functionality. Most subcommands can be run from either the command line or from within an interactive automation content navigator session, but some commands do not support the <code>-m stdout</code> option. </p>
+<p>When running a subcommand in an interactive session, type : to start the command, such as <code>:config</code>.</p>
+<p>The following chart introduces some ansible-navigator subcommands.</p>
+<table>
+<thead>
+<tr>
+<th>Subcommand</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>collections</td>
+<td>Get information about installed collections.</td>
+</tr>
+<tr>
+<td>config</td>
+<td>Examine the current Ansible configuration.</td>
+</tr>
+<tr>
+<td>doc</td>
+<td>Examine the Ansible documentation for a plug-in.</td>
+</tr>
+<tr>
+<td>help</td>
+<td>Display detailed help for ansible-navigator.</td>
+</tr>
+<tr>
+<td>images</td>
+<td>Examine an execution environment.</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>Explore an inventory.</td>
+</tr>
+<tr>
+<td>log</td>
+<td>Review the current log file.</td>
+</tr>
+<tr>
+<td>open</td>
+<td>Open the current page in a text editor.</td>
+</tr>
+<tr>
+<td>replay</td>
+<td>Replay a playbook artifact.</td>
+</tr>
+<tr>
+<td>run</td>
+<td>Run a playbook.</td>
+</tr>
+</tbody></table>
+<h3 id="Reviewing-Previous-Playbook-Runs"><a href="#Reviewing-Previous-Playbook-Runs" class="headerlink" title="Reviewing Previous Playbook Runs"></a>Reviewing Previous Playbook Runs</h3><p>Automation content navigator provides a new <code>replay</code> feature that displays the output of a previous playbook run. If playbook artifacts are enabled (the default), then the ansible-navigator run command generates an artifact file, which use names such as <code>PlaybookName-artifact-xxxxx.json</code> or similar.</p>
+<p>One advantage of the replay file is that if the playbook fails then you can share the replay file with another developer or a support team. They can proceed with <code>troubleshooting without needing to have access to all the files in the project directory</code>, such as playbooks, roles, inventory files, variable<br>files, and so on.</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Ansible</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ansible Series Chapter1: The introduction of Ansible Automation Platform 2(RHAAP2)</title>
+    <url>//Linux/Ansible/the-introduction-of-ansible-automation-platform2/index.html</url>
     <content><![CDATA[<h2 id="Introduction-to-Red-Hat-Ansible-Automation-Platform-2"><a href="#Introduction-to-Red-Hat-Ansible-Automation-Platform-2" class="headerlink" title="Introduction to Red Hat Ansible Automation Platform 2"></a>Introduction to Red Hat Ansible Automation Platform 2</h2><h3 id="What-is-the-Red-Hat-Ansible-Automaion-Platform2"><a href="#What-is-the-Red-Hat-Ansible-Automaion-Platform2" class="headerlink" title="What is the Red Hat Ansible Automaion Platform2?"></a>What is the Red Hat Ansible Automaion Platform2?</h3><p>An enterprise-grade automation platform that offers a complete set of integrated automation tools and resources. </p>
 <p>It provides a new level of customisation and control, delivering a higher standard of automation experience.</p>
 <h3 id="What-could-you-do-with-Ansible-Automation-Platform2"><a href="#What-could-you-do-with-Ansible-Automation-Platform2" class="headerlink" title="What could you do with Ansible Automation Platform2?"></a>What could you do with Ansible Automation Platform2?</h3><ul>
@@ -17,9 +633,9 @@
 <p>It provides the basic functionality to run Ansible Playbooks.</p>
 <h3 id="Ansible-Content-Collections"><a href="#Ansible-Content-Collections" class="headerlink" title="Ansible Content Collections"></a>Ansible Content Collections</h3><p><code>Modules</code>, <code>roles</code>, and <code>plugins</code> form a <code>collection</code> of resources.</p>
 <h3 id="Automation-Content-Navigator"><a href="#Automation-Content-Navigator" class="headerlink" title="Automation Content Navigator"></a>Automation Content Navigator</h3><ul>
-<li><p>Introducing the <code>new top-level tool</code>, <code>ansible-navigator</code>, for developing and testing Ansible Playbooks. This tool replaces and extends several commands, including the <code>ansible-playbook</code> command.</p>
+<li><p>Introducing the <code>new top-level tool</code>, <code>ansible-navigator</code>, for developing and testing Ansible Playbooks. This tool replaces and extends several commands, including the <code>ansible-playbook</code>, <code>ansible-playbook</code>, <code>ansible-inventory</code>, <code>ansible-config</code>, <code>ansible-doc</code>, etc.</p>
 </li>
-<li><p><code>Running playbooks in containers</code> separates the control node running Ansible from the automation execution environment.</p>
+<li><p>Navigator <code>runs playbooks within a container</code>, separating the Ansible control node from the automation execution environment in which it operates. This allows different automation execution environments to accommodate varying Python environment requirements.</p>
 </li>
 </ul>
 <h3 id="Automation-Execution-Environments-EE"><a href="#Automation-Execution-Environments-EE" class="headerlink" title="Automation Execution Environments(EE)"></a>Automation Execution Environments(EE)</h3><p>EE is a container image that includes <code>Ansible Core</code>, <code>Ansible Content Collections</code>, and any <code>required Python libraries</code> for running playbooks.</p>
@@ -38,6 +654,16 @@
 <li><p>The new Automation Controller <code>separates the control node from the automation execution environment</code>.</p>
 </li>
 </ul>
+<p><img src="/../images/Controller.png" alt="Components of automation controller"></p>
+<h3 id="Automation-hub"><a href="#Automation-hub" class="headerlink" title="Automation hub"></a>Automation hub</h3><ul>
+<li><p>The Ansible Automation Hub is a platform for managing and distributing automation content. It provides a way to manage and distribute automation content, <code>similar to an online repository</code> from which content can be downloaded.</p>
+</li>
+<li><p>Public service access is available on <code>console.redhat.com</code>, providing Red Hat-certified Ansible content collections.</p>
+</li>
+<li><p>In the practice environment, eg.<code>hub.lab.example.com</code> serves as a private automation hub for managing private Ansible content collections.</p>
+</li>
+</ul>
+<p><img src="/../images/Hub.png" alt="Creator experience: Working with Ansible Automation Platform"></p>
 ]]></content>
       <categories>
         <category>Linux</category>

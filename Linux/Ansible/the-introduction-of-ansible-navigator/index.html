@@ -1,0 +1,670 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Ansible Series Chapter2: The introduction of ansible-navigator | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="This article primarily introduces knowledge related to ansible-navigator.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ansible Series Chapter2: The introduction of ansible-navigator">
+<meta property="og:url" content="https://blog.sunhaoyang.net/Linux/Ansible/the-introduction-of-ansible-navigator/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="This article primarily introduces knowledge related to ansible-navigator.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/Ansible.png">
+<meta property="article:published_time" content="2025-03-05T15:35:12.000Z">
+<meta property="article:modified_time" content="2025-03-07T03:01:06.230Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="Ansible">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/Ansible.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://blog.sunhaoyang.net/Linux/Ansible/the-introduction-of-ansible-navigator/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Ansible Series Chapter2: The introduction of ansible-navigator',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Ansible Series Chapter2: The introduction of ansible-navigator</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Ansible Series Chapter2: The introduction of ansible-navigator</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-03-05T15:35:12.000Z" title="Created 2025-03-05 23:35:12">2025-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-03-07T03:01:06.230Z" title="Updated 2025-03-07 11:01:06">2025-03-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>11mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">Comments:</span><a href="/Linux/Ansible/the-introduction-of-ansible-navigator/index.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h2 id="Automation-Content-Navigator"><a href="#Automation-Content-Navigator" class="headerlink" title="Automation Content Navigator"></a>Automation Content Navigator</h2><p>Automation content navigator (ansible-navigator) is a new tool in Red Hat Ansible Automation Platform 2, and is designed to make it easier for you to write playbooks that can be<br>run in a reproducible manner. It combines the features formerly provided by <code>ansible-playbook</code>, <code>ansible-inventory</code>, <code>ansible-config</code>, and <code>ansible-doc</code> in one top-level interface.</p>
+<p>Automation content navigator offers a new <code>interactive mode</code> with a text-based user interface (<code>TUI</code>), and can also be run using the <code>--mode stdout</code> (or <code>-m stdout</code>) option to provide output in the original format used by the earlier tools.</p>
+<p>Here are its main features:</p>
+<ol>
+<li><p>Unified CLI Experience</p>
+<ul>
+<li><p>Replaces multiple Ansible commands (ansible-playbook, ansible-inventory, ansible-config, ansible-doc) with a single interface.</p>
+</li>
+<li><p>Provides a streamlined and consistent way to interact with Ansible.</p>
+</li>
+</ul>
+</li>
+<li><p>Containerized Execution</p>
+<ul>
+<li><p>Runs Ansible playbooks within a container, separating the control node from the execution environment.</p>
+</li>
+<li><p>Ensures compatibility across different Python versions and dependencies.</p>
+</li>
+<li><p>Reduces the need for local Ansible installations and dependencies.</p>
+</li>
+</ul>
+</li>
+<li><p>Interactive TUI (Text User Interface)</p>
+<ul>
+<li><p>Offers an interactive, user-friendly text-based interface.</p>
+</li>
+<li><p>Enables easier navigation through playbook results, inventory, and documentation.</p>
+</li>
+<li><p>Provides real-time insights into playbook execution.</p>
+</li>
+</ul>
+</li>
+<li><p>Enhanced Playbook Execution and Debugging</p>
+<ul>
+<li><p>Supports interactive viewing of playbook execution with detailed logs.</p>
+</li>
+<li><p>Allows users to explore playbook results step by step.</p>
+</li>
+<li><p>Helps in debugging with real-time feedback.</p>
+</li>
+</ul>
+</li>
+<li><p>Seamless Integration with Automation Hub</p>
+<ul>
+<li><p>Can access certified and private content collections from Automation Hub.</p>
+</li>
+<li><p>Helps manage and distribute automation content efficiently.</p>
+</li>
+</ul>
+</li>
+<li><p>Supports Various Execution Environments</p>
+<ul>
+<li><p>Works with Ansible execution environments (EEs), allowing flexibility in managing dependencies.</p>
+</li>
+<li><p>Users can switch between different execution environments as needed.</p>
+</li>
+</ul>
+</li>
+<li><p>Inventory and Documentation Management</p>
+<ul>
+<li><p>Provides easy access to inventory information with interactive views.</p>
+</li>
+<li><p>Enables browsing of Ansible documentation and content collections directly from the CLI.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>Compared with the original method, for example, to run a playbook with <code>ansible-playbook</code>, you might enter the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-playbook -i inventory playbook.yml </span><br></pre></td></tr></table></figure>
+
+<p>Currently, You can use the <code>ansible-navigator</code> command to do the same thing and get output from the playbook in the same format, as follows:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ ansible-navigator run playbook.yml -i inventory -m stdout</span><br></pre></td></tr></table></figure>
+
+<p>However, if you <code>omit the -m stdout option</code> for the ansible-navigator command, it starts an <code>interactive mode</code> that summarizes the output of the playbook run in real time. This enables you to investigate the results in a TUI after the run completes.</p>
+<p><img src="/../images/ansible-navigator.png" alt="Output of a playbook run with automation content navigator"></p>
+<p>In the preceding image, you can see that ansible-navigator ran a playbook containing three plays. </p>
+<p>You can get more information about the tasks that were run by the first play by <code>pressing 0, or by typing :0</code> in ansible-navigator:</p>
+<p><img src="/../images/ansible-navigator1.png" alt="Output of a playbook run with automation content navigator"></p>
+<p>You can also get detailed information about particular tasks. In the preceding example, if you <code>press 2 or type :2</code>, then details of the “Ensure HAProxy is started and enabled” task are displayed, and you can use the arrow keys to scroll through the results:</p>
+<p><img src="/../images/ansible-navigator2.png" alt="Output of a playbook run with automation content navigator"></p>
+<p>To <code>go back</code> to previous pages or <code>exit</code> from ansible-navigator at the top-level page, <code>press Esc</code>.</p>
+<h2 id="Using-Automation-Execution-Environments-to-Improve-Portability"><a href="#Using-Automation-Execution-Environments-to-Improve-Portability" class="headerlink" title="Using Automation Execution Environments to Improve Portability"></a>Using Automation Execution Environments to Improve Portability</h2><p>Automation Execution Environments (EEs) enhance portability by providing a consistent and isolated environment for running Ansible automation. Here’s how they help:</p>
+<ol>
+<li><p>Consistency Across Different Systems</p>
+<ul>
+<li><p>EEs encapsulate Ansible, dependencies, and Python libraries into a container image.</p>
+</li>
+<li><p>Ensures that automation runs the same way across different environments, avoiding “works on my machine” issues.</p>
+</li>
+</ul>
+</li>
+<li><p>Simplified Dependency Management</p>
+<ul>
+<li><p>No need to install Ansible and its dependencies on each system manually.</p>
+</li>
+<li><p>Eliminates conflicts between different versions of Python and Ansible modules.</p>
+</li>
+</ul>
+</li>
+<li><p>Improved Reproducibility</p>
+<ul>
+<li><p>   Playbooks always run within a controlled, versioned environment.</p>
+</li>
+<li><p>   Ensures that automation behaves predictably across development, testing, and production.</p>
+</li>
+</ul>
+</li>
+<li><p>Seamless Collaboration</p>
+<ul>
+<li><p>   Teams can share predefined execution environments, reducing setup inconsistencies.</p>
+</li>
+<li><p>   Developers and operators can work with the same automation stack, minimizing configuration drift.</p>
+</li>
+</ul>
+</li>
+<li><p>Integration with Ansible Navigator</p>
+<ul>
+<li><p>   ansible-navigator uses execution environments to run playbooks, making automation portable and self-contained.</p>
+</li>
+<li><p>   Users can easily switch between different EEs to match specific automation needs.</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>When you use <code>ansible-navigator</code> to run a playbook, and do not specify a particular automation execution environment, <code>ansible-navigator</code> automatically attempts to pull the default automation execution environment from <code>registry.redhat.io</code> if it is not already present on the system. For Red Hat Ansible Automation Platform 2.2, this default environment includes Ansible Core 2.13 and a standard set of Red Hat Ansible Certified Content Collections.</p>
+<p>By default, the ansible-navigator command in Ansible Automation Platform 2.2 attempts to download and use the container image available at <code>registry.redhat.io/ansible-automation-platform-22/ee-supported-rhel8:latest</code>s if the automation execution environment is not specified in some other way.</p>
+<p>You can also use the <code>--pull-policy (--pp)</code> option to control how ansible-navigator pulls container images. When the value of this option is set to <code>missing</code>, automation content navigator only pulls the container image if the image does not exist on the local system.</p>
+<blockquote>
+<p>Note:</p>
+<p>Depending on your container runtime, use the corresponding command to log in to the image registry.</p>
+<p>e.g. podman&#x2F;docker login <registry_url></p>
+</blockquote>
+<h2 id="Installing-ansible-navigator"><a href="#Installing-ansible-navigator" class="headerlink" title="Installing ansible-navigator"></a>Installing ansible-navigator</h2><p>Ansible is a <code>non-intrusive</code> automation platform, meaning it only needs to <code>be installed on the control node</code> without requiring any software or agents on managed nodes.</p>
+<blockquote>
+<p>Note: </p>
+<p>Installation requires <code>an active Red Hat subscription</code>, but in our environment, it is already pre-configured.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ <span class="built_in">sudo</span> yum -y install ansible-navigator</span><br></pre></td></tr></table></figure>
+
+<p>After installation, you also need to generate the <code>ansible.cfg</code> configuration file and the <code>ansible-navigator.yml</code> configuration file.</p>
+<ul>
+<li><p><code>ansible.cfg</code> is a crucial file that controls the core behavior of Ansible.</p>
+<p>ansible.cfg is the core configuration file for Ansible, used to define Ansible’s global behaviour. It mainly controls the execution of tasks, the method of connecting to remote hosts, and important parameters such as logging and role paths. This file is automatically read when running Ansible, and users can customise Ansible’s runtime environment through it.</p>
+<p>Main Functions:</p>
+<ul>
+<li><p>Inventory Configuration: Specifies the default path for the inventory file.</p>
+</li>
+<li><p>Connection Management: Configures SSH connection parameters, such as timeout and control path.</p>
+</li>
+<li><p>Log Management: Defines the location and format of log files to record the execution process.</p>
+</li>
+<li><p>Role and Module Paths: Configures the search paths for custom roles and modules, facilitating the extension of functionalities.</p>
+</li>
+</ul>
+<p>This file has a <code>high priority</code> and affects the operation of all Ansible tasks. It is the <code>core tool for controlling</code> Ansible’s behaviour.</p>
+</li>
+<li><p><code>ansible-navigator.yml</code> is a customization tool for configuring the Navigator interface and interactive experience.</p>
+<p>ansible-navigator.yml is a configuration file designed specifically for Ansible Navigator, used to control the interactive interface behaviour, execution environment, and the interaction with inventories and content collections. It is more focused on optimising the user experience and providing a <code>customised</code> operational approach.</p>
+<p>Main Functions:</p>
+<ul>
+<li><p>Interactive Mode: Specifies the operating mode of Navigator, such as interactive interface mode or standard output mode.</p>
+</li>
+<li><p>   Execution Environment: Defines whether to enable a containerised execution environment and configures the container image and runtime engine (e.g., Podman or Docker).</p>
+</li>
+<li><p>   Resource Management: Sets the default inventory file and playbook paths for quicker loading and usage.</p>
+</li>
+<li><p>   Logging and Debugging: Controls the location and level of detail for logging, making it easier for users to trace and troubleshoot issues.</p>
+</li>
+<li><p>   Interface Optimisation: Adjusts the behaviour and layout of the user interface to improve interaction efficiency.</p>
+</li>
+</ul>
+<p>This file’s settings focus more on <code>user experience</code>, mainly influencing the operation of the Navigator tool, rather than the core execution logic of Ansible.</p>
+</li>
+</ul>
+<p>These two files complement each other, providing a flexible and efficient automation environment for users.</p>
+<h2 id="Configuring-Authentication-to-Managed-Hosts"><a href="#Configuring-Authentication-to-Managed-Hosts" class="headerlink" title="Configuring Authentication to Managed Hosts"></a>Configuring Authentication to Managed Hosts</h2><p>Automation content navigator needs to be able to log in to managed hosts and gain <code>superuser privileges</code> on those hosts. The easiest way to implement this is by using <code>SSH key-based authentication</code> to an account that allows privilege escalation through sudo without a password.</p>
+<p>To begin with, you need to <code>generate an SSH key pair on the control node</code> for the automation user, and then <code>distribute the public key to the remote hosts</code>. This enables passwordless SSH authentication between the control node and the remote systems, where user is the remote user and host is one of the managed hosts.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ ssh-keygen</span><br><span class="line">[student@workstation ~]$ ssh-copy-id student@servera</span><br></pre></td></tr></table></figure>
+
+<p>Then configure ansible.cfg on the control node or have ansible.cfg in the current directory. Set a remote_user directive to the name of the user account you plan to use on the managed hosts in the [defaults] section of your Ansible configuration file on the control node.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/ansible/ansible.cfg</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[defaults]</span></span><br><span class="line"><span class="attr">remote_user</span>=student</span><br></pre></td></tr></table></figure>
+
+<p>You need to configure sudo privilege escalation on all managed hosts.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ <span class="built_in">sudo</span> vim /etc/sudoers</span><br><span class="line">...</span><br><span class="line">student ALL=(ALL)       NOPASSWD: ALL</span><br></pre></td></tr></table></figure>
+
+<p>The main difference between <code>authenticating ansible-navigator and ansible-playbook</code> to managed hosts is that ansible-navigator runs the playbook inside a container that cannot access your ~&#x2F;.ssh directory. However, if you are running <code>ssh-agent</code> on your control node to store SSH private keys, when you run ansible-navigator it can automatically provide those keys to the execution environment.</p>
+<p>If you logged in to the control node through the graphical desktop environment, ssh-agent is automatically started and the ssh-add command is automatically run to add your private keys to the agent. If any of your SSH private keys are passphrase protected, you are prompted for the password after you log in. Authentication then automatically works for all terminals in that graphical login session.</p>
+<p>If you logged in to the control node through a text-based virtual console or remotely using ssh, you must start ssh-agent yourself by running the <code>eval $(ssh-agent)</code> command. In the same shell, you then run ssh-add and if necessary provide the passphrase for your private key. You can then run ansible-navigator in the same shell and authenticate.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[student@workstation ~]$ <span class="built_in">eval</span> $(ssh-agent)</span><br><span class="line">[student@workstation ~]$ ssh-add</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Earlier Ansible command</th>
+<th>Automation content navigator subcommand</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ansible-config</td>
+<td>ansible-navigator config</td>
+</tr>
+<tr>
+<td>ansible-doc</td>
+<td>ansible-navigator doc</td>
+</tr>
+<tr>
+<td>ansible-inventory</td>
+<td>ansible-navigator inventory</td>
+</tr>
+<tr>
+<td>ansible-playbook</td>
+<td>ansible-navigator run</td>
+</tr>
+</tbody></table>
+<p>Automation content navigator also provides additional functionality. Most subcommands can be run from either the command line or from within an interactive automation content navigator session, but some commands do not support the <code>-m stdout</code> option. </p>
+<p>When running a subcommand in an interactive session, type : to start the command, such as <code>:config</code>.</p>
+<p>The following chart introduces some ansible-navigator subcommands.</p>
+<table>
+<thead>
+<tr>
+<th>Subcommand</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>collections</td>
+<td>Get information about installed collections.</td>
+</tr>
+<tr>
+<td>config</td>
+<td>Examine the current Ansible configuration.</td>
+</tr>
+<tr>
+<td>doc</td>
+<td>Examine the Ansible documentation for a plug-in.</td>
+</tr>
+<tr>
+<td>help</td>
+<td>Display detailed help for ansible-navigator.</td>
+</tr>
+<tr>
+<td>images</td>
+<td>Examine an execution environment.</td>
+</tr>
+<tr>
+<td>inventory</td>
+<td>Explore an inventory.</td>
+</tr>
+<tr>
+<td>log</td>
+<td>Review the current log file.</td>
+</tr>
+<tr>
+<td>open</td>
+<td>Open the current page in a text editor.</td>
+</tr>
+<tr>
+<td>replay</td>
+<td>Replay a playbook artifact.</td>
+</tr>
+<tr>
+<td>run</td>
+<td>Run a playbook.</td>
+</tr>
+</tbody></table>
+<h3 id="Reviewing-Previous-Playbook-Runs"><a href="#Reviewing-Previous-Playbook-Runs" class="headerlink" title="Reviewing Previous Playbook Runs"></a>Reviewing Previous Playbook Runs</h3><p>Automation content navigator provides a new <code>replay</code> feature that displays the output of a previous playbook run. If playbook artifacts are enabled (the default), then the ansible-navigator run command generates an artifact file, which use names such as <code>PlaybookName-artifact-xxxxx.json</code> or similar.</p>
+<p>One advantage of the replay file is that if the playbook fails then you can share the replay file with another developer or a support team. They can proceed with <code>troubleshooting without needing to have access to all the files in the project directory</code>, such as playbooks, roles, inventory files, variable<br>files, and so on.</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net/Linux/Ansible/the-introduction-of-ansible-navigator/index.html">https://blog.sunhaoyang.net/Linux/Ansible/the-introduction-of-ansible-navigator/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Ansible/">Ansible</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/Ansible.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Ansible Series Chapter3: Implementing Recommended Ansible Practices</div></div><div class="info-2"><div class="info-item-1">Demonstrate and describe commonly recommended practices for developing and maintaining effective Ansible automation solutions.</div></div></div></a><a class="pagination-related" href="/Linux/Ansible/the-introduction-of-ansible-automation-platform2/index.html" title="Ansible Series Chapter1: The introduction of Ansible Automation Platform 2(RHAAP2)"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Ansible Series Chapter1: The introduction of Ansible Automation Platform 2(RHAAP2)</div></div><div class="info-2"><div class="info-item-1">This article primarily introduces knowledge related to componets of Ansible Automation Platform 2.</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-08</div><div class="info-item-2">Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections</div></div><div class="info-2"><div class="info-item-1">I'll describe how Ansible Content Collections are used to distribute modules and plug-ins, and create plays that use content from them.</div></div></div></a><a class="pagination-related" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-06</div><div class="info-item-2">Ansible Series Chapter3: Implementing Recommended Ansible Practices</div></div><div class="info-2"><div class="info-item-1">Demonstrate and describe commonly recommended practices for developing and maintaining effective Ansible automation solutions.</div></div></div></a><a class="pagination-related" href="/Linux/Ansible/the-introduction-of-ansible-automation-platform2/index.html" title="Ansible Series Chapter1: The introduction of Ansible Automation Platform 2(RHAAP2)"><img class="cover" src="https://blog.sunhaoyang.net/images/Ansible.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-22</div><div class="info-item-2">Ansible Series Chapter1: The introduction of Ansible Automation Platform 2(RHAAP2)</div></div><div class="info-2"><div class="info-item-1">This article primarily introduces knowledge related to componets of Ansible Automation Platform 2.</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Automation-Content-Navigator"><span class="toc-number">1.</span> <span class="toc-text">Automation Content Navigator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-Automation-Execution-Environments-to-Improve-Portability"><span class="toc-number">2.</span> <span class="toc-text">Using Automation Execution Environments to Improve Portability</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Installing-ansible-navigator"><span class="toc-number">3.</span> <span class="toc-text">Installing ansible-navigator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuring-Authentication-to-Managed-Hosts"><span class="toc-number">4.</span> <span class="toc-text">Configuring Authentication to Managed Hosts</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reviewing-Previous-Playbook-Runs"><span class="toc-number">4.1.</span> <span class="toc-text">Reviewing Previous Playbook Runs</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Linux/NGINX_1.Deploying-NGINX/index.html" title="NGINX Series Chapter1: Deploying NGINX"><img src="https://blog.sunhaoyang.net/images/Nginx.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NGINX Series Chapter1: Deploying NGINX"/></a><div class="content"><a class="title" href="/Linux/NGINX_1.Deploying-NGINX/index.html" title="NGINX Series Chapter1: Deploying NGINX">NGINX Series Chapter1: Deploying NGINX</a><time datetime="2025-03-10T06:20:45.000Z" title="Created 2025-03-10 14:20:45">2025-03-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"/></a><div class="content"><a class="title" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections">Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections</a><time datetime="2025-03-08T15:42:39.000Z" title="Created 2025-03-08 23:42:39">2025-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Language/English/20250308/index.html" title="2025/03/08 English accumulation"><img src="https://blog.sunhaoyang.net/images/English.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/03/08 English accumulation"/></a><div class="content"><a class="title" href="/Language/English/20250308/index.html" title="2025/03/08 English accumulation">2025/03/08 English accumulation</a><time datetime="2025-03-08T14:28:35.000Z" title="Created 2025-03-08 22:28:35">2025-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter3: Implementing Recommended Ansible Practices"/></a><div class="content"><a class="title" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices">Ansible Series Chapter3: Implementing Recommended Ansible Practices</a><time datetime="2025-03-06T15:31:53.000Z" title="Created 2025-03-06 23:31:53">2025-03-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/the-introduction-of-ansible-navigator/index.html" title="Ansible Series Chapter2: The introduction of ansible-navigator"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter2: The introduction of ansible-navigator"/></a><div class="content"><a class="title" href="/Linux/Ansible/the-introduction-of-ansible-navigator/index.html" title="Ansible Series Chapter2: The introduction of ansible-navigator">Ansible Series Chapter2: The introduction of ansible-navigator</a><time datetime="2025-03-05T15:35:12.000Z" title="Created 2025-03-05 23:35:12">2025-03-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://blog.sunhaoyang.net/images/footer_background.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/gonganbeian.png" alt="公安备案" style="vertical-align:middle; width:16px; heigh:16px;"> 辽公网安备21029602001011号
+</a>
+<a href="https://beian.miit.gov.cn/" rel="noreferrer" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/icpbeian.png" alt="ICP备案" style="vertical-align:middle; width:16px; height:16px;"> 辽ICP备2025048274号-1
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[Image]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[Link]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[Code]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[Code]') // replace code      
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'src'
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}"></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += 'No comments'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.sunhaoyang.net/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "Unable to retrieve comments, please check the configuration"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="/pluginsSrc/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="/pluginsSrc/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
