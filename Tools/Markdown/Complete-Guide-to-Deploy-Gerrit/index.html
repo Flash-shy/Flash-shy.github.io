@@ -1,0 +1,502 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Complete Guide to deploy Gerrit | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Deployment Plan Table   Operating System IP NGINX Version Hostname Role    Rocky9.5(x86_64) 192.168.225.30 1.26.3 loadbalance.haoyang.cn gerrit service 1   Rocky9.5(x86_64) 192.168.225.31 1.26.3 gerri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Complete Guide to deploy Gerrit">
+<meta property="og:url" content="https://blog.sunhaoyang.net/Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="Deployment Plan Table   Operating System IP NGINX Version Hostname Role    Rocky9.5(x86_64) 192.168.225.30 1.26.3 loadbalance.haoyang.cn gerrit service 1   Rocky9.5(x86_64) 192.168.225.31 1.26.3 gerri">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/Gerrit.png">
+<meta property="article:published_time" content="2025-03-11T06:29:08.000Z">
+<meta property="article:modified_time" content="2025-03-11T10:43:35.514Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="Gerrit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/Gerrit.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://blog.sunhaoyang.net/Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Complete Guide to deploy Gerrit',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Complete Guide to deploy Gerrit</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Complete Guide to deploy Gerrit</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-03-11T06:29:08.000Z" title="Created 2025-03-11 14:29:08">2025-03-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-03-11T10:43:35.514Z" title="Updated 2025-03-11 18:43:35">2025-03-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Tools/">Tools</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>10mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">Comments:</span><a href="/Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h2 id="Deployment-Plan-Table"><a href="#Deployment-Plan-Table" class="headerlink" title="Deployment Plan Table"></a>Deployment Plan Table</h2><table>
+<thead>
+<tr>
+<th>Operating System</th>
+<th>IP</th>
+<th>NGINX Version</th>
+<th>Hostname</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rocky9.5(x86_64)</td>
+<td>192.168.225.30</td>
+<td>1.26.3</td>
+<td>loadbalance.haoyang.cn</td>
+<td>gerrit service 1</td>
+</tr>
+<tr>
+<td>Rocky9.5(x86_64)</td>
+<td>192.168.225.31</td>
+<td>1.26.3</td>
+<td>gerrit1.haoyang.cn</td>
+<td>gerrit service 2</td>
+</tr>
+<tr>
+<td>Rocky9.5(x86_64)</td>
+<td>192.168.225.32</td>
+<td>1.26.3</td>
+<td>gerrit2.haoyang.cn</td>
+<td>Loadbalance service</td>
+</tr>
+</tbody></table>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>To run the Gerrit service, the following requirement must be met on the host:</p>
+<p>JRE, versions <code>17</code> or <code>21</code>.</p>
+<blockquote>
+<p>Oracle’s java is paid not free any more.</p>
+<p>Openjdk is available <a target="_blank" rel="noopener" href="https://openjdk.org/">here</a>.</p>
+</blockquote>
+<h2 id="Download-the-gerrit-war-tarball"><a href="#Download-the-gerrit-war-tarball" class="headerlink" title="Download the gerrit.war tarball"></a>Download the gerrit.war tarball</h2><p>You could download the <code>gerrit.war</code> file from <a target="_blank" rel="noopener" href="https://gerrit-releases.storage.googleapis.com/index.html">Gerrit official site here</a> as you want.</p>
+<p>Download any current <code>*.war</code> package. The war will be referred to as <code>gerrit.war</code> from this point forward, so you may find it easier to rename the downloaded file.</p>
+<h2 id="Initialize-the-Site"><a href="#Initialize-the-Site" class="headerlink" title="Initialize the Site"></a>Initialize the Site</h2><p>Gerrit stores configuration files, the server’s SSH keys, and the managed Git repositories under a local directory, typically referred to as ‘$site_path’.</p>
+<p>Initialize a new site directory by running the init command, passing the path of the site directory to be created as an argument to the ‘-d’ option.</p>
+<p>Its recommended that Gerrit Code Review be given its own user account on the host system:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a new user called gerrit</span></span><br><span class="line"><span class="built_in">sudo</span> adduser gerrit</span><br><span class="line"><span class="comment"># Swith the privilages to root for gerrit user account and start it up:(inherit the environment variables from root)</span></span><br><span class="line"><span class="built_in">sudo</span> su gerrit</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize a new site directory for Gerrit: (replace /path/to/your/gerrit_application_directory with your actual path)</span></span><br><span class="line">java -jar gerrit.war init -d /path/to/your/gerrit_application_directory</span><br></pre></td></tr></table></figure>
+
+<h2 id="Initial-Configuration"><a href="#Initial-Configuration" class="headerlink" title="Initial Configuration"></a>Initial Configuration</h2><p>I would like to show the whole process I’ve experienced here. Don’t worry, just follow my guidance.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create a new user called gerrit</span></span><br><span class="line"><span class="built_in">sudo</span> adduser gerrit</span><br><span class="line"><span class="comment"># Swith the privilages to root for gerrit user account and start it up:(inherit the environment variables from root)</span></span><br><span class="line"><span class="built_in">sudo</span> su gerrit</span><br><span class="line"></span><br><span class="line"><span class="comment"># Make a new directory</span></span><br><span class="line"><span class="built_in">cd</span> /home/gerrit</span><br><span class="line"><span class="built_in">mkdir</span> gerrit_war</span><br></pre></td></tr></table></figure>
+
+<p>The structure should be same as me as followed.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[gerrit@gerrit2 ~]$ pwd</span><br><span class="line">/home/gerrit</span><br><span class="line">[gerrit@gerrit2 ~]$ tree -L 2</span><br><span class="line">.</span><br><span class="line">└── gerrit_war</span><br><span class="line"></span><br><span class="line">2 directories, 0 files</span><br></pre></td></tr></table></figure>
+
+<p>Then, download the <code>gerrit.war</code> from the <a target="_blank" rel="noopener" href="https://gerrit-releases.storage.googleapis.com/index.html">Gerrit official site here</a> as you want. Then, move the <code>gerrit</code> application to your gerrit directory.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[gerrit@gerrit2 gerrit_war]$ scp root@192.168.225.30:/home/gerrit/gerrit_war/gerrit-3.11.1.war .</span><br><span class="line">The authenticity of host &#x27;192.168.225.30 (192.168.225.30)&#x27; can&#x27;t be established.</span><br><span class="line">ED25519 key fingerprint is SHA256:QZY7LFi5pVYhQHY56cn96boDi59JBU55x9o8/uyTlic.</span><br><span class="line">This key is not known by any other names</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line">Warning: Permanently added &#x27;192.168.225.30&#x27; (ED25519) to the list of known hosts.</span><br><span class="line">root@192.168.225.30&#x27;s password: </span><br><span class="line">gerrit-3.11.1.war                                                                                                              100%   82MB 111.7MB/s   00:00    </span><br><span class="line">[gerrit@gerrit2 gerrit_war]$ ls</span><br><span class="line">gerrit-3.11.1.war</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Init the gerrir.war tarball</span></span><br><span class="line"><span class="built_in">cd</span> /home/gerrit/gerrit_war</span><br><span class="line">java -jar gerrit-3.11.1.war init -d /home/gerrit/gerrit_application</span><br></pre></td></tr></table></figure>
+
+<p>The detailed information you could based on my settings and change it as you want.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line">[gerrit@gerrit2 gerrit_war]$ java -jar gerrit-3.11.1.war init -d /home/gerrit/gerrit_application</span><br><span class="line">Using secure store: com.google.gerrit.server.securestore.DefaultSecureStore</span><br><span class="line">[2025-03-11 15:07:00,893] [main] INFO  com.google.gerrit.server.config.GerritServerConfigProvider : No /home/gerrit/gerrit_application/etc/gerrit.config; assuming defaults</span><br><span class="line"></span><br><span class="line">*** Gerrit Code Review 3.11.1</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Create &#x27;/home/gerrit/gerrit_application&#x27; [Y/n]? Y</span><br><span class="line"></span><br><span class="line">*** Git Repositories</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Location of Git repositories   [git]: </span><br><span class="line"></span><br><span class="line">*** JGit Configuration</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Auto-configured &quot;receive.autogc = false&quot; to disable auto-gc after git-receive-pack.</span><br><span class="line"></span><br><span class="line">*** Index</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Type                           [lucene]: </span><br><span class="line"></span><br><span class="line">*** User Authentication</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Authentication method          [openid/?]: HTTP</span><br><span class="line">Get username from custom HTTP header [y/N]? N</span><br><span class="line">SSO logout URL                 : </span><br><span class="line">Enable signed push support     [y/N]? N</span><br><span class="line">Use case insensitive usernames [Y/n]? Y</span><br><span class="line"></span><br><span class="line">*** Review Labels</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Install Verified label         [y/N]? y</span><br><span class="line"></span><br><span class="line">*** Email Delivery</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">SMTP server hostname           [localhost]: ***</span><br><span class="line">SMTP server port               [(default)]: **</span><br><span class="line">SMTP encryption                [none/?]: none</span><br><span class="line">SMTP username                  [gerrit]: ***@***.com</span><br><span class="line">***@***.com&#x27;s password : </span><br><span class="line">              confirm password : </span><br><span class="line"></span><br><span class="line">*** Container Process</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Run as                         [gerrit]: gerrit</span><br><span class="line">Java runtime                   [/usr/lib/jvm/java-21-openjdk-21.0.6.0.7-1.el9.x86_64]: </span><br><span class="line">Copy gerrit-3.11.1.war to /home/gerrit/gerrit_application/bin/gerrit.war [Y/n]? Y</span><br><span class="line">Copying gerrit-3.11.1.war to /home/gerrit/gerrit_application/bin/gerrit.war</span><br><span class="line"></span><br><span class="line">*** SSH Daemon</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Listen on address              [*]: </span><br><span class="line">Listen on port                 [29418]: </span><br><span class="line">Generating SSH host key ... rsa... ed25519... ecdsa 256... ecdsa 384... ecdsa 521... done</span><br><span class="line"></span><br><span class="line">*** HTTP Daemon</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Behind reverse proxy           [y/N]? y</span><br><span class="line">Proxy uses SSL (https://)      [y/N]? N</span><br><span class="line">Subdirectory on proxy server   [/]: </span><br><span class="line">Listen on address              [*]: </span><br><span class="line">Listen on port                 [8081]: 8080</span><br><span class="line">Canonical URL                  [http://***/]: http://***</span><br><span class="line"></span><br><span class="line">*** Cache</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*** Plugins</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Installing plugins.</span><br><span class="line">Install plugin codemirror-editor version v3.11.1 [y/N]? y</span><br><span class="line">Installed codemirror-editor v3.11.1</span><br><span class="line">Install plugin commit-message-length-validator version v3.11.1 [y/N]? y</span><br><span class="line">Installed commit-message-length-validator v3.11.1</span><br><span class="line">Install plugin delete-project version v3.11.1 [y/N]? y</span><br><span class="line">Installed delete-project v3.11.1</span><br><span class="line">Install plugin download-commands version v3.11.1 [y/N]? y</span><br><span class="line">Installed download-commands v3.11.1</span><br><span class="line">Install plugin gitiles version v3.11.1 [y/N]? y</span><br><span class="line">Installed gitiles v3.11.1</span><br><span class="line">Install plugin hooks version v3.11.1 [y/N]? y</span><br><span class="line">Installed hooks v3.11.1</span><br><span class="line">Install plugin plugin-manager version v3.11.1 [y/N]? y</span><br><span class="line">Installed plugin-manager v3.11.1</span><br><span class="line">Install plugin replication version v3.11.1 [y/N]? y</span><br><span class="line">Installed replication v3.11.1</span><br><span class="line">Install plugin replication-api version v3.11.1 [y/N]? y</span><br><span class="line">Installed replication-api v3.11.1</span><br><span class="line">Install plugin reviewnotes version v3.11.1 [y/N]? y</span><br><span class="line">Installed reviewnotes v3.11.1</span><br><span class="line">Install plugin singleusergroup version v3.11.1 [y/N]? y</span><br><span class="line">Installed singleusergroup v3.11.1</span><br><span class="line">Install plugin webhooks version v3.11.1 [y/N]? y</span><br><span class="line">Installed webhooks v3.11.1</span><br><span class="line">Initializing plugins.</span><br><span class="line"></span><br><span class="line">Mar 11, 2025 3:09:49 PM org.apache.lucene.store.MemorySegmentIndexInputProvider &lt;init&gt;</span><br><span class="line">INFO: Using MemorySegmentIndexInput with Java 21; to disable start with -Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false</span><br><span class="line">============================================================================</span><br><span class="line">Welcome to the Gerrit community</span><br><span class="line"></span><br><span class="line">Find more information on the homepage: https://www.gerritcodereview.com</span><br><span class="line">Discuss Gerrit on the mailing list: https://groups.google.com/g/repo-discuss</span><br><span class="line">============================================================================</span><br><span class="line">Initialized /home/gerrit/gerrit_application</span><br><span class="line">Init complete, reindexing accounts,changes,groups,projects with: reindex --site-path /home/gerrit/gerrit_application --threads 1 --index accounts --index changes --index groups --index projectsReindexed 0 documents in accounts index in 0.0s (0.0/s)</span><br><span class="line">Index accounts in version 14 is ready</span><br><span class="line">Reindexing groups:      100% (3/3)</span><br><span class="line">Reindexed 3 documents in groups index in 0.3s (11.3/s)</span><br><span class="line">Index groups in version 11 is ready</span><br><span class="line">Reindexing changes: Slicing projects: 100% (2/2), done    </span><br><span class="line">Reindexed 0 documents in changes index in 0.0s (0.0/s)</span><br><span class="line">Index changes in version 86 is ready</span><br><span class="line">Reindexing projects:    100% (2/2)</span><br><span class="line">Reindexed 2 documents in projects index in 0.1s (27.0/s)</span><br><span class="line">Index projects in version 9 is ready</span><br><span class="line">Executing /home/gerrit/gerrit_application/bin/gerrit.sh start</span><br><span class="line">Starting Gerrit Code Review: WARNING: Could not adjust Gerrit&#x27;s process for the kernel&#x27;s out-of-memory killer.</span><br><span class="line">         This may be caused by /home/gerrit/gerrit_application/bin/gerrit.sh not being run as root.</span><br><span class="line">         Consider changing the OOM score adjustment manually for Gerrit&#x27;s PID=1859 with e.g.:</span><br><span class="line">         echo &#x27;-1000&#x27; | sudo tee /proc/1859/oom_score_adj</span><br><span class="line">OK</span><br><span class="line">Waiting for server on 192.168.225.31:8080 ... OK</span><br><span class="line">Please open the following URL in the browser: http://192.168.225.31:8080/#/admin/projects/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Tips:</p>
+<p>If you would like to use reverse-proxy, the Authentication method must be set as <code>http</code>.<br>Other configurations could set as default, type <code>enter</code> to skip.</p>
+<p>What’s more, please rememer to allow the <code>8080</code> port by using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@gerrit2 ~]# firewall-cmd --permanent --add-port=8080/tcp</span><br><span class="line">success</span><br><span class="line">[root@gerrit2 ~]# firewall-cmd --reload</span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>If you see this page, please do not worry!</p>
+<p>It represents you’ve deployed the gerrit application successfully.</p>
+<p>For the next step, you should handle with the NGINX configuration.</p>
+<p><img src="/../images/reverse_proxy.png" alt="Revers-proxy error"></p>
+<h2 id="Configuring-NGINX-as-a-Reverse-Proxy-for-Gerrit"><a href="#Configuring-NGINX-as-a-Reverse-Proxy-for-Gerrit" class="headerlink" title="Configuring NGINX as a Reverse Proxy for Gerrit"></a>Configuring NGINX as a Reverse Proxy for Gerrit</h2><p>Please refer to <a href="https://blog.sunhaoyang.net/Linux/NGINX_1.Deploying-NGINX/index.html">NGIXN Series Chapter 1: Deploying NGINX</a> to deploy NGINX in your local.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@loadbalance conf.d]# pwd</span><br><span class="line">/etc/nginx/conf.d</span><br><span class="line">[root@loadbalance conf.d]# ls</span><br><span class="line">default.conf.bak  gerrit.conf</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Tips:</p>
+<p>You’d better to rename the <code>default.conf</code> in <code>/etc/nginx/conf.d</code>.</p>
+</blockquote>
+<p>Create a new configuration file, here called <code>gerrit.conf</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">upstream gerrit_backend &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server 192.168.225.30:8080 weight=1 max_fails=3 fail_timeout=10s;</span><br><span class="line">    server 192.168.225.31:8080 weight=1 max_fails=3 fail_timeout=10s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name loadbalance.haoyang.cn;</span><br><span class="line"></span><br><span class="line">    auth_basic &quot;Gerrit Code Review&quot;;</span><br><span class="line">    auth_basic_user_file /etc/nginx/conf.d/htpasswd;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://gerrit_backend;</span><br><span class="line"></span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line"></span><br><span class="line">        proxy_set_header Host $host;</span><br><span class="line">        proxy_set_header Authorization $http_authorization;</span><br><span class="line"></span><br><span class="line">        proxy_redirect off;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Finally, install the httpd-tools to generate http-authentification account and password.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install httpd-tools -y</span><br></pre></td></tr></table></figure>
+
+<p>Create the gerrit administrator user.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@loadbalance ~]# htpasswd -b -c /etc/nginx/conf.d/htpasswd gerritadmin ***</span><br><span class="line">Adding password <span class="keyword">for</span> user gerritadmin</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@loadbalance conf.d]# curl http://192.168.225.32:80</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;&lt;title&gt;401 Authorization Required&lt;/title&gt;&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;center&gt;&lt;h1&gt;401 Authorization Required&lt;/h1&gt;&lt;/center&gt;</span><br><span class="line">&lt;hr&gt;&lt;center&gt;nginx/1.26.3&lt;/center&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>We could find that it needs to be authorized.</p>
+<p>If you open the website in the browser(e.g. chrome), A pop-up window will appear asking you to enter your password.</p>
+<p align="center">
+  <img src="../images/pop-up.png" alt="pop-up window" width="50%">
+</p>
+
+<p>Congratulations to you! Up to now, you have completed the whole process of deploying gerrit.</p>
+<p><img src="/../images/gerrit.png" alt="gerrit"><br>Please enjoy yourself in using such a code review application :D</p>
+<blockquote>
+<p>Tips:</p>
+<p>It is normal phenomenon if you could not sign out in the website.</p>
+<p>Here is the reason: You are using HTTP Basic authentication. There is no way to tell a browser to quit sending basic authentication credentials, to logout with basic authentication is to close the Web browser.</p>
+<p>What’s more, clear all cookies and data cache does work as well.</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net/Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html">https://blog.sunhaoyang.net/Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Gerrit/">Gerrit</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/Gerrit.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/Linux/NGINX_1.Deploying-NGINX/index.html" title="NGINX Series Chapter1: Deploying NGINX"><img class="cover" src="https://blog.sunhaoyang.net/images/Nginx.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">NGINX Series Chapter1: Deploying NGINX</div></div><div class="info-2"><div class="info-item-1">This article mainly introduces how to deploy NGINX on a local server and also explains the basic concepts of nginx. It's an essential guide for any beginner or intermediate developer looking into web development with NGINX series.</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Deployment-Plan-Table"><span class="toc-number">1.</span> <span class="toc-text">Deployment Plan Table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prerequisites"><span class="toc-number">2.</span> <span class="toc-text">Prerequisites</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Download-the-gerrit-war-tarball"><span class="toc-number">3.</span> <span class="toc-text">Download the gerrit.war tarball</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Initialize-the-Site"><span class="toc-number">4.</span> <span class="toc-text">Initialize the Site</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Initial-Configuration"><span class="toc-number">5.</span> <span class="toc-text">Initial Configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuring-NGINX-as-a-Reverse-Proxy-for-Gerrit"><span class="toc-number">6.</span> <span class="toc-text">Configuring NGINX as a Reverse Proxy for Gerrit</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html" title="Complete Guide to deploy Gerrit"><img src="https://blog.sunhaoyang.net/images/Gerrit.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Complete Guide to deploy Gerrit"/></a><div class="content"><a class="title" href="/Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html" title="Complete Guide to deploy Gerrit">Complete Guide to deploy Gerrit</a><time datetime="2025-03-11T06:29:08.000Z" title="Created 2025-03-11 14:29:08">2025-03-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/NGINX_1.Deploying-NGINX/index.html" title="NGINX Series Chapter1: Deploying NGINX"><img src="https://blog.sunhaoyang.net/images/Nginx.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="NGINX Series Chapter1: Deploying NGINX"/></a><div class="content"><a class="title" href="/Linux/NGINX_1.Deploying-NGINX/index.html" title="NGINX Series Chapter1: Deploying NGINX">NGINX Series Chapter1: Deploying NGINX</a><time datetime="2025-03-10T06:20:45.000Z" title="Created 2025-03-10 14:20:45">2025-03-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections"/></a><div class="content"><a class="title" href="/Linux/Ansible/detailed-explanation-of-ansible-content-collections/index.html" title="Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections">Ansible Series Chapter4: Detailed Explanation of Ansible Content Collections</a><time datetime="2025-03-08T15:42:39.000Z" title="Created 2025-03-08 23:42:39">2025-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Language/English/20250308/index.html" title="2025/03/08 English accumulation"><img src="https://blog.sunhaoyang.net/images/English.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2025/03/08 English accumulation"/></a><div class="content"><a class="title" href="/Language/English/20250308/index.html" title="2025/03/08 English accumulation">2025/03/08 English accumulation</a><time datetime="2025-03-08T14:28:35.000Z" title="Created 2025-03-08 22:28:35">2025-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices"><img src="https://blog.sunhaoyang.net/images/Ansible.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible Series Chapter3: Implementing Recommended Ansible Practices"/></a><div class="content"><a class="title" href="/Linux/Ansible/implementing-recommended-ansible-practices/index.html" title="Ansible Series Chapter3: Implementing Recommended Ansible Practices">Ansible Series Chapter3: Implementing Recommended Ansible Practices</a><time datetime="2025-03-06T15:31:53.000Z" title="Created 2025-03-06 23:31:53">2025-03-06</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://blog.sunhaoyang.net/images/footer_background.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/gonganbeian.png" alt="公安备案" style="vertical-align:middle; width:16px; heigh:16px;"> 辽公网安备21029602001011号
+</a>
+<a href="https://beian.miit.gov.cn/" rel="noreferrer" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/icpbeian.png" alt="ICP备案" style="vertical-align:middle; width:16px; height:16px;"> 辽ICP备2025048274号-1
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[Image]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[Link]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[Code]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[Code]') // replace code      
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'src'
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}"></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += 'No comments'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.sunhaoyang.net/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "Unable to retrieve comments, please check the configuration"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="/pluginsSrc/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="/pluginsSrc/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

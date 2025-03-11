@@ -1,6 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Complete Guide to deploy Gerrit</title>
+    <url>//Tools/Markdown/Complete-Guide-to-Deploy-Gerrit/index.html</url>
+    <content><![CDATA[<h2 id="Deployment-Plan-Table"><a href="#Deployment-Plan-Table" class="headerlink" title="Deployment Plan Table"></a>Deployment Plan Table</h2><table>
+<thead>
+<tr>
+<th>Operating System</th>
+<th>IP</th>
+<th>NGINX Version</th>
+<th>Hostname</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Rocky9.5(x86_64)</td>
+<td>192.168.225.30</td>
+<td>1.26.3</td>
+<td>loadbalance.haoyang.cn</td>
+<td>gerrit service 1</td>
+</tr>
+<tr>
+<td>Rocky9.5(x86_64)</td>
+<td>192.168.225.31</td>
+<td>1.26.3</td>
+<td>gerrit1.haoyang.cn</td>
+<td>gerrit service 2</td>
+</tr>
+<tr>
+<td>Rocky9.5(x86_64)</td>
+<td>192.168.225.32</td>
+<td>1.26.3</td>
+<td>gerrit2.haoyang.cn</td>
+<td>Loadbalance service</td>
+</tr>
+</tbody></table>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>To run the Gerrit service, the following requirement must be met on the host:</p>
+<p>JRE, versions <code>17</code> or <code>21</code>.</p>
+<blockquote>
+<p>Oracle’s java is paid not free any more.</p>
+<p>Openjdk is available <a href="https://openjdk.org/">here</a>.</p>
+</blockquote>
+<h2 id="Download-the-gerrit-war-tarball"><a href="#Download-the-gerrit-war-tarball" class="headerlink" title="Download the gerrit.war tarball"></a>Download the gerrit.war tarball</h2><p>You could download the <code>gerrit.war</code> file from <a href="https://gerrit-releases.storage.googleapis.com/index.html">Gerrit official site here</a> as you want.</p>
+<p>Download any current <code>*.war</code> package. The war will be referred to as <code>gerrit.war</code> from this point forward, so you may find it easier to rename the downloaded file.</p>
+<h2 id="Initialize-the-Site"><a href="#Initialize-the-Site" class="headerlink" title="Initialize the Site"></a>Initialize the Site</h2><p>Gerrit stores configuration files, the server’s SSH keys, and the managed Git repositories under a local directory, typically referred to as ‘$site_path’.</p>
+<p>Initialize a new site directory by running the init command, passing the path of the site directory to be created as an argument to the ‘-d’ option.</p>
+<p>Its recommended that Gerrit Code Review be given its own user account on the host system:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a new user called gerrit</span></span><br><span class="line"><span class="built_in">sudo</span> adduser gerrit</span><br><span class="line"><span class="comment"># Swith the privilages to root for gerrit user account and start it up:(inherit the environment variables from root)</span></span><br><span class="line"><span class="built_in">sudo</span> su gerrit</span><br><span class="line"></span><br><span class="line"><span class="comment"># Initialize a new site directory for Gerrit: (replace /path/to/your/gerrit_application_directory with your actual path)</span></span><br><span class="line">java -jar gerrit.war init -d /path/to/your/gerrit_application_directory</span><br></pre></td></tr></table></figure>
+
+<h2 id="Initial-Configuration"><a href="#Initial-Configuration" class="headerlink" title="Initial Configuration"></a>Initial Configuration</h2><p>I would like to show the whole process I’ve experienced here. Don’t worry, just follow my guidance.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create a new user called gerrit</span></span><br><span class="line"><span class="built_in">sudo</span> adduser gerrit</span><br><span class="line"><span class="comment"># Swith the privilages to root for gerrit user account and start it up:(inherit the environment variables from root)</span></span><br><span class="line"><span class="built_in">sudo</span> su gerrit</span><br><span class="line"></span><br><span class="line"><span class="comment"># Make a new directory</span></span><br><span class="line"><span class="built_in">cd</span> /home/gerrit</span><br><span class="line"><span class="built_in">mkdir</span> gerrit_war</span><br></pre></td></tr></table></figure>
+
+<p>The structure should be same as me as followed.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[gerrit@gerrit2 ~]$ pwd</span><br><span class="line">/home/gerrit</span><br><span class="line">[gerrit@gerrit2 ~]$ tree -L 2</span><br><span class="line">.</span><br><span class="line">└── gerrit_war</span><br><span class="line"></span><br><span class="line">2 directories, 0 files</span><br></pre></td></tr></table></figure>
+
+<p>Then, download the <code>gerrit.war</code> from the <a href="https://gerrit-releases.storage.googleapis.com/index.html">Gerrit official site here</a> as you want. Then, move the <code>gerrit</code> application to your gerrit directory.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[gerrit@gerrit2 gerrit_war]$ scp root@192.168.225.30:/home/gerrit/gerrit_war/gerrit-3.11.1.war .</span><br><span class="line">The authenticity of host &#x27;192.168.225.30 (192.168.225.30)&#x27; can&#x27;t be established.</span><br><span class="line">ED25519 key fingerprint is SHA256:QZY7LFi5pVYhQHY56cn96boDi59JBU55x9o8/uyTlic.</span><br><span class="line">This key is not known by any other names</span><br><span class="line">Are you sure you want to continue connecting (yes/no/[fingerprint])? yes</span><br><span class="line">Warning: Permanently added &#x27;192.168.225.30&#x27; (ED25519) to the list of known hosts.</span><br><span class="line">root@192.168.225.30&#x27;s password: </span><br><span class="line">gerrit-3.11.1.war                                                                                                              100%   82MB 111.7MB/s   00:00    </span><br><span class="line">[gerrit@gerrit2 gerrit_war]$ ls</span><br><span class="line">gerrit-3.11.1.war</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Init the gerrir.war tarball</span></span><br><span class="line"><span class="built_in">cd</span> /home/gerrit/gerrit_war</span><br><span class="line">java -jar gerrit-3.11.1.war init -d /home/gerrit/gerrit_application</span><br></pre></td></tr></table></figure>
+
+<p>The detailed information you could based on my settings and change it as you want.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[gerrit@gerrit2 gerrit_war]$ java -jar gerrit-3.11.1.war init -d /home/gerrit/gerrit_application</span><br><span class="line">Using secure store: com.google.gerrit.server.securestore.DefaultSecureStore</span><br><span class="line">[2025-03-11 15:07:00,893] [main] INFO  com.google.gerrit.server.config.GerritServerConfigProvider : No /home/gerrit/gerrit_application/etc/gerrit.config; assuming defaults</span><br><span class="line"></span><br><span class="line">*** Gerrit Code Review 3.11.1</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Create &#x27;/home/gerrit/gerrit_application&#x27; [Y/n]? Y</span><br><span class="line"></span><br><span class="line">*** Git Repositories</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Location of Git repositories   [git]: </span><br><span class="line"></span><br><span class="line">*** JGit Configuration</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Auto-configured &quot;receive.autogc = false&quot; to disable auto-gc after git-receive-pack.</span><br><span class="line"></span><br><span class="line">*** Index</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Type                           [lucene]: </span><br><span class="line"></span><br><span class="line">*** User Authentication</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Authentication method          [openid/?]: HTTP</span><br><span class="line">Get username from custom HTTP header [y/N]? N</span><br><span class="line">SSO logout URL                 : </span><br><span class="line">Enable signed push support     [y/N]? N</span><br><span class="line">Use case insensitive usernames [Y/n]? Y</span><br><span class="line"></span><br><span class="line">*** Review Labels</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Install Verified label         [y/N]? y</span><br><span class="line"></span><br><span class="line">*** Email Delivery</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">SMTP server hostname           [localhost]: ***</span><br><span class="line">SMTP server port               [(default)]: **</span><br><span class="line">SMTP encryption                [none/?]: none</span><br><span class="line">SMTP username                  [gerrit]: ***@***.com</span><br><span class="line">***@***.com&#x27;s password : </span><br><span class="line">              confirm password : </span><br><span class="line"></span><br><span class="line">*** Container Process</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Run as                         [gerrit]: gerrit</span><br><span class="line">Java runtime                   [/usr/lib/jvm/java-21-openjdk-21.0.6.0.7-1.el9.x86_64]: </span><br><span class="line">Copy gerrit-3.11.1.war to /home/gerrit/gerrit_application/bin/gerrit.war [Y/n]? Y</span><br><span class="line">Copying gerrit-3.11.1.war to /home/gerrit/gerrit_application/bin/gerrit.war</span><br><span class="line"></span><br><span class="line">*** SSH Daemon</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Listen on address              [*]: </span><br><span class="line">Listen on port                 [29418]: </span><br><span class="line">Generating SSH host key ... rsa... ed25519... ecdsa 256... ecdsa 384... ecdsa 521... done</span><br><span class="line"></span><br><span class="line">*** HTTP Daemon</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Behind reverse proxy           [y/N]? y</span><br><span class="line">Proxy uses SSL (https://)      [y/N]? N</span><br><span class="line">Subdirectory on proxy server   [/]: </span><br><span class="line">Listen on address              [*]: </span><br><span class="line">Listen on port                 [8081]: 8080</span><br><span class="line">Canonical URL                  [http://***/]: http://***</span><br><span class="line"></span><br><span class="line">*** Cache</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*** Plugins</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Installing plugins.</span><br><span class="line">Install plugin codemirror-editor version v3.11.1 [y/N]? y</span><br><span class="line">Installed codemirror-editor v3.11.1</span><br><span class="line">Install plugin commit-message-length-validator version v3.11.1 [y/N]? y</span><br><span class="line">Installed commit-message-length-validator v3.11.1</span><br><span class="line">Install plugin delete-project version v3.11.1 [y/N]? y</span><br><span class="line">Installed delete-project v3.11.1</span><br><span class="line">Install plugin download-commands version v3.11.1 [y/N]? y</span><br><span class="line">Installed download-commands v3.11.1</span><br><span class="line">Install plugin gitiles version v3.11.1 [y/N]? y</span><br><span class="line">Installed gitiles v3.11.1</span><br><span class="line">Install plugin hooks version v3.11.1 [y/N]? y</span><br><span class="line">Installed hooks v3.11.1</span><br><span class="line">Install plugin plugin-manager version v3.11.1 [y/N]? y</span><br><span class="line">Installed plugin-manager v3.11.1</span><br><span class="line">Install plugin replication version v3.11.1 [y/N]? y</span><br><span class="line">Installed replication v3.11.1</span><br><span class="line">Install plugin replication-api version v3.11.1 [y/N]? y</span><br><span class="line">Installed replication-api v3.11.1</span><br><span class="line">Install plugin reviewnotes version v3.11.1 [y/N]? y</span><br><span class="line">Installed reviewnotes v3.11.1</span><br><span class="line">Install plugin singleusergroup version v3.11.1 [y/N]? y</span><br><span class="line">Installed singleusergroup v3.11.1</span><br><span class="line">Install plugin webhooks version v3.11.1 [y/N]? y</span><br><span class="line">Installed webhooks v3.11.1</span><br><span class="line">Initializing plugins.</span><br><span class="line"></span><br><span class="line">Mar 11, 2025 3:09:49 PM org.apache.lucene.store.MemorySegmentIndexInputProvider &lt;init&gt;</span><br><span class="line">INFO: Using MemorySegmentIndexInput with Java 21; to disable start with -Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false</span><br><span class="line">============================================================================</span><br><span class="line">Welcome to the Gerrit community</span><br><span class="line"></span><br><span class="line">Find more information on the homepage: https://www.gerritcodereview.com</span><br><span class="line">Discuss Gerrit on the mailing list: https://groups.google.com/g/repo-discuss</span><br><span class="line">============================================================================</span><br><span class="line">Initialized /home/gerrit/gerrit_application</span><br><span class="line">Init complete, reindexing accounts,changes,groups,projects with: reindex --site-path /home/gerrit/gerrit_application --threads 1 --index accounts --index changes --index groups --index projectsReindexed 0 documents in accounts index in 0.0s (0.0/s)</span><br><span class="line">Index accounts in version 14 is ready</span><br><span class="line">Reindexing groups:      100% (3/3)</span><br><span class="line">Reindexed 3 documents in groups index in 0.3s (11.3/s)</span><br><span class="line">Index groups in version 11 is ready</span><br><span class="line">Reindexing changes: Slicing projects: 100% (2/2), done    </span><br><span class="line">Reindexed 0 documents in changes index in 0.0s (0.0/s)</span><br><span class="line">Index changes in version 86 is ready</span><br><span class="line">Reindexing projects:    100% (2/2)</span><br><span class="line">Reindexed 2 documents in projects index in 0.1s (27.0/s)</span><br><span class="line">Index projects in version 9 is ready</span><br><span class="line">Executing /home/gerrit/gerrit_application/bin/gerrit.sh start</span><br><span class="line">Starting Gerrit Code Review: WARNING: Could not adjust Gerrit&#x27;s process for the kernel&#x27;s out-of-memory killer.</span><br><span class="line">         This may be caused by /home/gerrit/gerrit_application/bin/gerrit.sh not being run as root.</span><br><span class="line">         Consider changing the OOM score adjustment manually for Gerrit&#x27;s PID=1859 with e.g.:</span><br><span class="line">         echo &#x27;-1000&#x27; | sudo tee /proc/1859/oom_score_adj</span><br><span class="line">OK</span><br><span class="line">Waiting for server on 192.168.225.31:8080 ... OK</span><br><span class="line">Please open the following URL in the browser: http://192.168.225.31:8080/#/admin/projects/</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Tips:</p>
+<p>If you would like to use reverse-proxy, the Authentication method must be set as <code>http</code>.<br>Other configurations could set as default, type <code>enter</code> to skip.</p>
+<p>What’s more, please rememer to allow the <code>8080</code> port by using:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@gerrit2 ~]# firewall-cmd --permanent --add-port=8080/tcp</span><br><span class="line">success</span><br><span class="line">[root@gerrit2 ~]# firewall-cmd --reload</span><br><span class="line">success</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>If you see this page, please do not worry!</p>
+<p>It represents you’ve deployed the gerrit application successfully.</p>
+<p>For the next step, you should handle with the NGINX configuration.</p>
+<p><img src="/../images/reverse_proxy.png" alt="Revers-proxy error"></p>
+<h2 id="Configuring-NGINX-as-a-Reverse-Proxy-for-Gerrit"><a href="#Configuring-NGINX-as-a-Reverse-Proxy-for-Gerrit" class="headerlink" title="Configuring NGINX as a Reverse Proxy for Gerrit"></a>Configuring NGINX as a Reverse Proxy for Gerrit</h2><p>Please refer to <a href="https://blog.sunhaoyang.net/Linux/NGINX_1.Deploying-NGINX/index.html">NGIXN Series Chapter 1: Deploying NGINX</a> to deploy NGINX in your local.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@loadbalance conf.d]# pwd</span><br><span class="line">/etc/nginx/conf.d</span><br><span class="line">[root@loadbalance conf.d]# ls</span><br><span class="line">default.conf.bak  gerrit.conf</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Tips:</p>
+<p>You’d better to rename the <code>default.conf</code> in <code>/etc/nginx/conf.d</code>.</p>
+</blockquote>
+<p>Create a new configuration file, here called <code>gerrit.conf</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">upstream gerrit_backend &#123;</span><br><span class="line">    ip_hash;</span><br><span class="line">    server 192.168.225.30:8080 weight=1 max_fails=3 fail_timeout=10s;</span><br><span class="line">    server 192.168.225.31:8080 weight=1 max_fails=3 fail_timeout=10s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name loadbalance.haoyang.cn;</span><br><span class="line"></span><br><span class="line">    auth_basic &quot;Gerrit Code Review&quot;;</span><br><span class="line">    auth_basic_user_file /etc/nginx/conf.d/htpasswd;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://gerrit_backend;</span><br><span class="line"></span><br><span class="line">        proxy_set_header X-Real-IP $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-For $remote_addr;</span><br><span class="line">        proxy_set_header X-Forwarded-Proto $scheme;</span><br><span class="line"></span><br><span class="line">        proxy_set_header Host $host;</span><br><span class="line">        proxy_set_header Authorization $http_authorization;</span><br><span class="line"></span><br><span class="line">        proxy_redirect off;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Finally, install the httpd-tools to generate http-authentification account and password.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install httpd-tools -y</span><br></pre></td></tr></table></figure>
+
+<p>Create the gerrit administrator user.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@loadbalance ~]# htpasswd -b -c /etc/nginx/conf.d/htpasswd gerritadmin ***</span><br><span class="line">Adding password <span class="keyword">for</span> user gerritadmin</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@loadbalance conf.d]# curl http://192.168.225.32:80</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;&lt;title&gt;401 Authorization Required&lt;/title&gt;&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;center&gt;&lt;h1&gt;401 Authorization Required&lt;/h1&gt;&lt;/center&gt;</span><br><span class="line">&lt;hr&gt;&lt;center&gt;nginx/1.26.3&lt;/center&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>We could find that it needs to be authorized.</p>
+<p>If you open the website in the browser(e.g. chrome), A pop-up window will appear asking you to enter your password.</p>
+<p align="center">
+  <img src="../images/pop-up.png" alt="pop-up window" width="50%">
+</p>
+
+<p>Congratulations to you! Up to now, you have completed the whole process of deploying gerrit.</p>
+<p><img src="/../images/gerrit.png" alt="gerrit"><br>Please enjoy yourself in using such a code review application :D</p>
+<blockquote>
+<p>Tips:</p>
+<p>It is normal phenomenon if you could not sign out in the website.</p>
+<p>Here is the reason: You are using HTTP Basic authentication. There is no way to tell a browser to quit sending basic authentication credentials, to logout with basic authentication is to close the Web browser.</p>
+<p>What’s more, clear all cookies and data cache does work as well.</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Tools</category>
+      </categories>
+      <tags>
+        <tag>Gerrit</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NGINX Series Chapter1: Deploying NGINX</title>
     <url>/Linux/NGINX_1.Deploying-NGINX/index.html</url>
     <content><![CDATA[<h2 id="Deployment-Plan-Table"><a href="#Deployment-Plan-Table" class="headerlink" title="Deployment Plan Table"></a>Deployment Plan Table</h2><table>
