@@ -1,0 +1,443 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Frp supplementation and improvement | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="This article mainly provides supplements for areas prone to errors and improves the usage of frp.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frp supplementation and improvement">
+<meta property="og:url" content="https://blog.sunhaoyang.net/Tools/Frp/Frp-supplementation-and-improvement/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="This article mainly provides supplements for areas prone to errors and improves the usage of frp.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/Frp.png">
+<meta property="article:published_time" content="2025-04-25T16:28:28.000Z">
+<meta property="article:modified_time" content="2025-04-29T06:52:29.830Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="Frp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/Frp.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://blog.sunhaoyang.net/Tools/Frp/Frp-supplementation-and-improvement/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Frp supplementation and improvement',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Frp supplementation and improvement</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Frp supplementation and improvement</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-04-25T16:28:28.000Z" title="Created 2025-04-26 00:28:28">2025-04-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-04-29T06:52:29.830Z" title="Updated 2025-04-29 14:52:29">2025-04-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Tools/">Tools</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>6mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">Comments:</span><a href="/Tools/Frp/Frp-supplementation-and-improvement/index.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h2 id="Set-the-frps-frpc-as-the-automatic-service-managed-by-systemd"><a href="#Set-the-frps-frpc-as-the-automatic-service-managed-by-systemd" class="headerlink" title="Set the frps&#x2F;frpc as the automatic service managed by systemd"></a>Set the frps&#x2F;frpc as the automatic service managed by <code>systemd</code></h2><h3 id="frps-service"><a href="#frps-service" class="headerlink" title="frps.service"></a>frps.service</h3><h4 id="Copy-the-folder-containing-the-installation-package-and-configuration-files-to-usr-local-bin-and-configure-systemd-accordingly"><a href="#Copy-the-folder-containing-the-installation-package-and-configuration-files-to-usr-local-bin-and-configure-systemd-accordingly" class="headerlink" title="Copy the folder containing the installation package and configuration files to /usr/local/bin, and configure systemd accordingly."></a>Copy the folder containing the installation package and configuration files to <code>/usr/local/bin</code>, and configure systemd accordingly.</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@frp-server ~]# mv frp_0.62.0_linux_amd64 /usr/local/bin/frp</span><br><span class="line">[root@frp-server ~]# ls /usr/local/bin/frp</span><br><span class="line">frpc  frpc.toml  frps  frps.toml  LICENSE</span><br></pre></td></tr></table></figure>
+
+<h4 id="Supplementation-of-monitoring-Frp-server"><a href="#Supplementation-of-monitoring-Frp-server" class="headerlink" title="Supplementation of monitoring Frp server"></a>Supplementation of monitoring Frp server</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Edit the frps.toml configuration file, add the following lines</span></span><br><span class="line">vim frps.toml</span><br><span class="line"></span><br><span class="line">bindPort = 7000</span><br><span class="line">auth.token = <span class="string">&quot;sunhaoyang&quot;</span></span><br><span class="line">webServer.addr = <span class="string">&quot;0.0.0.0&quot;</span></span><br><span class="line">webServer.port = 7500</span><br><span class="line">webServer.user = <span class="string">&quot;admin&quot;</span></span><br><span class="line">webServer.password = <span class="string">&quot;admin_password&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Here’s a breakdown of the server parameters:</p>
+<ul>
+<li><p>bindPort &#x3D; 7000: This is the port the server listens on (7000), and the client connects to the server through this port.</p>
+</li>
+<li><p>auth.token &#x3D; “sunhaoyang”: This sets an authentication token. The client and server use this token to authenticate each other—like a key,only matching tokens can establish a connection.</p>
+</li>
+<li><p>webServer.addr &#x3D; “0.0.0.0”: The web server listens on all network interfaces, making it accessible from anywhere.</p>
+</li>
+<li><p>webServer.port &#x3D; 7500: This is the port for the web server (7500), which is used to access the FRP management interface.</p>
+</li>
+<li><p>webServer.user &#x3D; “admin” and webServer.password &#x3D; “admin_password”: These are the username and password for the web server, required for logging into the management interface.</p>
+</li>
+</ul>
+<h4 id="Create-the-systemd-service-unit"><a href="#Create-the-systemd-service-unit" class="headerlink" title="Create the systemd service unit"></a>Create the systemd service unit</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/systemd/system/frps.service &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=FRP Server Service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/local/bin/frp/frps -c /usr/local/bin/frp/frps.toml</span><br><span class="line">Restart=on-failure</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="Start-the-service"><a href="#Start-the-service" class="headerlink" title="Start the service"></a>Start the service</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@frp-server ~]# systemctl daemon-reload</span><br><span class="line">[root@frp-server ~]# systemctl enable frps.service --now</span><br><span class="line">Created symlink /etc/systemd/system/multi-user.target.wants/frps.service → /etc/systemd/system/frps.service.</span><br><span class="line">[root@frp-server ~]# systemctl status frps.service</span><br><span class="line">● frps.service - FRP Server Service</span><br><span class="line">     Loaded: loaded (/etc/systemd/system/frps.service; enabled; preset: disabled)</span><br><span class="line">     Active: active (running) since Fri 2025-04-25 16:06:45 CST; 4s ago</span><br><span class="line">   Main PID: 355286 (frps)</span><br><span class="line">      Tasks: 5 (limit: 12344)</span><br><span class="line">     Memory: 9.0M</span><br><span class="line">        CPU: 324ms</span><br><span class="line">     CGroup: /system.slice/frps.service</span><br><span class="line">             └─355286 /usr/local/bin/frp/frps -c /usr/local/bin/frp/frps.toml</span><br><span class="line"></span><br><span class="line">Apr 25 16:06:45 frp-server systemd[1]: Started FRP Server Service.</span><br><span class="line">Apr 25 16:06:45 frp-server frps[355286]: 2025-04-25 16:06:45.952 [I] [frps/root.go:105] frps uses config file: /usr/local/bin/frp/frps.toml</span><br><span class="line">Apr 25 16:06:46 frp-server frps[355286]: 2025-04-25 16:06:46.270 [I] [server/service.go:237] frps tcp listen on 0.0.0.0:7000</span><br><span class="line">Apr 25 16:06:46 frp-server frps[355286]: 2025-04-25 16:06:46.271 [I] [frps/root.go:114] frps started successfully</span><br><span class="line">Apr 25 16:06:46 frp-server frps[355286]: 2025-04-25 16:06:46.271 [I] [server/service.go:351] dashboard listen on 0.0.0.0:7500</span><br></pre></td></tr></table></figure>
+
+<p>Now, Try logging into the web interface on port 7500 by entering <code>http://&lt;public IP&gt;</code> in your browser!</p>
+<p>From the chart, you can see the traffic and connection information. By clicking on the left, you can view details about different types of proxy.</p>
+<p><img src="/../images/webui.png" alt="frps webui"></p>
+<h3 id="frpc-service"><a href="#frpc-service" class="headerlink" title="frpc.service"></a>frpc.service</h3><p>For frpc.service, please just follow the operations above, similarl to the frps.service. Have a try!</p>
+<h4 id="Copy-the-folder-containing-the-installation-package-and-configuration-files-to-usr-local-bin-and-configure-systemd-accordingly-1"><a href="#Copy-the-folder-containing-the-installation-package-and-configuration-files-to-usr-local-bin-and-configure-systemd-accordingly-1" class="headerlink" title="Copy the folder containing the installation package and configuration files to /usr/local/bin, and configure systemd accordingly."></a>Copy the folder containing the installation package and configuration files to <code>/usr/local/bin</code>, and configure systemd accordingly.</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@internal-sshserver ~]# mv frp_0.62.0_linux_amd64 /usr/local/bin/frp</span><br><span class="line">[root@internal-sshserver ~]# ls /usr/local/bin/frp</span><br><span class="line">frpc  frpc.toml  frps  frps.toml  LICENSE</span><br><span class="line">[root@internal-sshserver ~]# cd /usr/local/bin/frp</span><br><span class="line">[root@internal-sshserver frp]# vim frpc.toml</span><br></pre></td></tr></table></figure>
+
+<h4 id="Supplementation-of-monitoring-Frp-server-1"><a href="#Supplementation-of-monitoring-Frp-server-1" class="headerlink" title="Supplementation of monitoring Frp server"></a>Supplementation of monitoring Frp server</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">serverAddr = &quot;x.x.x.x&quot;      # Frps&#x27;s public ip address</span><br><span class="line">serverPort = 7000           # Frps&#x27;s listening port</span><br><span class="line">auth.token = &quot;lixiaohui&quot;    # Same as the server&#x27;s auth.token above</span><br><span class="line">[[proxies]]</span><br><span class="line">name = &quot;ssh&quot;                # Proxy name</span><br><span class="line">type = &quot;tcp&quot;                # Proxy type (TCP)</span><br><span class="line">localIP = &quot;127.0.0.1&quot;       # Frpc&#x27;s service ip address</span><br><span class="line">localPort = 22              # Frpc&#x27;s listening port（e.g. SSH service）</span><br><span class="line">remotePort = 6000           # Expose port on the Frps&#x27;s server for external calling</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="Create-the-systemd-service-unit-1"><a href="#Create-the-systemd-service-unit-1" class="headerlink" title="Create the systemd service unit"></a>Create the systemd service unit</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; /etc/systemd/system/frpc.service &lt;&lt;-<span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=FRP Client Service</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/local/bin/frp/frpc -c /usr/local/bin/frp/frpc.toml</span><br><span class="line">Restart=on-failure</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h4 id="Start-the-service-1"><a href="#Start-the-service-1" class="headerlink" title="Start the service"></a>Start the service</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[root@internal-sshserver ~]# systemctl daemon-reload</span><br><span class="line">[root@internal-sshserver ~]# systemctl enable frpc.service --now</span><br><span class="line">[root@internal-sshserver ~]# systemctl status frpc.service</span><br><span class="line">● frpc.service - FRP Client Service</span><br><span class="line">     Loaded: loaded (/etc/systemd/system/frps.service; enabled; preset: disabled)</span><br><span class="line">     Active: active (running) since Fri 2025-04-25 16:29:13 CST; 14s ago</span><br><span class="line">   Main PID: 94421 (frpc)</span><br><span class="line">      Tasks: 4 (limit: 12140)</span><br><span class="line">     Memory: 4.6M</span><br><span class="line">        CPU: 7ms</span><br><span class="line">     CGroup: /system.slice/frpc.service</span><br><span class="line">             └─94421 /usr/local/bin/frp/frpc -c /usr/local/bin/frp/frpc.toml</span><br><span class="line"></span><br><span class="line">Apr 25 16:29:13 internal-sshserver systemd[1]: Started FRP Client Service.</span><br><span class="line">Apr 25 16:29:13 internal-sshserver frpc[94421]: 2025-04-25 16:29:13.467 [I] [sub/root.go:149] start frpc service for config file [/usr/local/bin/frp/frpc.toml]</span><br><span class="line">Apr 25 16:29:13 internal-sshserver frpc[94421]: 2025-04-25 16:29:13.467 [I] [client/service.go:314] try to connect to server...</span><br><span class="line">Apr 25 16:29:13 internal-sshserver frpc[94421]: 2025-04-25 16:29:13.472 [I] [client/service.go:306] [66f9a7e320b717cd] login to server success, get run id [66f9a7e320b717cd]</span><br><span class="line">Apr 25 16:29:13 internal-sshserver frpc[94421]: 2025-04-25 16:29:13.472 [I] [proxy/proxy_manager.go:177] [66f9a7e320b717cd] proxy added: [ssh]</span><br><span class="line">Apr 25 16:29:13 internal-sshserver frpc[94421]: 2025-04-25 16:29:13.473 [I] [client/control.go:172] [66f9a7e320b717cd] [ssh] start proxy success</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ol>
+<li>The <code>bindPort</code>&#x3D;<code>serverPort</code> must be allowed in the settings of firewall. (E.g. ufw allow xxx&#x2F; firewall-cmd –permanent –add-port&#x3D;xxx)</li>
+<li>Some vendor&#x2F;providers may filter the ports and the hardware firewall may block the nonstandard port.</li>
+<li>systemctl enable frps.service&#x2F;frpc.service may be failed.<br>Please <code>sudo setenforce 0</code> change the selinux mode from <code>enforce</code> to <code>permissive</code>, and then <code>systemctl restart frps.service/frpc.service</code> again.</li>
+<li>Selinux context should be set as <code>bin_t</code> <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> semanage fcontext -a -t bin_t <span class="string">&quot;/usr/local/bin/frp/frpc&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> restorecon -v /usr/local/bin/frp/frpc</span><br></pre></td></tr></table></figure></li>
+<li>Increase the interval between two failed restart processes and avoid to stop trying becasue of the frequent reboots. <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[Service]</span><br><span class="line">RestartSec=5s</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net/Tools/Frp/Frp-supplementation-and-improvement/index.html">https://blog.sunhaoyang.net/Tools/Frp/Frp-supplementation-and-improvement/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Frp/">Frp</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/Frp.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/Tools/Frp/Frp-P2P-mode/index.html" title="Frp P2P mode"><img class="cover" src="https://blog.sunhaoyang.net/images/Frp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Frp P2P mode</div></div><div class="info-2"><div class="info-item-1">This article explains how to use frp to create a P2P model, establishing a direct connection between two frpc servers through hole punching.</div></div></div></a><a class="pagination-related" href="/Linux/SSH/Disable-password-based-SSH-login-and-restrict-SSH-access-to-key-based-authentication-on-Linux-and-Mac/index.html" title="Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac"><img class="cover" src="https://blog.sunhaoyang.net/images/SSH.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac</div></div><div class="info-2"><div class="info-item-1">To enhance security, it is recommended to disable SSH password login and allow access only through private key authentication. Below are the steps to achieve this on Linux and macOS.</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/Tools/Frp/Frp-P2P-mode/index.html" title="Frp P2P mode"><img class="cover" src="https://blog.sunhaoyang.net/images/Frp.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-27</div><div class="info-item-2">Frp P2P mode</div></div><div class="info-2"><div class="info-item-1">This article explains how to use frp to create a P2P model, establishing a direct connection between two frpc servers through hole punching.</div></div></div></a><a class="pagination-related" href="/Tools/Frp/Complete-Guide-to-Use-Frp/index.html" title="Complete Guide to Use Frp"><img class="cover" src="https://blog.sunhaoyang.net/images/Frp.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-23</div><div class="info-item-2">Complete Guide to Use Frp</div></div><div class="info-2"><div class="info-item-1">Frp is primarily used to solve NAT and firewall issues, allowing external networks to access services located within the internal network.</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Set-the-frps-frpc-as-the-automatic-service-managed-by-systemd"><span class="toc-number">1.</span> <span class="toc-text">Set the frps&#x2F;frpc as the automatic service managed by systemd</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#frps-service"><span class="toc-number">1.1.</span> <span class="toc-text">frps.service</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Copy-the-folder-containing-the-installation-package-and-configuration-files-to-usr-local-bin-and-configure-systemd-accordingly"><span class="toc-number">1.1.1.</span> <span class="toc-text">Copy the folder containing the installation package and configuration files to &#x2F;usr&#x2F;local&#x2F;bin, and configure systemd accordingly.</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Supplementation-of-monitoring-Frp-server"><span class="toc-number">1.1.2.</span> <span class="toc-text">Supplementation of monitoring Frp server</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Create-the-systemd-service-unit"><span class="toc-number">1.1.3.</span> <span class="toc-text">Create the systemd service unit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Start-the-service"><span class="toc-number">1.1.4.</span> <span class="toc-text">Start the service</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#frpc-service"><span class="toc-number">1.2.</span> <span class="toc-text">frpc.service</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Copy-the-folder-containing-the-installation-package-and-configuration-files-to-usr-local-bin-and-configure-systemd-accordingly-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">Copy the folder containing the installation package and configuration files to &#x2F;usr&#x2F;local&#x2F;bin, and configure systemd accordingly.</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Supplementation-of-monitoring-Frp-server-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">Supplementation of monitoring Frp server</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Create-the-systemd-service-unit-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">Create the systemd service unit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Start-the-service-1"><span class="toc-number">1.2.4.</span> <span class="toc-text">Start the service</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Cloud/OpenStack/Introducing-Containerized-Services/index.html" title="Openstack Series Chapter1:Introducing Containerized Services"><img src="https://blog.sunhaoyang.net/images/OpenStack.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Openstack Series Chapter1:Introducing Containerized Services"/></a><div class="content"><a class="title" href="/Cloud/OpenStack/Introducing-Containerized-Services/index.html" title="Openstack Series Chapter1:Introducing Containerized Services">Openstack Series Chapter1:Introducing Containerized Services</a><time datetime="2025-04-29T08:18:50.000Z" title="Created 2025-04-29 16:18:50">2025-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Frp/Frp-P2P-mode/index.html" title="Frp P2P mode"><img src="https://blog.sunhaoyang.net/images/Frp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Frp P2P mode"/></a><div class="content"><a class="title" href="/Tools/Frp/Frp-P2P-mode/index.html" title="Frp P2P mode">Frp P2P mode</a><time datetime="2025-04-26T16:29:15.000Z" title="Created 2025-04-27 00:29:15">2025-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Frp/Frp-supplementation-and-improvement/index.html" title="Frp supplementation and improvement"><img src="https://blog.sunhaoyang.net/images/Frp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Frp supplementation and improvement"/></a><div class="content"><a class="title" href="/Tools/Frp/Frp-supplementation-and-improvement/index.html" title="Frp supplementation and improvement">Frp supplementation and improvement</a><time datetime="2025-04-25T16:28:28.000Z" title="Created 2025-04-26 00:28:28">2025-04-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/SSH/Disable-password-based-SSH-login-and-restrict-SSH-access-to-key-based-authentication-on-Linux-and-Mac/index.html" title="Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac"><img src="https://blog.sunhaoyang.net/images/SSH.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac"/></a><div class="content"><a class="title" href="/Linux/SSH/Disable-password-based-SSH-login-and-restrict-SSH-access-to-key-based-authentication-on-Linux-and-Mac/index.html" title="Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac">Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac</a><time datetime="2025-04-24T14:37:54.000Z" title="Created 2025-04-24 22:37:54">2025-04-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Frp/Complete-Guide-to-Use-Frp/index.html" title="Complete Guide to Use Frp"><img src="https://blog.sunhaoyang.net/images/Frp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Complete Guide to Use Frp"/></a><div class="content"><a class="title" href="/Tools/Frp/Complete-Guide-to-Use-Frp/index.html" title="Complete Guide to Use Frp">Complete Guide to Use Frp</a><time datetime="2025-04-23T15:24:26.000Z" title="Created 2025-04-23 23:24:26">2025-04-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://blog.sunhaoyang.net/images/footer_background.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/gonganbeian.png" alt="公安备案" style="vertical-align:middle; width:16px; heigh:16px;"> 辽公网安备21029602001011号
+</a>
+<a href="https://beian.miit.gov.cn/" rel="noreferrer" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/icpbeian.png" alt="ICP备案" style="vertical-align:middle; width:16px; height:16px;"> 辽ICP备2025048274号-1
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[Image]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[Link]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[Code]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[Code]') // replace code      
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'src'
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}"></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += 'No comments'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.sunhaoyang.net/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "Unable to retrieve comments, please check the configuration"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="/pluginsSrc/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="/pluginsSrc/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

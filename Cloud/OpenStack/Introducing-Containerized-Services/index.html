@@ -1,0 +1,441 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Openstack Series Chapter1:Introducing Containerized Services | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="This article provides a detailed introduction to how the main services of OpenStack run in containers through TripleO. It covers the relevant container commands in detail, as well as how to manage con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openstack Series Chapter1:Introducing Containerized Services">
+<meta property="og:url" content="https://blog.sunhaoyang.net/Cloud/OpenStack/Introducing-Containerized-Services/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="This article provides a detailed introduction to how the main services of OpenStack run in containers through TripleO. It covers the relevant container commands in detail, as well as how to manage con">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/OpenStack.png">
+<meta property="article:published_time" content="2025-04-29T08:18:50.000Z">
+<meta property="article:modified_time" content="2025-04-29T11:17:26.506Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="Openstack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/OpenStack.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://blog.sunhaoyang.net/Cloud/OpenStack/Introducing-Containerized-Services/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Openstack Series Chapter1:Introducing Containerized Services',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">Openstack Series Chapter1:Introducing Containerized Services</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">Openstack Series Chapter1:Introducing Containerized Services</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-04-29T08:18:50.000Z" title="Created 2025-04-29 16:18:50">2025-04-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-04-29T11:17:26.506Z" title="Updated 2025-04-29 19:17:26">2025-04-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Cloud/">Cloud</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">971</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>6mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">Comments:</span><a href="/Cloud/OpenStack/Introducing-Containerized-Services/index.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h2 id="Use-systemd-to-manage-the-containerized-services"><a href="#Use-systemd-to-manage-the-containerized-services" class="headerlink" title="Use systemd to manage the containerized services"></a>Use <code>systemd</code> to manage the containerized services</h2><p>The latest version of RHOSP uses <code>systemd units</code> to manage the lifecycle of service containers. <code>systemd</code> handles common operations such as starting, stopping, and others, managing containers in the same way as other systemd units and services, using the podman command to interact with the containers.</p>
+<p>For example:</p>
+<p>To verify the status of a containerized service, run the systemctl status command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@controller0 ~]# systemctl status tripleo_cinder_api</span><br><span class="line">● tripleo_cinder_api.service - cinder_api container</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/tripleo_cinder_api.service; enabled; vendor preset: di&gt;</span><br><span class="line">   Active: active (running) since Tue 2025-04-29 02:27:54 UTC; 6h ago</span><br><span class="line"> Main PID: 4963 (conmon)</span><br><span class="line">    Tasks: 0 (limit: 101103)</span><br><span class="line">   Memory: 1.7M</span><br><span class="line">   CGroup: /system.slice/tripleo_cinder_api.service</span><br><span class="line">           ‣ 4963 /usr/bin/conmon --api-version 1 -s -c a89efc04180c85f9e5a2a0f6a7d1835b543b9&gt;</span><br><span class="line"></span><br><span class="line">Apr 29 02:27:46 controller0 systemd[1]: Starting cinder_api container...</span><br><span class="line">Apr 29 02:27:54 controller0 podman[3564]: 2025-04-29 02:27:54.043315718 +0000 UTC m=+6.779304&gt;</span><br><span class="line">Apr 29 02:27:54 controller0 podman[3564]: 2025-04-29 02:27:54.375331615 +0000 UTC m=+7.111320&gt;</span><br><span class="line">Apr 29 02:27:54 controller0 podman[3564]: cinder_api</span><br><span class="line">Apr 29 02:27:54 controller0 systemd[1]: Started cinder_api container.</span><br></pre></td></tr></table></figure>
+
+<h3 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h3><p>Systemd monitors container health checks, which are not displayed by <code>podman ps</code>, using <code>systemd timers</code>. To list containers timers, use the <code>systemctl list-timers</code> command. This example filters to view only <code>tripleo</code> unit services.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@controller0 ~]# systemctl list-timers | grep tripleo</span><br><span class="line">Tue 2025-04-29 10:34:36 UTC  34ms left     Tue 2025-04-29 10:33:27 UTC  1min 9s ago  tripleo_swift_rsync_healthcheck.timer                tripleo_swift_rsync_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:34:36 UTC  365ms left    Tue 2025-04-29 10:33:22 UTC  1min 14s ago tripleo_heat_engine_healthcheck.timer                tripleo_heat_engine_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:34:39 UTC  2s left       Tue 2025-04-29 10:33:12 UTC  1min 24s ago tripleo_octavia_worker_healthcheck.timer             tripleo_octavia_worker_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:34:40 UTC  4s left       Tue 2025-04-29 10:32:57 UTC  1min 39s ago tripleo_manila_scheduler_healthcheck.timer           tripleo_manila_scheduler_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:34:43 UTC  7s left       Tue 2025-04-29 10:33:12 UTC  1min 24s ago tripleo_cinder_scheduler_healthcheck.timer           tripleo_cinder_scheduler_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:34:44 UTC  8s left       Tue 2025-04-29 10:33:17 UTC  1min 19s ago tripleo_neutron_api_healthcheck.timer                tripleo_neutron_api_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:34:51 UTC  14s left      Tue 2025-04-29 10:33:12 UTC  1min 24s ago tripleo_clustercheck_healthcheck.timer               tripleo_clustercheck_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:34:55 UTC  19s left      Tue 2025-04-29 10:33:27 UTC  1min 9s ago  tripleo_logrotate_crond_healthcheck.timer            tripleo_logrotate_crond_healthcheck.service</span><br><span class="line">Tue 2025-04-29 10:35:00 UTC  24s left      Tue 2025-04-29 10:33:27 UTC  1min 9s ago  tripleo_swift_object_replicator_healthcheck.timer    tripleo_swift_object_replicator_healthcheck.service</span><br><span class="line">...output omitted...</span><br></pre></td></tr></table></figure>
+
+<p>To verify a specific container timer, use the <code>systemctl status</code> command.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@controller0 ~]# systemctl status tripleo_cinder_api_healthcheck.timer</span><br><span class="line">● tripleo_cinder_api_healthcheck.timer - cinder_api container healthcheck</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/tripleo_cinder_api_healthcheck.timer; enabled; vendor &gt;</span><br><span class="line">   Active: active (waiting) since Tue 2025-04-29 02:26:51 UTC; 8h ago</span><br><span class="line">  Trigger: Tue 2025-04-29 10:53:36 UTC; 13s left</span><br><span class="line"></span><br><span class="line">Apr 29 02:26:51 controller0 systemd[1]: Started cinder_api container healthcheck.</span><br></pre></td></tr></table></figure>
+
+<p>Let’s check the configuration of <code>tripleo_cinder_api_healthcheck.timer</code>!</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@controller0 ~]# systemctl cat tripleo_cinder_api_healthcheck.timer</span><br><span class="line"># /etc/systemd/system/tripleo_cinder_api_healthcheck.timer</span><br><span class="line">[Unit]</span><br><span class="line">Description=cinder_api container healthcheck</span><br><span class="line">PartOf=tripleo_cinder_api.service</span><br><span class="line">[Timer]</span><br><span class="line">OnActiveSec=120</span><br><span class="line">OnUnitActiveSec=60</span><br><span class="line">RandomizedDelaySec=45.0</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=timers.target</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>[Unit] section:</li>
+</ul>
+<p><code>Description</code>: Describes the purpose of the timer.</p>
+<p><code>PartOf=tripleo_cinder_api.service</code> only affects the lifecycle of the timer and does not change the service triggered by the timer.</p>
+<p>By default, <code>the timer will trigger the service file with the same name</code>, i.e., tripleo_cinder_api_healthcheck.service. This is not controlled by PartOf, but rather by the naming convention of systemd.</p>
+<p>If you want the timer to trigger a different service (such as tripleo_cinder_api.service), you need to explicitly specify the desired service in the Unit section or ExecStart of the timer file.</p>
+<ul>
+<li>[Timer] section:</li>
+</ul>
+<p><code>OnActiveSec=120</code>: The timer will start 120 seconds after the service is activated.</p>
+<p><code>OnUnitActiveSec=60</code>: The timer will start again 60 seconds after the last active period of the service.</p>
+<p><code>RandomizedDelaySec=45.0</code>: A random delay of up to 45 seconds will be added before each timer start.</p>
+<ul>
+<li>[Install] section:</li>
+</ul>
+<p><code>WantedBy=timers.target</code>: Specifies that this timer will start when timers.target is triggered.</p>
+<p>To verify, you can repeatedly check the status <code>systemctl status tripleo_cinder_api_healthcheck</code>. After about 60 seconds, you will see the service start once again.</p>
+<h3 id="Log"><a href="#Log" class="headerlink" title="Log"></a>Log</h3><p>In the latest version of RHOSP, the standard output (stdout) and standard errors (stderr) are consolidated in a single file per container, located in the <code>/var/log/containers/stdouts</code> directory.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@controller0 ~]# ls -1 /var/log/containers/stdouts</span><br><span class="line">aodh_api.log</span><br><span class="line">aodh_db_sync.log</span><br><span class="line">aodh_evaluator.log</span><br><span class="line">aodh_init_log.log</span><br><span class="line">aodh_listener.log</span><br><span class="line">aodh_notifier.log</span><br><span class="line">ceilometer_agent_central.log</span><br><span class="line">ceilometer_agent_notification.log</span><br><span class="line">ceilometer_gnocchi_upgrade.log</span><br><span class="line">ceilometer_init_log.log</span><br><span class="line">cinder_api_cron.log</span><br><span class="line">cinder_api_cron.log.1</span><br><span class="line">cinder_api_cron.log.10.gz</span><br><span class="line">cinder_api_cron.log.11.gz</span><br><span class="line">cinder_api_cron.log.12.gz</span><br><span class="line">cinder_api_cron.log.13.gz</span><br><span class="line">cinder_api_cron.log.14.gz</span><br><span class="line">cinder_api_cron.log.2.gz</span><br><span class="line">cinder_api_cron.log.3.gz</span><br><span class="line">cinder_api_cron.log.4.gz</span><br><span class="line">cinder_api_cron.log.5.gz</span><br><span class="line">cinder_api_cron.log.6.gz</span><br><span class="line">...output omitted...</span><br></pre></td></tr></table></figure>
+
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><p>In RHOSP versions with containerized services, container configuration files are located in the <code>/var/lib/config-data/puppet-generated/container_name</code> directory.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@controller0 ~]# ls -1 /var/lib/config-data/puppet-generated/ | more</span><br><span class="line">aodh</span><br><span class="line">aodh.md5sum</span><br><span class="line">ceilometer</span><br><span class="line">ceilometer.md5sum</span><br><span class="line">cinder</span><br><span class="line">cinder.md5sum</span><br><span class="line">clustercheck</span><br><span class="line">clustercheck.md5sum</span><br><span class="line">crond</span><br><span class="line">crond.md5sum</span><br><span class="line">glance_api</span><br><span class="line">glance_api.md5sum</span><br><span class="line">gnocchi</span><br><span class="line">gnocchi.md5sum</span><br><span class="line">haproxy</span><br><span class="line">haproxy.md5sum</span><br><span class="line">heat</span><br><span class="line">heat_api</span><br><span class="line">heat_api_cfn</span><br><span class="line">heat_api_cfn.md5sum</span><br><span class="line">heat_api.md5sum</span><br><span class="line">heat.md5sum</span><br><span class="line">horizon</span><br><span class="line">horizon.md5sum</span><br><span class="line">...output omitted...</span><br></pre></td></tr></table></figure>
+
+<p>The systemd unit files of containerized services are named with a <code>tripleo_ prefix</code>, because they are installed by TripleO.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@controller0 ~]# ls -1 /etc/systemd/system/tripleo* | more</span><br><span class="line">/etc/systemd/system/tripleo_cinder_api_cron_healthcheck.service</span><br><span class="line">/etc/systemd/system/tripleo_cinder_api_cron_healthcheck.timer</span><br><span class="line">/etc/systemd/system/tripleo_cinder_api_cron.service</span><br><span class="line">/etc/systemd/system/tripleo_cinder_api_healthcheck.service</span><br><span class="line">/etc/systemd/system/tripleo_cinder_api_healthcheck.timer</span><br><span class="line">/etc/systemd/system/tripleo_cinder_api.service</span><br><span class="line">/etc/systemd/system/tripleo_cinder_scheduler_healthcheck.service</span><br><span class="line">/etc/systemd/system/tripleo_cinder_scheduler_healthcheck.timer</span><br><span class="line">/etc/systemd/system/tripleo_cinder_scheduler.service</span><br><span class="line">/etc/systemd/system/tripleo_clustercheck_healthcheck.service</span><br><span class="line">/etc/systemd/system/tripleo_clustercheck_healthcheck.timer</span><br><span class="line">/etc/systemd/system/tripleo_clustercheck.service</span><br><span class="line">...output omitted...</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.sunhaoyang.net/Cloud/OpenStack/Introducing-Containerized-Services/index.html">https://blog.sunhaoyang.net/Cloud/OpenStack/Introducing-Containerized-Services/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Openstack/">Openstack</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/OpenStack.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/Tools/Frp/Frp-P2P-mode/index.html" title="Frp P2P mode"><img class="cover" src="https://blog.sunhaoyang.net/images/Frp.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Frp P2P mode</div></div><div class="info-2"><div class="info-item-1">This article explains how to use frp to create a P2P model, establishing a direct connection between two frpc servers through hole punching.</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-systemd-to-manage-the-containerized-services"><span class="toc-number">1.</span> <span class="toc-text">Use systemd to manage the containerized services</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Timer"><span class="toc-number">1.1.</span> <span class="toc-text">Timer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Log"><span class="toc-number">1.2.</span> <span class="toc-text">Log</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Configuration"><span class="toc-number">1.3.</span> <span class="toc-text">Configuration</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Cloud/OpenStack/Introducing-Containerized-Services/index.html" title="Openstack Series Chapter1:Introducing Containerized Services"><img src="https://blog.sunhaoyang.net/images/OpenStack.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Openstack Series Chapter1:Introducing Containerized Services"/></a><div class="content"><a class="title" href="/Cloud/OpenStack/Introducing-Containerized-Services/index.html" title="Openstack Series Chapter1:Introducing Containerized Services">Openstack Series Chapter1:Introducing Containerized Services</a><time datetime="2025-04-29T08:18:50.000Z" title="Created 2025-04-29 16:18:50">2025-04-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Frp/Frp-P2P-mode/index.html" title="Frp P2P mode"><img src="https://blog.sunhaoyang.net/images/Frp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Frp P2P mode"/></a><div class="content"><a class="title" href="/Tools/Frp/Frp-P2P-mode/index.html" title="Frp P2P mode">Frp P2P mode</a><time datetime="2025-04-26T16:29:15.000Z" title="Created 2025-04-27 00:29:15">2025-04-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Frp/Frp-supplementation-and-improvement/index.html" title="Frp supplementation and improvement"><img src="https://blog.sunhaoyang.net/images/Frp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Frp supplementation and improvement"/></a><div class="content"><a class="title" href="/Tools/Frp/Frp-supplementation-and-improvement/index.html" title="Frp supplementation and improvement">Frp supplementation and improvement</a><time datetime="2025-04-25T16:28:28.000Z" title="Created 2025-04-26 00:28:28">2025-04-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/SSH/Disable-password-based-SSH-login-and-restrict-SSH-access-to-key-based-authentication-on-Linux-and-Mac/index.html" title="Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac"><img src="https://blog.sunhaoyang.net/images/SSH.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac"/></a><div class="content"><a class="title" href="/Linux/SSH/Disable-password-based-SSH-login-and-restrict-SSH-access-to-key-based-authentication-on-Linux-and-Mac/index.html" title="Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac">Disable password-based SSH login and restrict SSH access to key-based authentication on Linux and Mac</a><time datetime="2025-04-24T14:37:54.000Z" title="Created 2025-04-24 22:37:54">2025-04-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Tools/Frp/Complete-Guide-to-Use-Frp/index.html" title="Complete Guide to Use Frp"><img src="https://blog.sunhaoyang.net/images/Frp.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Complete Guide to Use Frp"/></a><div class="content"><a class="title" href="/Tools/Frp/Complete-Guide-to-Use-Frp/index.html" title="Complete Guide to Use Frp">Complete Guide to Use Frp</a><time datetime="2025-04-23T15:24:26.000Z" title="Created 2025-04-23 23:24:26">2025-04-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://blog.sunhaoyang.net/images/footer_background.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/gonganbeian.png" alt="公安备案" style="vertical-align:middle; width:16px; heigh:16px;"> 辽公网安备21029602001011号
+</a>
+<a href="https://beian.miit.gov.cn/" rel="noreferrer" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/icpbeian.png" alt="ICP备案" style="vertical-align:middle; width:16px; height:16px;"> 辽ICP备2025048274号-1
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[Image]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[Link]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[Code]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[Code]') // replace code      
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'src'
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}"></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += 'No comments'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.sunhaoyang.net/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "Unable to retrieve comments, please check the configuration"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="/pluginsSrc/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="/pluginsSrc/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
