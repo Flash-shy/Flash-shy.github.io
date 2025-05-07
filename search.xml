@@ -1,6 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OpenStack Series Chapter4: Identifying shared services and VNC</title>
+    <url>//Cloud/OpenStack/Identifying-shared-services-and-VNC/index.html</url>
+    <content><![CDATA[<h2 id="Shared-Services-Overview"><a href="#Shared-Services-Overview" class="headerlink" title="Shared Services Overview"></a>Shared Services Overview</h2><table>
+<thead>
+<tr>
+<th align="left">Service</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">MariaDB</td>
+<td align="left">A relational database.</td>
+</tr>
+<tr>
+<td align="left">Redis</td>
+<td align="left">An in-memory key-value data store.</td>
+</tr>
+<tr>
+<td align="left">memcached</td>
+<td align="left">A distributed memory cache.</td>
+</tr>
+<tr>
+<td align="left">Pacemaker</td>
+<td align="left">Clustering software.</td>
+</tr>
+<tr>
+<td align="left">Ceph MON and MDS</td>
+<td align="left">The Ceph cluster monitor, and Metadata Server.</td>
+</tr>
+<tr>
+<td align="left">NoVNC and Spice</td>
+<td align="left">Both provide a remote console for instances.</td>
+</tr>
+</tbody></table>
+<h3 id="MariaDB"><a href="#MariaDB" class="headerlink" title="MariaDB"></a>MariaDB</h3><p><code>MariaDB</code> is an open-source edition SQL database and it’s compatible with MySQL database.</p>
+<p>It allows all components to store information.</p>
+<p>In the <code>controller node</code>, the method is <code>MariaDB Galera</code>. It provides <code>multi-master replication</code> mode to confirm the stable status, all nodes are the master.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">+----------+     +----------+     +----------+</span><br><span class="line">|  Node A  | &lt;--&gt;|  Node B  | &lt;--&gt;|  Node C  |</span><br><span class="line">+----------+     +----------+     +----------+</span><br><span class="line">      ^                              ^</span><br><span class="line">      |                              |</span><br><span class="line">      +-------- Client -------------+</span><br></pre></td></tr></table></figure>
+
+<p>The Features of MariaDB Galera:</p>
+<ul>
+<li><p>Multi-Master Replication</p>
+<ul>
+<li>All nodes can perform read and write operations simultaneously.</li>
+<li>Real-time data synchronisation (synchronous replication, not asynchronous) ensures strong consistency.</li>
+</ul>
+</li>
+<li><p>Strong Consistency (Synchronous Replication)</p>
+<ul>
+<li>Uses <strong>write-set replication</strong>: a write operation is considered successful only after all nodes have reached consensus.</li>
+</ul>
+</li>
+<li><p>Automatic Membership Management and Failover</p>
+<ul>
+<li>Nodes can automatically join or leave the cluster.</li>
+<li>A single node failure does not render the entire database unavailable.</li>
+</ul>
+</li>
+<li><p>No Single Point of Failure (Theoretically)</p>
+<ul>
+<li>As long as the majority of nodes (typically N&#x2F;2 + 1) remain operational, the cluster can continue to function.</li>
+<li>All nodes act as primary nodes, with strong data synchronisation between them.</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Synchronous</th>
+<th>Granularity</th>
+<th>Characteristics</th>
+<th>Common Use Cases</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Statement-based (SBR)</td>
+<td>Asynchronous</td>
+<td>SQL statements</td>
+<td>Fast but may lead to inconsistencies</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td>Row-based (RBR)</td>
+<td>Asynchronous</td>
+<td>Row-level</td>
+<td>Good consistency, high data volume</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td>Mixed-based</td>
+<td>Asynchronous</td>
+<td>Auto-switching</td>
+<td>A compromise between SBR and RBR</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td>Write-set</td>
+<td>Synchronous</td>
+<td>Transaction write-set</td>
+<td>Strong consistency, multi-master</td>
+<td>Galera Cluster</td>
+</tr>
+<tr>
+<td>Logical</td>
+<td>Sync&#x2F;Async</td>
+<td>Table&#x2F;statement-level</td>
+<td>Highly flexible</td>
+<td>PostgreSQL</td>
+</tr>
+<tr>
+<td>Physical</td>
+<td>Synchronous</td>
+<td>Binary data</td>
+<td>High performance but less flexible</td>
+<td>PostgreSQL, Oracle, etc.</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>OpenStack</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>cifs mount attention</title>
     <url>//Linux/Mount/cifs-mount-attention/index.html</url>
     <content><![CDATA[<h2 id="Automatically-mount"><a href="#Automatically-mount" class="headerlink" title="Automatically mount"></a>Automatically mount</h2><h3 id="Edit-the-etc-fstab-file"><a href="#Edit-the-etc-fstab-file" class="headerlink" title="Edit the /etc/fstab file"></a>Edit the <code>/etc/fstab</code> file</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/fstab</span><br><span class="line"></span><br><span class="line">//xxx.xx.xx.xx/FileStorage /mnt/smb cifs credentials=/home/[user_name]/smbcredentials,vers=3.1.1,x-systemd.automount,_netdev 0 0</span><br></pre></td></tr></table></figure>
