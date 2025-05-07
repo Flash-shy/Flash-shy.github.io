@@ -1,7 +1,457 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Openstack Series Chapter1:Introducing Containerized Services</title>
+    <title>cifs mount attention</title>
+    <url>//Linux/Mount/cifs-mount-attention/index.html</url>
+    <content><![CDATA[<h2 id="Automatically-mount"><a href="#Automatically-mount" class="headerlink" title="Automatically mount"></a>Automatically mount</h2><h3 id="Edit-the-etc-fstab-file"><a href="#Edit-the-etc-fstab-file" class="headerlink" title="Edit the /etc/fstab file"></a>Edit the <code>/etc/fstab</code> file</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vim /etc/fstab</span><br><span class="line"></span><br><span class="line">//xxx.xx.xx.xx/FileStorage /mnt/smb cifs credentials=/home/[user_name]/smbcredentials,vers=3.1.1,x-systemd.automount,_netdev 0 0</span><br></pre></td></tr></table></figure>
+
+<h3 id="Modify-the-permission-of-the-credential-file"><a href="#Modify-the-permission-of-the-credential-file" class="headerlink" title="Modify the permission of the credential file"></a>Modify the permission of the credential file</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 600 /home/[user_name]/smbcredentials</span><br></pre></td></tr></table></figure>
+
+<h2 id="Check-whether-the-mount-point-is-available-or-not"><a href="#Check-whether-the-mount-point-is-available-or-not" class="headerlink" title="Check whether the mount-point is available or not"></a>Check whether the mount-point is available or not</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo cat /etc/mtab | grep cifs</span><br></pre></td></tr></table></figure>
+
+<h2 id="Remove-all-existing-mount-record"><a href="#Remove-all-existing-mount-record" class="headerlink" title="Remove all existing mount-record"></a>Remove all existing mount-record</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> umount -l /mnt/smb</span><br></pre></td></tr></table></figure>
+
+<h2 id="Remount"><a href="#Remount" class="headerlink" title="Remount"></a>Remount</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> mount -a</span><br></pre></td></tr></table></figure>
+
+<h2 id="Confirm-the-mount-result"><a href="#Confirm-the-mount-result" class="headerlink" title="Confirm the mount result"></a>Confirm the mount result</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">df</span> -hT</span><br><span class="line"></span><br><span class="line">user@localhost:~$ <span class="built_in">df</span> -hT</span><br><span class="line">Filesystem                  Type   Size  Used Avail Use% Mounted on</span><br><span class="line">tmpfs                       tmpfs   13G  4.6M   13G   1% /run</span><br><span class="line">/dev/sdc4                   ext4   5.2T  2.0T  3.1T  39% /</span><br><span class="line">tmpfs                       tmpfs   63G  4.0K   63G   1% /dev/shm</span><br><span class="line">tmpfs                       tmpfs  5.0M     0  5.0M   0% /run/lock</span><br><span class="line">/dev/sdc2                   ext4   974M  245M  663M  27% /boot</span><br><span class="line">/dev/sdc1                   vfat   1.1G  6.1M  1.1G   1% /boot/efi</span><br><span class="line">tmpfs                       tmpfs   13G  4.0K   13G   1% /run/user/1000</span><br><span class="line">//xxx.xx.xx.xx/FileStorage cifs   2.5T  2.4T  151G  95% /mnt/smb</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Mount</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Openstack Deployment Series Chapter0:Overview</title>
+    <url>//Cloud/OpenStack/Openstack-Deployment-Overview/index.html</url>
+    <content><![CDATA[<h2 id="What-is-OpenStack"><a href="#What-is-OpenStack" class="headerlink" title="What is OpenStack?"></a>What is OpenStack?</h2><p>OpenStack is an <code>open-source cloud computing platform</code> designed to provide scalable, flexible, and robust Infrastructure as a Service (IaaS). Through a suite of modular services—such as compute, storage, and network management—it offers enterprises and organisations a solution for building private or public clouds. OpenStack supports a range of virtualisation technologies, including <code>KVM</code>, <code>Xen</code>, and <code>VMware</code>, making it suitable for cloud environments of varying sizes and requirements.</p>
+<p>Drawbacks of OpenStack:</p>
+<ul>
+<li><p>Complex architecture and heavy deployment:<br>OpenStack is highly <code>modular—each</code> function (like Nova, Neutron, Cinder, etc.) operates as an independent service. Deploying and integrating them involves considerable complexity, and upgrading or maintaining such a system comes with a high operational cost.</p>
+</li>
+<li><p>Performance overhead:<br>The control plane and scheduling logic introduce <code>latency</code>. For performance-critical, large-scale internet services, OpenStack is often not lightweight enough.</p>
+</li>
+<li><p>Limited flexibility despite high customisability:<br>While it is theoretically highly customisable, making significant changes requires <code>deep knowledge of its internal workings</code>. This demands strong in-house development capability.</p>
+</li>
+</ul>
+<p>Domestic cloud platform:</p>
+<ul>
+<li><p>Alibaba Cloud’s <code>Apsara</code> is indeed its self-developed cloud platform, supporting massive computing, storage, and networking needs. Although early iterations may have drawn on open-source tools, it’s now fully proprietary.</p>
+</li>
+<li><p>Tencent Cloud’s <code>vStation</code> was an earlier name for part of their virtualisation platform. This evolved into a broader internal infrastructure, with “TStack” and the “Xingxinghai” architecture forming the basis of Tencent’s cloud platform.</p>
+</li>
+</ul>
+<h1 id="Cloud-Platform-Base-Comparison-Table"><a href="#Cloud-Platform-Base-Comparison-Table" class="headerlink" title="Cloud Platform Base Comparison Table"></a>Cloud Platform Base Comparison Table</h1><table>
+<thead>
+<tr>
+<th>Cloud Provider</th>
+<th>Core Platform (Base)</th>
+<th>OpenStack-Based?</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Alibaba Cloud</strong></td>
+<td><strong>Apsara (飞天)</strong></td>
+<td>❌ No</td>
+<td>Fully in-house developed. Highly optimised for Alibaba’s scale.</td>
+</tr>
+<tr>
+<td><strong>Tencent Cloud</strong></td>
+<td><strong>TStack &#x2F; vStation</strong></td>
+<td>❌ No</td>
+<td>Self-developed virtualisation and orchestration stack.</td>
+</tr>
+<tr>
+<td><strong>Huawei Cloud</strong></td>
+<td><strong>FusionSphere</strong></td>
+<td>✅ Yes (modified)</td>
+<td>Based on OpenStack, heavily customised and commercialised.</td>
+</tr>
+<tr>
+<td><strong>Baidu Cloud</strong></td>
+<td><strong>ABC Stack</strong></td>
+<td>❌ No</td>
+<td>Proprietary platform optimised for AI and big data workloads.</td>
+</tr>
+<tr>
+<td><strong>Open Telekom Cloud</strong></td>
+<td>Based on OpenStack</td>
+<td>✅ Yes</td>
+<td>European carrier cloud offering. Standard OpenStack distribution.</td>
+</tr>
+<tr>
+<td><strong>OVHcloud</strong></td>
+<td>Based on OpenStack</td>
+<td>✅ Yes</td>
+<td>One of the largest OpenStack-based public clouds.</td>
+</tr>
+<tr>
+<td><strong>Red Hat</strong></td>
+<td><strong>TripleO (OpenStack)</strong></td>
+<td>✅ Yes</td>
+<td>Red Hat’s IaaS&#x2F;PaaS offering, often used for private cloud setups.</td>
+</tr>
+<tr>
+<td><strong>Google Cloud</strong></td>
+<td>Proprietary Infrastructure</td>
+<td>❌ No</td>
+<td>Uses fully in-house cloud platform. OpenStack not used.</td>
+</tr>
+<tr>
+<td><strong>Amazon Web Services (AWS)</strong></td>
+<td>Proprietary Infrastructure</td>
+<td>❌ No</td>
+<td>Entirely proprietary and highly integrated platform.</td>
+</tr>
+<tr>
+<td><strong>Microsoft Azure</strong></td>
+<td>Proprietary Infrastructure</td>
+<td>❌ No</td>
+<td>Microsoft’s fully self-developed cloud ecosystem.</td>
+</tr>
+</tbody></table>
+<h2 id="Server-Configurations"><a href="#Server-Configurations" class="headerlink" title="Server Configurations"></a>Server Configurations</h2><p>One Controller node + One Compute node.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Hostname</th>
+<th align="left">IP address</th>
+<th align="left">Operating System</th>
+<th align="left">OpenStack Version</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">controller</td>
+<td align="left">Management Network：192.168.225.33  <br> Provider Network：No IP addr</td>
+<td align="left">Rocky 9.5</td>
+<td align="left">Dalmatian (2025.1)</td>
+</tr>
+<tr>
+<td align="left">node</td>
+<td align="left">Management Network：192.168.225.34  <br> Provider Network：NO IP addr</td>
+<td align="left">Rocky 9.5</td>
+<td align="left">Dalmatian (2025.1)</td>
+</tr>
+</tbody></table>
+<h2 id="Modular-each-Services"><a href="#Modular-each-Services" class="headerlink" title="Modular-each Services"></a>Modular-each Services</h2><h3 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h3><ul>
+<li><p><strong>Identity service</strong>: Used for user authentication and authorisation. </p>
+</li>
+<li><p><strong>Image service</strong>: Used to store and manage virtual machine images.  </p>
+</li>
+<li><p><strong>Placement service</strong>: Used for resource tracking and allocation.  </p>
+</li>
+<li><p><strong>Compute management component</strong>: Manages the lifecycle of virtual machines. </p>
+</li>
+<li><p><strong>Networking management component</strong>: Handles the management of network resources.  </p>
+</li>
+<li><p><strong>Various networking agents</strong>: Implement networking functions.  </p>
+</li>
+<li><p><strong>Dashboard</strong>: Provides a graphical user interface for management.  </p>
+</li>
+<li><p><strong>Cinder block storage</strong>: Offers block storage services.  </p>
+</li>
+<li><p><strong>Manila file sharing service</strong>: Provides file sharing capabilities.</p>
+</li>
+<li><p><strong>SQL database</strong>: Stores data for OpenStack services.  </p>
+</li>
+<li><p><strong>ETCD database</strong>: Stores distributed configuration data.  </p>
+</li>
+<li><p><strong>Message queue</strong>: Facilitates communication between services.  </p>
+</li>
+<li><p><strong>NTP (Network Time Protocol)</strong>: Ensures time synchronisation across components.</p>
+</li>
+</ul>
+<h3 id="Compute"><a href="#Compute" class="headerlink" title="Compute"></a>Compute</h3><ul>
+<li><p><strong>Compute management component</strong>: Manages the lifecycle of virtual machines. </p>
+</li>
+<li><p><strong>KVM virtualisation component</strong>: Responsible for running virtual machines. </p>
+</li>
+<li><p><strong>Networking agent</strong>: Implements networking functions.</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>OpenStack</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenStack Series Chapter3:Introducing Overcloud</title>
+    <url>//Cloud/OpenStack/Introducing-Overcloud/index.html</url>
+    <content><![CDATA[<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>In Red Hat OpenStack Platform (RHOSP), a Red Hat supported overcloud is built by the undercloud <code>Director</code> node using the Deployment service <code>TripleO</code>. At the same time, the undercloud can deploy and manage <code>multiple</code> overclouds.</p>
+<h2 id="The-Deployment-template"><a href="#The-Deployment-template" class="headerlink" title="The Deployment template"></a>The Deployment template</h2><p>An overcloud consists of numerous deployed nodes, each configured using roles, which specify the services and configuration required for a node to perform that role. Predefined RHOSP role definitions are located in the <code>/usr/share/openstack-tripleo-heat-templates/roles</code> directory and can be viewed with the <code>openstack role</code> command.</p>
+<h3 id="Check-all-default-roles"><a href="#Check-all-default-roles" class="headerlink" title="Check all default roles"></a>Check all default roles</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ ls /usr/share/openstack-tripleo-heat-templates/roles | wc -l</span><br><span class="line">52</span><br><span class="line"></span><br><span class="line">(undercloud) [stack@director ~]$ ls /usr/share/openstack-tripleo-heat-templates/roles</span><br><span class="line">BlockStorage.yaml           ComputePPC64LE.yaml                 DistributedComputeScaleOut.yaml</span><br><span class="line">CellController.yaml         ComputeRBDEphemeral.yaml            HciCephAll.yaml</span><br><span class="line">CephAll.yaml                ComputeRealTime.yaml                HciCephFile.yaml</span><br><span class="line">CephFile.yaml               ComputeSriov.yaml                   HciCephMon.yaml</span><br><span class="line">CephObject.yaml             ComputeSriovIB.yaml                 HciCephObject.yaml</span><br><span class="line">CephStorage.yaml            ComputeSriovRT.yaml                 IronicConductor.yaml</span><br><span class="line">Compute.yaml                Controller.yaml                     Messaging.yaml</span><br><span class="line">ComputeAlt.yaml             ControllerAllNovaStandalone.yaml    Networker.yaml</span><br><span class="line">ComputeDVR.yaml             ControllerNoCeph.yaml               NetworkerSriov.yaml</span><br><span class="line">ComputeHCI.yaml             ControllerNovaStandalone.yaml       Novacontrol.yaml</span><br><span class="line">ComputeHCIOvsDpdk.yaml      ControllerOpenstack.yaml            ObjectStorage.yaml</span><br><span class="line">ComputeInstanceHA.yaml      ControllerSriov.yaml                README.rst</span><br><span class="line">ComputeLiquidio.yaml        ControllerStorageDashboard.yaml     Standalone.yaml</span><br><span class="line">ComputeLocalEphemeral.yaml  ControllerStorageNfs.yaml           Telemetry.yaml</span><br><span class="line">ComputeOvsDpdk.yaml         Database.yaml                       Undercloud.yaml</span><br><span class="line">ComputeOvsDpdkRT.yaml       DistributedCompute.yaml             UndercloudMinion.yaml</span><br><span class="line">ComputeOvsDpdkSriov.yaml    DistributedComputeHCI.yaml</span><br><span class="line">ComputeOvsDpdkSriovRT.yaml  DistributedComputeHCIScaleOut.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="Check-all-deployed-roles"><a href="#Check-all-deployed-roles" class="headerlink" title="Check all deployed roles"></a>Check all deployed roles</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ grep &#x27;^- name:&#x27; ~/templates/roles_data.yaml</span><br><span class="line">- name: Controller</span><br><span class="line">- name: Compute</span><br><span class="line">- name: CephStorage</span><br><span class="line">- name: ComputeHCI</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Controller</p>
+<p>Control plane node with all core services loaded. Provides service APIs and handles database, messaging, and network processing functions.</p>
+<blockquote>
+<p>In the exercise case, we provide only one <code>Controller</code> node.</p>
+</blockquote>
+</li>
+<li><p>Compute</p>
+<p>Standard compute node working as a hypervisor running deployed instances and stacks.</p>
+</li>
+<li><p>CephStorage</p>
+<p>Storage back end node using a containerized Red Hat Ceph Storage server and multiple object storage disks (OSDs).</p>
+</li>
+<li><p>ComputeHCI</p>
+<p>Converged node. (<code>Compute node</code> + <code>CephStorage node</code>.)</p>
+<p>Compute node with hyperconverged infrastructure, combining compute and Ceph OSD functionality on a single node.</p>
+</li>
+</ul>
+<h2 id="Components-and-Services"><a href="#Components-and-Services" class="headerlink" title="Components and Services"></a>Components and Services</h2><h3 id="Core-Services"><a href="#Core-Services" class="headerlink" title="Core Services"></a>Core Services</h3><ul>
+<li><p>Block Storage Service (Cinder)</p>
+<p>Cinder -&gt; Ceph.</p>
+<p>Original Swift only provides the object storage. So, Cinder will schedule the back-end <code>Ceph</code> for <code>block</code> and <code>file</code> storage.</p>
+</li>
+<li><p>Image Service (Glance)</p>
+<p>The Image service stores and manages images used to deploy instances. (<code>Object Storage</code>)</p>
+</li>
+<li><p>Orchestration Service (Heat)</p>
+<p>In the undercloud, Heat templates deploy each <code>overcloud as a stack</code>.</p>
+<p>In the overcloud, Heat templates deploy <code>application workloads as stacks</code>.</p>
+<p>All templates are based on <code>yaml</code> files.</p>
+</li>
+<li><p>Dashboard Service (Horizon)</p>
+<p><code>Web UI Front-end Dashboard</code> It just looks like a console. More convenient and intuitionistic.</p>
+<p>The Dashboard service provides a browser-based interface for self-service cloud users to create and configure resources and launch and manage instances and stacks.</p>
+</li>
+<li><p>Identity Service (Keystone)</p>
+<p>It looks like a <code>gate-keeper</code> to confirm&#x2F;verify the comer.</p>
+<p>The Identity service provides domain, project, and user <code>authorization</code> for other overcloud services.</p>
+</li>
+<li><p>OpenStack Networking Service (Neutron)</p>
+<p>It’s responsible for the network.</p>
+<p>The OpenStack Networking service manages <code>virtual networking infrastructure</code>. It provides the virtual network and manages the network interfaces.</p>
+</li>
+<li><p>Compute Service (Nova)</p>
+<p>The Compute service schedules and runs on-demand virtual machines. </p>
+<p>It’s responsible for <code>creating, starting, stoping and removing the virtual machines</code>.</p>
+</li>
+<li><p>Messaging Service (Oslo)</p>
+<p>It provides a common <code>messaging framework</code> and provides a compatible and consistent <code>communication</code> feature set between each services.</p>
+</li>
+<li><p>Object Store (Swift)</p>
+<p><code>Original and default</code> object storage back-end.</p>
+<p>The Object Store service provides self-service cloud user object storage. Other overcloud services that collect data or objects can use the <code>Object Store</code> service as a back end.</p>
+</li>
+</ul>
+<h3 id="Discretionary-and-Operational-OpenStack-Services"><a href="#Discretionary-and-Operational-OpenStack-Services" class="headerlink" title="Discretionary and Operational OpenStack Services"></a>Discretionary and Operational OpenStack Services</h3><ul>
+<li><p>Bare Metal Service (Ironic)</p>
+<p><code>Initializes</code> and <code>introspects</code> -&gt; <code>scaling</code>.</p>
+<p>The Bare Metal service locates and prepares compute resources, including bare metal and virtual machines.</p>
+</li>
+<li><p>File Share Service (Manila)</p>
+<p>It can use either the <code>NFS</code> or <code>CIFS</code> protocols to provide file sharing to instances. </p>
+</li>
+<li><p>Load Balancing Service(Octavia)</p>
+<p>It is an original <code>HAProxy-based</code> service.<br>The Load Balancing service enables failover network traffic distribution to instances in a multitier application architecture.</p>
+</li>
+</ul>
+<h2 id="Managing-the-Overcloud"><a href="#Managing-the-Overcloud" class="headerlink" title="Managing the Overcloud"></a>Managing the Overcloud</h2><h3 id="Listing-all-Overcloud-nodes"><a href="#Listing-all-Overcloud-nodes" class="headerlink" title="Listing all Overcloud nodes"></a>Listing all Overcloud nodes</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ openstack server list \</span><br><span class="line">&gt; -c &#x27;Name&#x27; -c &#x27;Status&#x27; -c &#x27;Networks&#x27;</span><br><span class="line">+-------------+--------+------------------------+</span><br><span class="line">| Name        | Status | Networks               |</span><br><span class="line">+-------------+--------+------------------------+</span><br><span class="line">| controller0 | ACTIVE | ctlplane=172.25.249.56 |</span><br><span class="line">| computehci0 | ACTIVE | ctlplane=172.25.249.54 |</span><br><span class="line">| compute1    | ACTIVE | ctlplane=172.25.249.53 |</span><br><span class="line">| compute0    | ACTIVE | ctlplane=172.25.249.59 |</span><br><span class="line">| ceph0       | ACTIVE | ctlplane=172.25.249.58 |</span><br><span class="line">+-------------+--------+------------------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="High-Availability"><a href="#High-Availability" class="headerlink" title="High Availability"></a>High Availability</h3><p>Red Hat OpenStack Platform uses <code>Pacemaker</code> as the cluster resource manager, <code>HAProxy</code> as the load balancing cluster service, and <code>MariaDB Galera</code> as the replicated database service.</p>
+<p>RHOSP Director installs a <code>duplicate set</code> of OpenStack components on each controller node and manages them as a single service.</p>
+<ul>
+<li><p>Pacemaker -&gt; Manager and Scheduler</p>
+</li>
+<li><p>HAProxy -&gt; Allocate all network traffic.</p>
+</li>
+<li><p>MariaDB -&gt; Duplicate the data.</p>
+</li>
+</ul>
+<p>We could use the command to check the status of our cluster.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[heat-admin@controller0 ~]$ sudo pcs status</span><br><span class="line">Cluster name: tripleo_cluster</span><br><span class="line">Cluster Summary:</span><br><span class="line">  * Stack: corosync</span><br><span class="line">  * Current DC: controller0 (version 2.0.3-5.el8_2.1-4b1f869f0f) - partition with quorum</span><br><span class="line">  * Last updated: Tue May  6 13:33:04 2025</span><br><span class="line">  * Last change:  Mon May  5 02:29:30 2025 by root via crm_resource on controller0</span><br><span class="line">  * 5 nodes configured</span><br><span class="line">  * 22 resource instances configured</span><br><span class="line"></span><br><span class="line">Node List:</span><br><span class="line">  * Online: [ controller0 ]</span><br><span class="line">  * GuestOnline: [ galera-bundle-0@controller0 ovn-dbs-bundle-0@controller0 rabbitmq-bundle-0@controller0 redis-bundle-0@controller0 ]</span><br><span class="line"></span><br><span class="line">Full List of Resources:</span><br><span class="line">  * Container bundle: galera-bundle [cluster.common.tag/gls-dle-dev-osp16-osp16_containers-openstack-mariadb:pcmklatest]:</span><br><span class="line">    * galera-bundle-0	(ocf::heartbeat:galera):	Master controller0</span><br><span class="line">  * Container bundle: rabbitmq-bundle [cluster.common.tag/gls-dle-dev-osp16-osp16_containers-openstack-rabbitmq:pcmklatest]:</span><br><span class="line">    * rabbitmq-bundle-0	(ocf::heartbeat:rabbitmq-cluster):	Started controller0</span><br><span class="line">  * Container bundle: redis-bundle [cluster.common.tag/gls-dle-dev-osp16-osp16_containers-openstack-redis:pcmklatest]:</span><br><span class="line">    * redis-bundle-0	(ocf::heartbeat:redis):	Master controller0</span><br><span class="line">  * ip-172.25.249.50	(ocf::heartbeat:IPaddr2):	Started controller0</span><br><span class="line">  * ip-172.25.250.50	(ocf::heartbeat:IPaddr2):	Started controller0</span><br><span class="line">  * ip-172.24.1.51	(ocf::heartbeat:IPaddr2):	Started controller0</span><br><span class="line">  * ip-172.24.1.50	(ocf::heartbeat:IPaddr2):	Started controller0</span><br><span class="line">  * ip-172.24.3.50	(ocf::heartbeat:IPaddr2):	Started controller0</span><br><span class="line">  * ip-172.24.4.50	(ocf::heartbeat:IPaddr2):	Started controller0</span><br><span class="line">  * Container bundle: haproxy-bundle [cluster.common.tag/gls-dle-dev-osp16-osp16_containers-openstack-haproxy:pcmklatest]:</span><br><span class="line">    * haproxy-bundle-podman-0	(ocf::heartbeat:podman):	Started controller0</span><br><span class="line">  * Container bundle: ovn-dbs-bundle [cluster.common.tag/gls-dle-dev-osp16-osp16_containers-openstack-ovn-northd:pcmklatest]:</span><br><span class="line">    * ovn-dbs-bundle-0	(ocf::ovn:ovndb-servers):	Master controller0</span><br><span class="line">  * ip-172.24.1.52	(ocf::heartbeat:IPaddr2):	Started controller0</span><br><span class="line">  * Container bundle: openstack-cinder-volume [cluster.common.tag/gls-dle-dev-osp16-osp16_containers-openstack-cinder-volume:pcmklatest]:</span><br><span class="line">    * openstack-cinder-volume-podman-0	(ocf::heartbeat:podman):	Started controller0</span><br><span class="line">  * Container bundle: openstack-manila-share [cluster.common.tag/gls-dle-dev-osp16-osp16_containers-openstack-manila-share:pcmklatest]:</span><br><span class="line">    * openstack-manila-share-podman-0	(ocf::heartbeat:podman):	Started controller0</span><br><span class="line"></span><br><span class="line">Daemon Status:</span><br><span class="line">  corosync: active/enabled</span><br><span class="line">  pacemaker: active/enabled</span><br><span class="line">  pcsd: active/enabled</span><br></pre></td></tr></table></figure>
+
+<h2 id="Accessing-Services-on-the-Overloud"><a href="#Accessing-Services-on-the-Overloud" class="headerlink" title="Accessing Services on the Overloud"></a>Accessing Services on the Overloud</h2><p>When the overcloud is first installed, the procedure creates the <code>overcloudrc</code> identity environment file under the stackrc user’s home directory with the admin credentials to access<br>the overcloud.</p>
+<ul>
+<li><p>stackrc</p>
+<p>It will be created automatically when deploy the undercloud which contains the environment variables in the undercloud.</p>
+<p>It could be used to deploy the overcloud.</p>
+</li>
+<li><p>overcloudrc</p>
+<p>After the overcloud was deployed, it will be generated by <code>TripleO</code>.</p>
+<p>It is the token&#x2F;authentication file to access the overcloud.</p>
+<p>We could check and manage the service on overcloud by CLI command with it.</p>
+</li>
+</ul>
+<h3 id="Switch-to-overcloud-environment-variables"><a href="#Switch-to-overcloud-environment-variables" class="headerlink" title="Switch to overcloud environment variables"></a>Switch to overcloud environment variables</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Check all environment variables on the overcloud</span><br><span class="line">(overcloud) [stack@director ~]$ env | grep ^OS_*</span><br><span class="line">OS_IMAGE_API_VERSION=2</span><br><span class="line">OS_AUTH_URL=http://172.25.250.50:5000</span><br><span class="line">OS_CLOUDNAME=overcloud</span><br><span class="line">OS_REGION_NAME=regionOne</span><br><span class="line">OS_PROJECT_NAME=admin</span><br><span class="line">OS_PROJECT_DOMAIN_NAME=Default</span><br><span class="line">OS_USER_DOMAIN_NAME=Default</span><br><span class="line">OS_IDENTITY_API_VERSION=3</span><br><span class="line">OS_AUTH_TYPE=password</span><br><span class="line">OS_NO_CACHE=True</span><br><span class="line">OS_COMPUTE_API_VERSION=2.latest</span><br><span class="line">OS_PASSWORD=redhat</span><br><span class="line">OS_USERNAME=admin</span><br><span class="line">OS_VOLUME_API_VERSION=3</span><br><span class="line"></span><br><span class="line"># Check all service on the overcloud</span><br><span class="line">(overcloud) [stack@director ~]$ openstack service list</span><br><span class="line">+----------------------------------+-----------+----------------+</span><br><span class="line">| ID                               | Name      | Type           |</span><br><span class="line">+----------------------------------+-----------+----------------+</span><br><span class="line">| 0932e03c896a4e73b905b81a0e4e8b02 | cinderv2  | volumev2       |</span><br><span class="line">| 1b5a14e5ff2d4d988dcbb7d1a31aa257 | panko     | event          |</span><br><span class="line">| 1e50893246094c05b0b8b5028efa65d6 | heat      | orchestration  |</span><br><span class="line">| 20ee8664c18146639e207d1dd833066b | heat-cfn  | cloudformation |</span><br><span class="line">| 2ed07d8f7afd4126b279bd273d029962 | gnocchi   | metric         |</span><br><span class="line">| 31442049b55040d5bb52589e0fd1b31f | nova      | compute        |</span><br><span class="line">| 446c6d0b77a74d05a491393c8d4cc106 | keystone  | identity       |</span><br><span class="line">| 76870267b75a4d0bb70772f586730659 | neutron   | network        |</span><br><span class="line">| 8413046b29f44285a772a8bbd172dbd8 | manilav2  | sharev2        |</span><br><span class="line">| bb7a5e08aad345a489ce0207684ae402 | swift     | object-store   |</span><br><span class="line">| c970fbfbc71a49008760c6d9a6f3ee91 | aodh      | alarming       |</span><br><span class="line">| cc386f44375343d19e1fc78e8e78db35 | cinderv3  | volumev3       |</span><br><span class="line">| cddaafd6d76b424b946a8fdb47a8ed12 | manila    | share          |</span><br><span class="line">| d799151c504541edacd68a08324d37c0 | glance    | image          |</span><br><span class="line">| e15d67325321405b854447a92bfe866f | octavia   | load-balancer  |</span><br><span class="line">| f8ebce21244748c09b20df6e9c939b73 | placement | placement      |</span><br><span class="line">+----------------------------------+-----------+----------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h3><p>Check the allocated VLAN.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[heat-admin@controller0 ~]$ sudo ovs-vsctl show</span><br><span class="line">da52b817-899b-459f-b486-b529fcbd9275</span><br><span class="line">    Bridge br-prov2</span><br><span class="line">        fail_mode: standalone</span><br><span class="line">        Port eth4</span><br><span class="line">            Interface eth4</span><br><span class="line">        Port br-prov2</span><br><span class="line">            Interface br-prov2</span><br><span class="line">                type: internal</span><br><span class="line">    Bridge br-int</span><br><span class="line">        Port br-int</span><br><span class="line">            Interface br-int</span><br><span class="line">                type: internal</span><br><span class="line">        Port o-hm0</span><br><span class="line">            Interface o-hm0</span><br><span class="line">                type: internal</span><br><span class="line">        Port patch-br-int-to-provnet-275c889d-ef54-4a38-88ff-a7cedee11506</span><br><span class="line">            Interface patch-br-int-to-provnet-275c889d-ef54-4a38-88ff-a7cedee11506</span><br><span class="line">                type: patch</span><br><span class="line">                options: &#123;peer=patch-provnet-275c889d-ef54-4a38-88ff-a7cedee11506-to-br-int&#125;</span><br><span class="line">        Port ovn-8e0b99-0</span><br><span class="line">            Interface ovn-8e0b99-0</span><br><span class="line">                type: geneve</span><br><span class="line">                options: &#123;csum=&quot;true&quot;, key=flow, remote_ip=&quot;172.24.2.2&quot;&#125;</span><br><span class="line">        Port ovn-3f678a-0</span><br><span class="line">            Interface ovn-3f678a-0</span><br><span class="line">                type: geneve</span><br><span class="line">                options: &#123;csum=&quot;true&quot;, key=flow, remote_ip=&quot;172.24.2.6&quot;&#125;</span><br><span class="line">        Port ovn-b8bd46-0</span><br><span class="line">            Interface ovn-b8bd46-0</span><br><span class="line">                type: geneve</span><br><span class="line">                options: &#123;csum=&quot;true&quot;, key=flow, remote_ip=&quot;172.24.2.12&quot;&#125;</span><br><span class="line">    Bridge br-ex</span><br><span class="line">        fail_mode: standalone</span><br><span class="line">        Port br-ex</span><br><span class="line">            Interface br-ex</span><br><span class="line">                type: internal</span><br><span class="line">        Port patch-provnet-275c889d-ef54-4a38-88ff-a7cedee11506-to-br-int</span><br><span class="line">            Interface patch-provnet-275c889d-ef54-4a38-88ff-a7cedee11506-to-br-int</span><br><span class="line">                type: patch</span><br><span class="line">                options: &#123;peer=patch-br-int-to-provnet-275c889d-ef54-4a38-88ff-a7cedee11506&#125;</span><br><span class="line">        Port eth2</span><br><span class="line">            Interface eth2</span><br><span class="line">    Bridge br-prov1</span><br><span class="line">        fail_mode: standalone</span><br><span class="line">        Port eth3</span><br><span class="line">            Interface eth3</span><br><span class="line">        Port br-prov1</span><br><span class="line">            Interface br-prov1</span><br><span class="line">                type: internal</span><br><span class="line">    Bridge br-trunk</span><br><span class="line">        fail_mode: standalone</span><br><span class="line">        Port vlan40</span><br><span class="line">            tag: 40</span><br><span class="line">            Interface vlan40</span><br><span class="line">                type: internal</span><br><span class="line">        Port eth1</span><br><span class="line">            Interface eth1</span><br><span class="line">        Port vlan20</span><br><span class="line">            tag: 20</span><br><span class="line">            Interface vlan20</span><br><span class="line">                type: internal</span><br><span class="line">        Port vlan30</span><br><span class="line">            tag: 30</span><br><span class="line">            Interface vlan30</span><br><span class="line">                type: internal</span><br><span class="line">        Port vlan50</span><br><span class="line">            tag: 50</span><br><span class="line">            Interface vlan50</span><br><span class="line">                type: internal</span><br><span class="line">        Port br-trunk</span><br><span class="line">            Interface br-trunk</span><br><span class="line">                type: internal</span><br><span class="line">        Port vlan10</span><br><span class="line">            tag: 10</span><br><span class="line">            Interface vlan10</span><br><span class="line">                type: internal</span><br><span class="line">    ovs_version: &quot;2.13.0&quot;</span><br></pre></td></tr></table></figure>
+
+<p>Check the ip address.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[heat-admin@controller0 ~]$ ip --br a</span><br><span class="line">lo               UNKNOWN        127.0.0.1/8 ::1/128 </span><br><span class="line">eth0             UP             172.25.249.56/24 172.25.249.50/32 fe80::5054:ff:fe00:f901/64 </span><br><span class="line">eth1             UP             fe80::5054:ff:fe01:1/64 </span><br><span class="line">eth2             UP             fe80::5054:ff:fe02:fa01/64 </span><br><span class="line">eth3             UP             fe80::5054:ff:fe03:1/64 </span><br><span class="line">eth4             UP             fe80::5054:ff:fe04:1/64 </span><br><span class="line">ovs-system       DOWN           </span><br><span class="line">br-prov1         UNKNOWN        fe80::5054:ff:fe03:1/64 </span><br><span class="line">genev_sys_6081   UNKNOWN        fe80::3c78:cbff:feee:3bf0/64 </span><br><span class="line">o-hm0            UNKNOWN        172.23.3.42/16 fe80::f816:3eff:fecd:dfd4/64 </span><br><span class="line">br-int           UNKNOWN        fe80::40e:d7ff:fe34:2944/64 </span><br><span class="line">br-ex            UNKNOWN        172.25.250.1/24 172.25.250.50/32 fe80::5054:ff:fe02:fa01/64 </span><br><span class="line">br-prov2         UNKNOWN        fe80::5054:ff:fe04:1/64 </span><br><span class="line">vlan40           UNKNOWN        172.24.4.1/24 172.24.4.50/32 fe80::b4ca:55ff:fe88:4fd4/64 </span><br><span class="line">vlan10           UNKNOWN        172.24.1.1/24 172.24.1.51/32 172.24.1.50/32 172.24.1.52/32 fe80::f45f:9ff:feed:88a4/64 </span><br><span class="line">vlan20           UNKNOWN        172.24.2.1/24 fe80::8cd7:ccff:fe8a:c345/64 </span><br><span class="line">vlan50           UNKNOWN        172.24.5.1/24 fe80::c2c:bcff:fe88:d879/64 </span><br><span class="line">vlan30           UNKNOWN        172.24.3.1/24 172.24.3.50/32 fe80::14aa:e9ff:fe4e:95a2/64 </span><br><span class="line">br-trunk         UNKNOWN        fe80::5054:ff:fe01:1/64 </span><br></pre></td></tr></table></figure>
+
+<p>The <code>eth0</code> interface is the 172.25.249.0<br><code>provisioning</code> network.</p>
+<p>The <code>br-trunk</code> is the internal network.</p>
+<p>The <code>br-ex bridge</code> is the 172.25.250.0 <code>public</code> network.</p>
+<h2 id="Containerized-services"><a href="#Containerized-services" class="headerlink" title="Containerized services"></a>Containerized services</h2><p>As I introduced in the Chapter1, all services are containerized here.</p>
+<p>Let’s check all services in podman container.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 ~]# podman ps --format &quot;table &#123;&#123;.Names&#125;&#125; &#123;&#123;.Status&#125;&#125;&quot;</span><br><span class="line">Names                              Status</span><br><span class="line">openstack-manila-share-podman-0    Up 11 hours ago</span><br><span class="line">openstack-cinder-volume-podman-0   Up 11 hours ago</span><br><span class="line">ovn-dbs-bundle-podman-0            Up 11 hours ago</span><br><span class="line">haproxy-bundle-podman-0            Up 11 hours ago</span><br><span class="line">rabbitmq-bundle-podman-0           Up 11 hours ago</span><br><span class="line">galera-bundle-podman-0             Up 11 hours ago</span><br><span class="line">redis-bundle-podman-0              Up 11 hours ago</span><br><span class="line">ceph-mgr-controller0               Up 11 hours ago</span><br><span class="line">ceph-mon-controller0               Up 11 hours ago</span><br><span class="line">ceph-mds-controller0               Up 11 hours ago</span><br><span class="line">octavia_worker                     Up 11 hours ago</span><br><span class="line">...ommited...</span><br></pre></td></tr></table></figure>
+
+<p>More detailed configuration information could be viewed by <code>inspect</code> command.</p>
+<p>E.g.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 ~]# podman inspect keystone | jq .[].HostConfig.Binds</span><br><span class="line">[</span><br><span class="line">  &quot;/etc/pki/tls/cert.pem:/etc/pki/tls/cert.pem:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/etc/puppet:/etc/puppet:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/etc/pki/ca-trust/extracted:/etc/pki/ca-trust/extracted:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/var/lib/config-data/puppet-generated/keystone:/var/lib/kolla/config_files/src:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/var/log/containers/keystone:/var/log/keystone:rw,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/dev/log:/dev/log:rw,rprivate,nosuid,rbind&quot;,</span><br><span class="line">  &quot;/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/certs/ca-bundle.crt:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/etc/pki/tls/certs/ca-bundle.trust.crt:/etc/pki/tls/certs/ca-bundle.trust.crt:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/var/log/containers/httpd/keystone:/var/log/httpd:rw,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/etc/localtime:/etc/localtime:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/var/lib/kolla/config_files/keystone.json:/var/lib/kolla/config_files/config.json:ro,rprivate,rbind&quot;,</span><br><span class="line">  &quot;/etc/hosts:/etc/hosts:ro,rprivate,rbind&quot;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="Configuration-Management-of-Containerized-Services"><a href="#Configuration-Management-of-Containerized-Services" class="headerlink" title="Configuration Management of Containerized Services"></a>Configuration Management of Containerized Services</h2><blockquote>
+<p>Remember to modify the configuration in physical rather than inside the container, because all changes will be reset after restarting the container.</p>
+</blockquote>
+<ul>
+<li><p>Configuration files path</p>
+<p><code>/var/log/config-data/puppet-generated/[service_name]/etc/</code></p>
+<p>Excepted for using <code>vim</code> command to modify the configuration, <code>crudini</code> also makes sense.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 puppet-generated]# podman exec -it keystone crudini --get /etc/keystone/keystone.conf DEFAULT debug</span><br><span class="line">False</span><br><span class="line"></span><br><span class="line">[root@controller0 puppet-generated]# crudini --get keystone/etc/keystone/keystone.conf DEFAULT debug</span><br><span class="line">False</span><br><span class="line"></span><br><span class="line">[root@controller0 puppet-generated]# crudini --set keystone/etc/keystone/keystone.conf DEFAULT debug </span><br><span class="line">True</span><br><span class="line"></span><br><span class="line">[root@controller0 puppet-generated]# crudini --get keystone/etc/keystone/keystone.conf DEFAULT debug</span><br><span class="line">True</span><br><span class="line"></span><br><span class="line">[root@controller0 puppet-generated]# podman restart keystone</span><br><span class="line">keystone</span><br><span class="line"></span><br><span class="line">[root@controller0 puppet-generated]# podman exec -it keystone crudini --get /etc/keystone/keystone.conf DEFAULT debug</span><br><span class="line">True</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Log files path</p>
+<p><code>/var/log/containers/[service_name]</code></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 containers]# pwd</span><br><span class="line">/var/log/containers</span><br><span class="line">[root@controller0 containers]# ls</span><br><span class="line">aodh        glance   heat     keystone   mysql    octavia      placement  stdouts</span><br><span class="line">ceilometer  gnocchi  horizon  manila     neutron  openvswitch  rabbitmq   swift</span><br><span class="line">cinder      haproxy  httpd    memcached  nova     panko        redis</span><br><span class="line">[root@controller0 containers]# cd keystone/</span><br><span class="line">[root@controller0 keystone]# ls</span><br><span class="line">keystone.log        keystone.log.11.gz  keystone.log.14.gz  keystone.log.4.gz  keystone.log.7.gz</span><br><span class="line">keystone.log.1      keystone.log.12.gz  keystone.log.2.gz   keystone.log.5.gz  keystone.log.8.gz</span><br><span class="line">keystone.log.10.gz  keystone.log.13.gz  keystone.log.3.gz   keystone.log.6.gz  keystone.log.9.gz</span><br></pre></td></tr></table></figure>
+
+<p>Containers also retain memory-based log structures that store the container’s console STDOUT activity.(<code>/var/log/containers/stdouts</code>) Use podman logs service to view the container’s console activity, for example <code>podman logs</code> keystone.</p>
+</li>
+</ul>
+<h2 id="Managing-Storage-Nodes"><a href="#Managing-Storage-Nodes" class="headerlink" title="Managing Storage Nodes"></a>Managing Storage Nodes</h2><h3 id="Check-the-services-on-the-Controller-node"><a href="#Check-the-services-on-the-Controller-node" class="headerlink" title="Check the services on the Controller node"></a>Check the services on the Controller node</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 stdouts]# podman ps --format &quot;&#123;&#123;.Names&#125;&#125;&quot; | grep ceph</span><br><span class="line">ceph-mgr-controller0</span><br><span class="line">ceph-mon-controller0</span><br><span class="line">ceph-mds-controller0</span><br></pre></td></tr></table></figure>
+
+<p>We obtain three ceph services <code>mgr+mon+mds</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 stdouts]# systemctl list-units | grep ceph</span><br><span class="line">ceph-mds@controller0.service                                                                                                         loaded active     running         Ceph MDS                                                                                                                    </span><br><span class="line">ceph-mgr@controller0.service                                                                                                         loaded active     running         Ceph Manager                                                                                                                </span><br><span class="line">ceph-mon@controller0.service                                                                                                         loaded active     running         Ceph Monitor                                                                                                                </span><br><span class="line">system-ceph\x2dmds.slice                                                                                                             loaded active     active          system-ceph\x2dmds.slice                                                                                                    </span><br><span class="line">system-ceph\x2dmgr.slice                                                                                                             loaded active     active          system-ceph\x2dmgr.slice                                                                                                    </span><br><span class="line">system-ceph\x2dmon.slice                                                                                                             loaded active     active          system-ceph\x2dmon.slice   </span><br></pre></td></tr></table></figure>
+
+<h3 id="Check-all-storage-pools"><a href="#Check-all-storage-pools" class="headerlink" title="Check all storage pools"></a>Check all storage pools</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 stdouts]# systemctl status ceph-mon@controller.service</span><br><span class="line">● ceph-mon@controller.service - Ceph Monitor</span><br><span class="line">   Loaded: loaded (/etc/systemd/system/ceph-mon@.service; disabled; vendor preset: disabled)</span><br><span class="line">   Active: inactive (dead)</span><br><span class="line"></span><br><span class="line">[root@controller0 stdouts]# podman exec ceph-mon-controller0 ceph osd pool ls</span><br><span class="line">vms</span><br><span class="line">volumes</span><br><span class="line">images</span><br><span class="line">manila_data</span><br><span class="line">manila_metadata</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-all-OSDs"><a href="#List-all-OSDs" class="headerlink" title="List all OSDs"></a>List all OSDs</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 stdouts]# podman exec ceph-mon-controller0 ceph osd ls</span><br><span class="line">0</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<h3 id="Check-the-health-situation-of-the-ceph-cluster"><a href="#Check-the-health-situation-of-the-ceph-cluster" class="headerlink" title="Check the health situation of the ceph cluster"></a>Check the health situation of the ceph cluster</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@controller0 stdouts]# podman exec ceph-mon-controller0 ceph -s</span><br><span class="line">  cluster:</span><br><span class="line">    id:     96157d2f-395f-4a54-8a19-b6042465100d</span><br><span class="line">    health: HEALTH_OK</span><br><span class="line"> </span><br><span class="line">  services:</span><br><span class="line">    mon: 1 daemons, quorum controller0 (age 11h)</span><br><span class="line">    mgr: controller0(active, since 11h)</span><br><span class="line">    mds: cephfs:1 &#123;0=controller0=up:active&#125;</span><br><span class="line">    osd: 6 osds: 6 up (since 11h), 6 in (since 4y)</span><br><span class="line"> </span><br><span class="line">  task status:</span><br><span class="line">    scrub status:</span><br><span class="line">        mds.controller0: idle</span><br><span class="line"> </span><br><span class="line">  data:</span><br><span class="line">    pools:   5 pools, 320 pgs</span><br><span class="line">    objects: 2.62k objects, 19 GiB</span><br><span class="line">    usage:   25 GiB used, 95 GiB / 120 GiB avail</span><br><span class="line">    pgs:     320 active+clean</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>OpenStack</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenStack Series Chapter2:Introducing Undercloud</title>
+    <url>//Cloud/OpenStack/Introducing-Undercloud/index.html</url>
+    <content><![CDATA[<h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>The Director undercloud node is an <code>all-in-one</code> Red Hat OpenStack Platform (RHOSP) deployment which provides the services used to install and manage OpenStack overclouds. The deployment toolset is the Deployment service known as <code>TripleO</code>. TripleO uses other existing OpenStack components, such as <code>Heat</code>, and <code>Ansible Playbooks</code>, to provision, deploy, and configure bare-metal systems as OpenStack cloud nodes.</p>
+<blockquote>
+<p>The undercloud is a deployment cloud for overclouds, in which the workload is the overcloud nodes themselves, such as the controller, compute, and storage nodes.</p>
+</blockquote>
+<h2 id="Components-and-Services"><a href="#Components-and-Services" class="headerlink" title="Components and Services"></a>Components and Services</h2><ul>
+<li><p>Identity Service (Keystone)</p>
+<p>The Identity service provides user authentication and authorization, but only to the undercloud’s OpenStack services.</p>
+</li>
+<li><p>Image Service (Glance)</p>
+<p>The Image service stores the initial images to be deployed to bare-metal nodes. These images contain the Red Hat Enterprise Linux (RHEL) operating system, a KVM hypervisor, and container runtimes.</p>
+</li>
+<li><p>Compute Service (Nova)</p>
+<p>The Compute service works with the Bare Metal service to provision nodes, by introspecting available systems to obtain hardware attributes. The Compute service’s scheduling function filters the available nodes to ensure that selected nodes meet role requirements.</p>
+</li>
+<li><p>Bare Metal Service (Ironic)</p>
+<p>The Bare Metal service manages and provisions physical machines. The ironic-inspector service performs introspection by PXE booting unregistered hardware. The undercloud uses an out-of-band management interface, such as IPMI, to perform power management during introspection.</p>
+</li>
+<li><p>Orchestration Service (Heat)</p>
+<p>The Orchestration service provides a set of YAML templates and node roles to define configuration and provisioning instructions for overcloud deployment. Default orchestration templates are located at &#x2F;usr&#x2F;share&#x2F;openstack-tripleo-heat-templates, and are designed to be customized using environment parameter files.</p>
+</li>
+<li><p>Object Service (Swift)</p>
+<p>The undercloud Object store holds images, deployment logs, and introspection results.</p>
+</li>
+<li><p>Networking Service (Neutron)</p>
+<p>The Networking service configures interfaces for the required provisioning and external networks. The provisioning network provides DHCP and PXE boot functions for bare-metal nodes. The external network provides public connectivity.</p>
+</li>
+</ul>
+<h2 id="Viewing-services"><a href="#Viewing-services" class="headerlink" title="Viewing services"></a>Viewing services</h2><p>When you complete the undercloud installation, the system will secretly place a stackrc file in the stack user’s home directory. And let me tell you, this file is a real gem! It’s like a “magic key” that lets you easily access various services on the undercloud.</p>
+<p>The stackrc file will automatically “borrow” a few things from the stack user’s .bashrc file, and as a result, it gains admin-level access to the undercloud. With it, you can manage and interact with the undercloud services as if you were an administrator.</p>
+<p>In this file, there’s one particularly important element called OS_AUTH_URL. It’s like a “satnav,” pointing to the public endpoint of the undercloud’s identity service. Simply put, it tells your system: “Hey, head over here to find the authentication service!” This way, you can easily communicate with the services on the undercloud.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ source stackrc</span><br></pre></td></tr></table></figure>
+
+<h3 id="Listing-all-services"><a href="#Listing-all-services" class="headerlink" title="Listing all services"></a>Listing all services</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ openstack service list</span><br><span class="line">+----------------------------------+------------------+-------------------------+</span><br><span class="line">| ID                               | Name             | Type                    |</span><br><span class="line">+----------------------------------+------------------+-------------------------+</span><br><span class="line">| 2a08c08cc51a4f299536fc66e4b748b6 | nova             | compute                 |</span><br><span class="line">| 313b7a22ef534d3fa367f50d7c9e2754 | mistral          | workflowv2              |</span><br><span class="line">| 417c10b71acb4c1aa40169e251b3d16d | zaqar-websocket  | messaging-websocket     |</span><br><span class="line">| 4d957e71f3284818b3a0617218f446bd | neutron          | network                 |</span><br><span class="line">| 6402d082e73a459c93d5e0b70783b7e5 | placement        | placement               |</span><br><span class="line">| 6f778463089446f49905f6842c25d92e | ironic-inspector | baremetal-introspection |</span><br><span class="line">| 7aa774aa28c344e49aa9eb01de4900ec | zaqar            | messaging               |</span><br><span class="line">| a4158e3f67a1472cb0798ebc979e4e3a | ironic           | baremetal               |</span><br><span class="line">| a822dfa8c6da4695a702b46e38d0077d | heat             | orchestration           |</span><br><span class="line">| ba7910222ac042c6a847a9a3c3c5074a | glance           | image                   |</span><br><span class="line">| bd92462118c042a1a55967372b4b695f | keystone         | identity                |</span><br><span class="line">| d9a5f802093d48958acb7f6e857f0384 | swift            | object-store            |</span><br><span class="line">+----------------------------------+------------------+-------------------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Listing-all-services’-endpoint"><a href="#Listing-all-services’-endpoint" class="headerlink" title="Listing all services’ endpoint"></a>Listing all services’ endpoint</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ openstack endpoint list -c &#x27;Service Type&#x27; -c &#x27;Interface&#x27; -c &#x27;URL&#x27;</span><br><span class="line">+-------------------------+-----------+----------------------------------------------------+</span><br><span class="line">| Service Type            | Interface | URL                                                |</span><br><span class="line">+-------------------------+-----------+----------------------------------------------------+</span><br><span class="line">| placement               | internal  | http://172.25.249.202:8778/placement               |</span><br><span class="line">| image                   | internal  | http://172.25.249.202:9292                         |</span><br><span class="line">| baremetal               | internal  | http://172.25.249.202:6385                         |</span><br><span class="line">| messaging-websocket     | admin     | ws://172.25.249.202:9000                           |</span><br><span class="line">| placement               | admin     | http://172.25.249.202:8778/placement               |</span><br><span class="line">| identity                | admin     | http://172.25.249.202:35357                        |</span><br><span class="line">| compute                 | internal  | http://172.25.249.202:8774/v2.1                    |</span><br><span class="line">| identity                | public    | https://172.25.249.201:13000                       |</span><br><span class="line">| baremetal-introspection | admin     | http://172.25.249.202:5050                         |</span><br><span class="line">| messaging               | internal  | http://172.25.249.202:8888                         |</span><br><span class="line">| baremetal               | public    | https://172.25.249.201:13385                       |</span><br><span class="line">| messaging-websocket     | internal  | ws://172.25.249.202:9000                           |</span><br><span class="line">| image                   | admin     | http://172.25.249.202:9292                         |</span><br><span class="line">| orchestration           | internal  | http://172.25.249.202:8004/v1/%(tenant_id)s        |</span><br><span class="line">| placement               | public    | https://172.25.249.201:13778/placement             |</span><br><span class="line">| image                   | public    | https://172.25.249.201:13292                       |</span><br><span class="line">| compute                 | admin     | http://172.25.249.202:8774/v2.1                    |</span><br><span class="line">| orchestration           | public    | https://172.25.249.201:13004/v1/%(tenant_id)s      |</span><br><span class="line">| object-store            | public    | https://172.25.249.201:13808/v1/AUTH_%(tenant_id)s |</span><br><span class="line">| orchestration           | admin     | http://172.25.249.202:8004/v1/%(tenant_id)s        |</span><br><span class="line">| baremetal-introspection | internal  | http://172.25.249.202:5050                         |</span><br><span class="line">| network                 | admin     | http://172.25.249.202:9696                         |</span><br><span class="line">| network                 | public    | https://172.25.249.201:13696                       |</span><br><span class="line">| workflowv2              | admin     | http://172.25.249.202:8989/v2                      |</span><br><span class="line">| baremetal               | admin     | http://172.25.249.202:6385                         |</span><br><span class="line">| messaging-websocket     | public    | wss://172.25.249.201:9000                          |</span><br><span class="line">| object-store            | admin     | http://172.25.249.202:8080                         |</span><br><span class="line">| identity                | internal  | http://172.25.249.202:5000                         |</span><br><span class="line">| workflowv2              | public    | https://172.25.249.201:13989/v2                    |</span><br><span class="line">| messaging               | admin     | http://172.25.249.202:8888                         |</span><br><span class="line">| messaging               | public    | https://172.25.249.201:13888                       |</span><br><span class="line">| workflowv2              | internal  | http://172.25.249.202:8989/v2                      |</span><br><span class="line">| compute                 | public    | https://172.25.249.201:13774/v2.1                  |</span><br><span class="line">| network                 | internal  | http://172.25.249.202:9696                         |</span><br><span class="line">| object-store            | internal  | http://172.25.249.202:8080/v1/AUTH_%(tenant_id)s   |</span><br><span class="line">| baremetal-introspection | public    | https://172.25.249.201:13050                       |</span><br><span class="line">+-------------------------+-----------+----------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="Listing-all-services’-password"><a href="#Listing-all-services’-password" class="headerlink" title="Listing all services’ password"></a>Listing all services’ password</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ cat undercloud-passwords.conf</span><br><span class="line">[auth]</span><br><span class="line">undercloud_admin_password: B7Hk2yX2zly2tKwDrVh3TGFjp</span><br><span class="line">undercloud_admin_token: B88pjtnpb7ch1bCMLUJqLdGAj</span><br><span class="line">undercloud_aodh_password: LKNMhUQNwhmapU74r8k8Llraw</span><br><span class="line">undercloud_barbican_password: Aoi7Ai5Osgh4tjcfI6cc8OyWh</span><br><span class="line">undercloud_barbican_simple_crypto_kek: bMabXDjqvX2k70V3c9Sip1na-Waw9N4VB-FQMMbxlqM=</span><br><span class="line">undercloud_ceilometer_password: fmQ3eAQ3Eo9lIv5DL9C8okMzz</span><br><span class="line">undercloud_ceph_grafana_admin_password: n42P9DzDhGxh7Emg5RPGt1SAE</span><br><span class="line">undercloud_ceph_dashboard_admin_password: KTUxEA7MHFo4CP4KqHNnz7PQc</span><br><span class="line">undercloud_cinder_password: db0EqnRpJ2JYkaIHMsPsdSwtJ</span><br><span class="line">undercloud_congress_password: 1guMjvHqlYUDdbE60XoJxapgw</span><br><span class="line">undercloud_designate_password: y4m53qVg8ulS1x3nDgwK7CdG2</span><br><span class="line">undercloud_ec2_api_password: vNSVPFS5l05F9cyDhtfOXLeyH</span><br><span class="line">undercloud_etcd_initial_cluster_token: dxmxMFJZ98HQ6eYBnX0nCCdB2</span><br><span class="line">undercloud_glance_password: 3l62WMyGenHPfIcoWDJhLlqaG</span><br><span class="line">undercloud_gnocchi_password: dAvnYVTzljdBPyn0gyi4b2LOh</span><br><span class="line">undercloud_ha_proxy_stats_password: bszPVap67n7B7h4DF6KD2gfrL</span><br><span class="line">undercloud_heat_password: IVgrfc9UKjBTAUOsjcsDUOjCx</span><br><span class="line">undercloud_heat_stack_domain_admin_password: 3DzFaXoB9DodArrdxEnA0Xclo</span><br><span class="line">undercloud_ironic_password: rcmaIUqoE3ft4vwfgGzWnUV80</span><br><span class="line">undercloud_libvirt_tls_password: McT2WnXIzmzWYfoHmg3nzDnP2</span><br><span class="line">undercloud_manila_password: PrNre8t0uKmglYPMGJrSp5DpU</span><br><span class="line">undercloud_mistral_password: u6iGEVtUbpjBus07ksfwB9v75</span><br><span class="line">undercloud_mysql_clustercheck_password: zjywUyG4OhHUhZF3FHIpagjwe</span><br><span class="line">undercloud_mysql_root_password: 2mo7UszHbM</span><br><span class="line">undercloud_neutron_password: wvaPHleiR0P2IpNIrbZ5JcPsS</span><br><span class="line">undercloud_nova_password: 12k2eWmgC0dMezTQeA2R1iLK1</span><br><span class="line">undercloud_novajoin_password: 6bYmgcdhEtcxPbGslIhIiqYuP</span><br><span class="line">undercloud_octavia_password: nm7jAQgPloK8O9lSi8dUW7aCy</span><br><span class="line">undercloud_open_daylight_password: t6ZrMUpqMce7Rls9pbkDGg9Rc</span><br><span class="line">undercloud_panko_password: iW8YEy4xPrzxHT7Uz7nP1CmfE</span><br><span class="line">undercloud_pcsd_password: BSUPMkdeMJwIUsy3</span><br><span class="line">undercloud_placement_password: oEwI1ubaJq4WwZ5HXhTc5357D</span><br><span class="line">undercloud_rpc_password: BOIlN86QyW6NnvIJrtEMgM3jx</span><br><span class="line">undercloud_notify_password: xhqWzQqHcdV1JCMhlSeM8lwzy</span><br><span class="line">undercloud_rabbit_password: 8ttaCabqb9I9ncw3lgBVrItw4</span><br><span class="line">undercloud_redis_password: xRelsoGSzeZqn12Lqk4RMQvjj</span><br><span class="line">undercloud_sahara_password: VgJjC5rDGM8hjAair44G67j7s</span><br><span class="line">undercloud_snmpd_readonly_user_password: Fxz5cmRlA0JhAK4tuzNF2Asae</span><br><span class="line">undercloud_swift_password: 9VRDEP87fnpWEBWJ623ct4x3i</span><br><span class="line">undercloud_zaqar_password: 8wS1kCJ9u5QjQQE37YqADmK5c</span><br></pre></td></tr></table></figure>
+
+<h2 id="Viewing-the-network"><a href="#Viewing-the-network" class="headerlink" title="Viewing the network"></a>Viewing the network</h2><p>Using DHCP and PXE boot, a dedicated high-throughput provisioning network is employed to prepare and deploy the overcloud nodes. This dedicated network acts like an “exclusive lane,” purpose-built to quickly and efficiently handle node configuration and deployment.</p>
+<p>Once you’ve deployed the overcloud, the undercloud continues to play a supporting role on this provisioning network—managing the overcloud nodes and updating them as needed. Since the provisioning network is isolated, it’s completely separate from the internal overcloud traffic and external workload traffic, ensuring no interference. This separation results in a more stable overcloud environment and makes ongoing management much easier.</p>
+<p>In simple terms, the undercloud sets up a “fast lane” for overcloud nodes—speeding up deployment while quietly managing things in the background, without affecting any other traffic. It’s a brilliantly designed setup!</p>
+<h3 id="dhcp-range"><a href="#dhcp-range" class="headerlink" title="dhcp range"></a>dhcp range</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ cat undercloud.conf | egrep -v &quot;(^#.*|^$)&quot;</span><br><span class="line">[DEFAULT]</span><br><span class="line">container_images_file = /home/stack/containers-prepare-parameter.yaml</span><br><span class="line">custom_env_files = /home/stack/custom-undercloud-params.yaml</span><br><span class="line">enable_telemetry = false</span><br><span class="line">generate_service_certificate = false</span><br><span class="line">hieradata_override = /home/stack/hieradata.yaml</span><br><span class="line">local_interface = eth1</span><br><span class="line">local_ip = 172.25.249.200/24</span><br><span class="line">overcloud_domain_name = overcloud.example.com</span><br><span class="line">undercloud_admin_host = 172.25.249.202</span><br><span class="line">undercloud_debug = false</span><br><span class="line">undercloud_ntp_servers = 172.25.254.254</span><br><span class="line">undercloud_public_host = 172.25.249.201</span><br><span class="line">undercloud_service_certificate = /etc/pki/tls/certs/undercloud.pem</span><br><span class="line">[ctlplane-subnet]</span><br><span class="line">cidr = 172.25.249.0/24</span><br><span class="line">dhcp_end = 172.25.249.59</span><br><span class="line">dhcp_start = 172.25.249.51</span><br><span class="line">gateway = 172.25.249.200</span><br><span class="line">inspection_iprange = 172.25.249.150,172.25.249.180</span><br><span class="line">masquerade = true</span><br></pre></td></tr></table></figure>
+
+<p><code>dhcp_end</code> and <code>dhcp_start</code>: Represents the range of IP addresses dynamically assigned via DHCP.</p>
+<p>IPs within this range are officially allocated to nodes once they’ve completed PXE boot and registration. These become the permanent management IPs (also known as ctlplane IPs).</p>
+<p>In other words, these are the addresses that nodes will ultimately use after booting.</p>
+<p>Specifies the temporary IP range assigned to nodes during PXE boot, used by ironic-inspector (or other node discovery tools).</p>
+<p><code>inspection_iprange</code>:</p>
+<p>These IPs are <code>temporarily</code> leased to nodes that are being discovered or prepared for deployment. Once deployment is complete, the IPs are released, and the nodes will switch to using addresses <code>from the dhcp_start to dhcp_end</code> range.</p>
+<h3 id="ip-info"><a href="#ip-info" class="headerlink" title="ip info"></a>ip info</h3><p>In the following output, the br-ctlplane bridge is the 172.25.249.0 provisioning network. The eth1 interface is the 172.25.250.0 public network.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ ip -br a</span><br><span class="line">lo               UNKNOWN        127.0.0.1/8 ::1/128 </span><br><span class="line">eth0             UP             172.25.250.200/24 fe80::1f21:2be6:7500:dfef/64 </span><br><span class="line">eth1             UP             fe80::5054:ff:fe00:f9c8/64 </span><br><span class="line">ovs-system       DOWN           </span><br><span class="line">br-int           DOWN           </span><br><span class="line">br-ctlplane      UNKNOWN        172.25.249.200/24 172.25.249.202/32 172.25.249.201/32 fe80::5054:ff:fe00:f9c8/64 </span><br></pre></td></tr></table></figure>
+
+<h3 id="Check-the-IP-range-assigned-to-the-br-ctlplane-bridge"><a href="#Check-the-IP-range-assigned-to-the-br-ctlplane-bridge" class="headerlink" title="Check the IP range assigned to the br_ctlplane bridge"></a>Check the IP range assigned to the br_ctlplane bridge</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ openstack subnet show ctlplane-subnet</span><br><span class="line">+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| Field             | Value                                                                                                                                                   |</span><br><span class="line">+-------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| allocation_pools  | 172.25.249.51-172.25.249.59                                                                                                                             |</span><br><span class="line">| cidr              | 172.25.249.0/24                                                                                                                                         |</span><br><span class="line">| created_at        | 2020-10-22T09:22:35Z                                                                                                                                    |</span><br><span class="line">| description       |                                                                                                                                                         |</span><br><span class="line">| dns_nameservers   |                                                                                                                                                         |</span><br><span class="line">| enable_dhcp       | True                                                                                                                                                    |</span><br><span class="line">| gateway_ip        | 172.25.249.200                                                                             </span><br></pre></td></tr></table></figure>
+
+<h2 id="Viewing-Provisioning-Resources"><a href="#Viewing-Provisioning-Resources" class="headerlink" title="Viewing Provisioning Resources"></a>Viewing Provisioning Resources</h2><p>At the very start of hardware configuration, the bare-metal provisioning service uses IPMI to give the managed nodes the “green light” to power on. Then, by default, these nodes will boot via PXE and begin “asking around”: they’ll request a temporary IP address from the DHCP server and fetch the bootable temporary kernel and ramdisk images. From there, they can begin the network boot process.</p>
+<h3 id="Listing-all-images"><a href="#Listing-all-images" class="headerlink" title="Listing all images"></a>Listing all images</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ openstack image list</span><br><span class="line">+--------------------------------------+------------------------+--------+</span><br><span class="line">| ID                                   | Name                   | Status |</span><br><span class="line">+--------------------------------------+------------------------+--------+</span><br><span class="line">| da2b80ea-5ffc-400c-bc0c-82b04facad9e | overcloud-full         | active |</span><br><span class="line">| 9826607c-dff5-45b0-b0c4-78c44b8665e9 | overcloud-full-initrd  | active |</span><br><span class="line">| bc188e61-99c5-4d32-8c32-e1e3d467149d | overcloud-full-vmlinuz | active |</span><br><span class="line">+--------------------------------------+------------------------+--------+</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>overcloud-full</p>
+<p>This image typically contains a complete operating system along with all the necessary components required for deploying OpenStack.</p>
+</li>
+<li><p>overcloud-full-initrd</p>
+<p>This is the initrd image, which includes essential files and drivers needed during the boot process.</p>
+</li>
+<li><p>overcloud-full-vmlinuz</p>
+<p>This is the compressed Linux kernel image responsible for initiating the operating system.</p>
+</li>
+</ul>
+<h3 id="Listing-all-registered-nodes"><a href="#Listing-all-registered-nodes" class="headerlink" title="Listing all registered nodes"></a>Listing all registered nodes</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ openstack baremetal node list -c Name -c &#x27;Power State&#x27; -c &#x27;Provisioning State&#x27;</span><br><span class="line">+-------------+-------------+--------------------+</span><br><span class="line">| Name        | Power State | Provisioning State |</span><br><span class="line">+-------------+-------------+--------------------+</span><br><span class="line">| controller0 | power on    | active             |</span><br><span class="line">| compute0    | power on    | active             |</span><br><span class="line">| computehci0 | power on    | active             |</span><br><span class="line">| compute1    | power on    | active             |</span><br><span class="line">| ceph0       | power on    | active             |</span><br><span class="line">+-------------+-------------+--------------------+</span><br></pre></td></tr></table></figure>
+
+<h2 id="Power-management-on-the-Undercloud"><a href="#Power-management-on-the-Undercloud" class="headerlink" title="Power management on the Undercloud"></a>Power management on the Undercloud</h2><p>In a typical overcloud deployment, the nodes are mostly physical machines—such as blade servers or rack-mounted servers. These systems come with a very handy feature: unattended out-of-band management interfaces that allow remote power control. Extremely convenient!</p>
+<p>As for the Bare Metal service, when nodes are being registered, it loads all the power management parameters in one go. These parameters are read from a configuration file called instackenv-initial.json. Simply put, this file acts like a “manual,” instructing the Bare Metal service on how to manage the power for each node.</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ cat instackenv-initial.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;nodes&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;name&quot;: &quot;controller0&quot;,</span><br><span class="line">      &quot;arch&quot;: &quot;x86_64&quot;,</span><br><span class="line">      &quot;cpu&quot;: &quot;2&quot;,</span><br><span class="line">      &quot;disk&quot;: &quot;40&quot;,</span><br><span class="line">      &quot;memory&quot;: &quot;8192&quot;,</span><br><span class="line">      &quot;mac&quot;: [ &quot;52:54:00:00:f9:01&quot; ],</span><br><span class="line">      &quot;pm_addr&quot;: &quot;172.25.249.101&quot;,</span><br><span class="line">      &quot;pm_type&quot;: &quot;pxe_ipmitool&quot;,</span><br><span class="line">      &quot;pm_user&quot;: &quot;admin&quot;,</span><br><span class="line">      &quot;pm_password&quot;: &quot;password&quot;,</span><br><span class="line">      &quot;pm_port&quot;: &quot;623&quot;,</span><br><span class="line">      &quot;capabilities&quot;: &quot;node:controller0,boot_option:local&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;name&quot;: &quot;compute0&quot;,</span><br><span class="line">      &quot;arch&quot;: &quot;x86_64&quot;,</span><br><span class="line">      &quot;cpu&quot;: &quot;2&quot;,</span><br><span class="line">      &quot;disk&quot;: &quot;40&quot;,</span><br><span class="line">      &quot;memory&quot;: &quot;6144&quot;,</span><br><span class="line">      &quot;mac&quot;: [ &quot;52:54:00:00:f9:02&quot; ],</span><br><span class="line">      &quot;pm_addr&quot;: &quot;172.25.249.102&quot;,</span><br><span class="line">      &quot;pm_type&quot;: &quot;pxe_ipmitool&quot;,</span><br><span class="line">      &quot;pm_user&quot;: &quot;admin&quot;,</span><br><span class="line">      &quot;pm_password&quot;: &quot;password&quot;,</span><br><span class="line">      &quot;pm_port&quot;: &quot;623&quot;,</span><br><span class="line">      &quot;capabilities&quot;: &quot;node:compute0,boot_option:local&quot;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+<h3 id="Performing-IPMI-Power-Management"><a href="#Performing-IPMI-Power-Management" class="headerlink" title="Performing IPMI Power Management"></a>Performing IPMI Power Management</h3><p>check the IPMI address</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ cat instackenv-initial.json | jq &#x27;.nodes[] | &#123;name: .name, pm_addr: .pm_addr, pm_user: .pm_user, pm_password: .pm_password&#125;&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;controller0&quot;,</span><br><span class="line">  &quot;pm_addr&quot;: &quot;172.25.249.101&quot;,</span><br><span class="line">  &quot;pm_user&quot;: &quot;admin&quot;,</span><br><span class="line">  &quot;pm_password&quot;: &quot;password&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;compute0&quot;,</span><br><span class="line">  &quot;pm_addr&quot;: &quot;172.25.249.102&quot;,</span><br><span class="line">  &quot;pm_user&quot;: &quot;admin&quot;,</span><br><span class="line">  &quot;pm_password&quot;: &quot;password&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;computehci0&quot;,</span><br><span class="line">  &quot;pm_addr&quot;: &quot;172.25.249.106&quot;,</span><br><span class="line">  &quot;pm_user&quot;: &quot;admin&quot;,</span><br><span class="line">  &quot;pm_password&quot;: &quot;password&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;compute1&quot;,</span><br><span class="line">  &quot;pm_addr&quot;: &quot;172.25.249.112&quot;,</span><br><span class="line">  &quot;pm_user&quot;: &quot;admin&quot;,</span><br><span class="line">  &quot;pm_password&quot;: &quot;password&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;ceph0&quot;,</span><br><span class="line">  &quot;pm_addr&quot;: &quot;172.25.249.103&quot;,</span><br><span class="line">  &quot;pm_user&quot;: &quot;admin&quot;,</span><br><span class="line">  &quot;pm_password&quot;: &quot;password&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Operation on Power</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ ipmitool -I lanplus \</span><br><span class="line">&gt; -U admin -P password -H 172.25.249.101 power status</span><br><span class="line">Chassis Power is on</span><br><span class="line"></span><br><span class="line">(undercloud) [stack@director ~]$ openstack baremetal node power on controller0</span><br><span class="line">(undercloud) [stack@director ~]$ openstack baremetal node power off controller0</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>OpenStack</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MySQL Series Chapter0: Introduction</title>
+    <url>//Database/MySQL/Introduction/index.html</url>
+    <content><![CDATA[<h2 id="Definition"><a href="#Definition" class="headerlink" title="Definition"></a>Definition</h2><p>MySQL is a <code>relational</code> database management system that organizes data into <code>structured</code> tables, rows, and columns for efficient programming and data management.</p>
+<p>It also works as a document store, enabling the creation of both SQL and NoSQL applications without the need for separate NoSQL databases.</p>
+<h2 id="Transaction"><a href="#Transaction" class="headerlink" title="Transaction"></a>Transaction</h2><p>MySQL is transactional by nature. When storing and managing data, actions such as selecting, inserting, updating, or deleting are required.</p>
+<p>MySQL groups these actions into a transaction. The transaction is saved only if every part completes successfully. </p>
+<p>MySQL works well with online transaction processing workloads. It handles transactions quickly and manages large volumes of transaction at once. </p>
+<p><code>OLTP</code>, with low latency and high throughput, makes MySQL ideal for high-speed environments like banking or online shopping. </p>
+<p>MySQL not only stores data but also <code>replicates</code> it from a main server to several replicas.</p>
+<h2 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h2><p>MySQL is a high-performance database that uses its default storage engine, known as <code>InnoDB</code>. InnoDB helps MySQL handle complex operations and large data volumes smoothly.</p>
+<h2 id="Version"><a href="#Version" class="headerlink" title="Version"></a>Version</h2><ul>
+<li><p>Community edition</p>
+</li>
+<li><p>Oracle enterprise edition</p>
+</li>
+</ul>
+<p><img src="/../images/community_enterprise_mysql.png" alt="differences"></p>
+]]></content>
+      <categories>
+        <category>Database</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenStack Series Chapter1:Introducing Containerized Services</title>
     <url>//Cloud/OpenStack/Introducing-Containerized-Services/index.html</url>
     <content><![CDATA[<h2 id="Use-systemd-to-manage-the-containerized-services"><a href="#Use-systemd-to-manage-the-containerized-services" class="headerlink" title="Use systemd to manage the containerized services"></a>Use <code>systemd</code> to manage the containerized services</h2><p>The latest version of RHOSP uses <code>systemd units</code> to manage the lifecycle of service containers. <code>systemd</code> handles common operations such as starting, stopping, and others, managing containers in the same way as other systemd units and services, using the podman command to interact with the containers.</p>
 <p>For example:</p>
@@ -274,7 +724,7 @@
       </tags>
   </entry>
   <entry>
-    <title>OpenStack Series Chapter0: Creating-and-Deleting-VMs-instaces(2)</title>
+    <title>OpenStack Series Chapter0: Creating and Deleting VMs instaces(2)</title>
     <url>//Cloud/OpenStack/Creating-and-Deleting-VMs-instaces(2)/index.html</url>
     <content><![CDATA[<h2 id="Environment"><a href="#Environment" class="headerlink" title="Environment"></a>Environment</h2><h3 id="Undercloud"><a href="#Undercloud" class="headerlink" title="Undercloud"></a>Undercloud</h3><p>director.lab.example.com : <code>172.25.250.60</code></p>
 <h3 id="Overcloud"><a href="#Overcloud" class="headerlink" title="Overcloud"></a>Overcloud</h3><ul>
@@ -474,7 +924,7 @@
       </tags>
   </entry>
   <entry>
-    <title>OpenStack Series Chapter0: Creating-and-Deleting-VMs-instaces(1)</title>
+    <title>OpenStack Series Chapter0: Creating and Deleting VMs instaces(1)</title>
     <url>//Cloud/OpenStack/Creating-and-Deleting-VMs-instaces(1)/index.html</url>
     <content><![CDATA[<h2 id="Delete-resources-in-openstack-dashboard"><a href="#Delete-resources-in-openstack-dashboard" class="headerlink" title="Delete resources in openstack dashboard"></a>Delete resources in openstack dashboard</h2><h3 id="Delete-images"><a href="#Delete-images" class="headerlink" title="Delete images"></a>Delete images</h3><p><img src="/../images/delete_image.png" alt="delete images"></p>
 <h3 id="Delete-flavors"><a href="#Delete-flavors" class="headerlink" title="Delete flavors"></a>Delete flavors</h3><p><img src="/../images/delete_flavor.png" alt="delete flavors"></p>
