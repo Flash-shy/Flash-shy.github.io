@@ -1,0 +1,49 @@
+name: Bing IndexNow
+
+on:
+  schedule:
+    - cron: '0 */5 * * *'  # 每天午夜运行一次，你可以调整这个时间
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  submit-indexnow:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@main
+
+    - name: Download sitemap.txt
+      run: |
+        curl -O https://www.sunhaoyang.net/sitemap.txt
+
+    - name: Prepare URLs for submission
+      run: |
+        # 读取sitemap.txt中的每一行URL
+        urls=$(cat sitemap.txt)
+        url_list="["
+        for url in $urls; do
+          # 直接将每个URL加入到数组中
+          url_list="$url_list\"$url\","
+        done
+        # 删除最后一个逗号并添加闭合括号
+        url_list=${url_list%,}
+        url_list="$url_list]"
+
+        # 调试输出：检查最终生成的urlList
+        echo "Submitting URLs: $url_list"
+
+        # 使用curl提交URL到Bing IndexNow API，增加keyLocation参数
+        response=$(curl -i -X POST "https://api.indexnow.org/IndexNow" \
+          -H "Content-Type: application/json; charset=utf-8" \
+          -d "{\"host\":\"www.sunhaoyang.net\",\"key\":\"b2632d5647b24daa9e7b2d728e84d4a9\",\"keyLocation\":\"https://www.sunhaoyang.net/b2632d5647b24daa9e7b2d728e84d4a9.txt\",\"urlList\":$url_list}")
+
+        # 输出响应结果
+        echo "Response Code:"
+        echo $response | head -n 20  # 输出响应的前20行，帮助调试
+        echo "Full Response:"
+        echo $response  # 完整输出响应内容
+
+    - name: Cleanup
+      run: |
+        rm sitemap.txt

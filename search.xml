@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ</title>
+    <url>//Cloud/OpenStack/Introducing-Component-Communication-RabbitMQ.html</url>
+    <content><![CDATA[<h2 id="Introduction-and-Overview-of-RabbitMQ"><a href="#Introduction-and-Overview-of-RabbitMQ" class="headerlink" title="Introduction and Overview of RabbitMQ"></a>Introduction and Overview of RabbitMQ</h2><p>As we discussed before in the last Chapter, OpenStack is highly <code>modular—each</code> function (like Nova, Neutron, Cinder, etc.) operates as an independent service.</p>
+<p>All services depend on two back end functions:</p>
+<ul>
+<li><p>Database (MariaDB)</p>
+<p>Database is used to store the persistent data of each OpenStack component. </p>
+</li>
+<li><p>Message Broker (RabbitMQ)</p>
+<p>Message Broker is used to support the communication between each component. Any message broker if only supports AMQP protocol could be used as a back end.<br>In OpenStack here, we use <code>RabbitMQ</code> as the message broker.</p>
+</li>
+</ul>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>OpenStack</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenStack Series Chapter4: Identifying shared services and VNC</title>
     <url>//Cloud/OpenStack/Identifying-shared-services-and-VNC/index.html</url>
     <content><![CDATA[<h2 id="Shared-Services-Overview"><a href="#Shared-Services-Overview" class="headerlink" title="Shared Services Overview"></a>Shared Services Overview</h2><table>
@@ -44,8 +65,10 @@
 <ul>
 <li><p>Multi-Master Replication</p>
 <ul>
-<li>All nodes can perform read and write operations simultaneously.</li>
-<li>Real-time data synchronisation (synchronous replication, not asynchronous) ensures strong consistency.</li>
+<li><p>All nodes can perform read and write operations simultaneously.</p>
+</li>
+<li><p>Real-time data synchronisation (synchronous replication, not asynchronous) ensures strong consistency.</p>
+</li>
 </ul>
 </li>
 <li><p>Strong Consistency (Synchronous Replication)</p>
@@ -55,14 +78,18 @@
 </li>
 <li><p>Automatic Membership Management and Failover</p>
 <ul>
-<li>Nodes can automatically join or leave the cluster.</li>
-<li>A single node failure does not render the entire database unavailable.</li>
+<li><p>Nodes can automatically join or leave the cluster.</p>
+</li>
+<li><p>A single node failure does not render the entire database unavailable.</p>
+</li>
 </ul>
 </li>
 <li><p>No Single Point of Failure (Theoretically)</p>
 <ul>
-<li>As long as the majority of nodes (typically N&#x2F;2 + 1) remain operational, the cluster can continue to function.</li>
-<li>All nodes act as primary nodes, with strong data synchronisation between them.</li>
+<li><p>As long as the majority of nodes (typically N&#x2F;2 + 1) remain operational, the cluster can continue to function.</p>
+</li>
+<li><p>All nodes act as primary nodes, with strong data synchronisation between them.</p>
+</li>
 </ul>
 </li>
 </ul>
@@ -119,6 +146,75 @@
 <td>PostgreSQL, Oracle, etc.</td>
 </tr>
 </tbody></table>
+<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><p><code>Redis</code> is a <code>high-performance</code> <code>in-memory</code> <code>key-value</code> data store.</p>
+<p>It can store several types of data structures, such as <code>strings, lists, sets, sorted sets, and hashes</code>.</p>
+<p>Compared with traditional database, Redis uses memory to store data. Therefore, keeping all data in memory increases performance.</p>
+<p>What’s more, Redis supports to save data to disk as well.</p>
+<h3 id="Memcached"><a href="#Memcached" class="headerlink" title="Memcached"></a>Memcached</h3><p><code>Memcached</code> is similar to <code>Redis</code>, it provides an in-memory cache for ephemeral data.</p>
+<p>However, Memcached does not support the persistent storage in disk, it does not support various kinds of data structure(only key-value string).</p>
+<p>It’s used more in <code>keystone</code>, <code>nova</code>, <code>oslo</code> and so on.</p>
+<h3 id="Pacemaker"><a href="#Pacemaker" class="headerlink" title="Pacemaker"></a>Pacemaker</h3><p><code>Pacemaker</code> service manages core containers and services, such as Galera, RabbitMQ, Redis, and HAProxy.</p>
+<p>It could monitor services as well as allocate the defected services to an available node, switch to a new node or restart the service.</p>
+<h3 id="Ceph-MON-and-MDS"><a href="#Ceph-MON-and-MDS" class="headerlink" title="Ceph MON and MDS"></a>Ceph MON and MDS</h3><p>MON and MDS are two core components for Ceph. </p>
+<p><code>MON</code> is responsible for monitorting the status of the whole ceph cluster.</p>
+<p><code>MDS</code> looks like a map which manages and stores the meta data, it records the configuration information.</p>
+<h3 id="NoVNC-and-SPICE"><a href="#NoVNC-and-SPICE" class="headerlink" title="NoVNC and SPICE"></a>NoVNC and SPICE</h3><p>OpenStack supports two protocols for providing remote virtual console access: <code>VNC(Virtual Network Computer)</code> and <code>SPICE(Simple Protocol for Independent Computing Environments)</code>.</p>
+<ul>
+<li><p>noVNC</p>
+<p><code>noVNC</code> is comprised of a JavaScript library and an application that runs in desktop and mobile browsers using HTML5 and WebSockets.</p>
+<p>It is a VNC client based on web, it is convenient for users to visit the virtual machine desktop by browser.</p>
+</li>
+<li><p>SPICE</p>
+<p><code>SPICE</code> provides more advanced features than existing VNC clients.(audio or vedio)</p>
+<blockquote>
+<p>Red Hat recommends that you use a standalone SPICE client to access OpenStack instances from the private management network.</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="Using-VNC-to-Access-an-Instance-Console"><a href="#Using-VNC-to-Access-an-Instance-Console" class="headerlink" title="Using VNC to Access an Instance Console"></a>Using VNC to Access an Instance Console</h2><p>Because all virtual machines are generated on the compute node, <code>each compute node</code> runs a <code>vncserver</code> process, listening on the internal API network on one or more ports, starting at 5900 and increasing, depending on the number of instances deployed on that compute node.</p>
+<p><code>Each controller node</code> runs a <code>novncproxy</code> process, listening on port 6080 on the same internal API network. </p>
+<p>The remaining services belong to the <code>Compute Service (Nova)</code> with components on <code>both the controller and compute nodes</code>.</p>
+<p><img src="/../images/VNC_process.png" alt="VNC process"></p>
+<p>VNC Process Flow for Accessing an Instance Console:</p>
+<ol>
+<li><p>Users make a request from <code>browser</code>.</p>
+<p> Users open a browser and use the NoVNC plugin, call the nova-api (the main controller of OpenStack, residing on the controller node and listening on port 8774) to connect to the virtual machine. At this point, OpenStack’s Dashboard (the management interface) forwards the request via HAProxy (a highly capable traffic coordinator located on the controller node, using port 80).</p>
+</li>
+<li><p><code>Nova API</code> passes the request.</p>
+<p> Nova-api passes a <code>get_vnc_console</code> request to nova-compute (compute, internal_API,AMQP).</p>
+</li>
+<li><p><code>Nova-compute</code> ask <code>libvirt</code>.</p>
+<p> nova-compute passes the <code>get_vnc_console</code> request to libvirt (compute) to locate the VM’s attributes.</p>
+</li>
+<li><p><code>libvirt</code> generates a token.</p>
+<p> libvirt generates a <code>token</code> from the VM’s UUID and returns the token to nova-compute (compute, internal_API, AMQP).</p>
+<p> The token is like the ID-card of the VMs.</p>
+</li>
+<li><p><code>Nova-compute</code> returns the token to <code>Nova API</code>.</p>
+<p> nova-compute returns the generated token and a <code>connect_info</code> object to nova-api (controller, internal API, AMQP).</p>
+</li>
+<li><p><code>Nova API</code> asks <code>Nova-consoleauth</code> to authorize.</p>
+<p> <code>nova-api</code> passes an <code>authorize_console</code> request to <code>nova-consoleauth</code> (compute, internal API, AMQP), which caches the <code>connect_info</code> object, using the token as the index, for future use when the actual connection request occurs.</p>
+</li>
+<li><p><code>Nova API</code> tells the browser.</p>
+<p> <code>nova-api</code> also returns a <code>nova-novncproxy URL</code> and the <code>instance-specific token</code> to the <code>browser</code> (workstation, external).</p>
+</li>
+<li><p><code>Browser</code> visit the <code>nova-novncproxy</code> by <code>haproxy</code>.</p>
+<p> The browser (workstation, external) connects to the URL, <code>proxied by the dashboard haproxy</code> (controller, external, port 6080) to reach nova-novncproxy (controller, internal API, port 6080).</p>
+</li>
+<li><p><code>Nova-novncproxy</code> parses the token.</p>
+<p> nova-novncproxy obtains the request and then it parses the <code>token and instance ID</code> from the URL and passes it to <code>nova-consoleauth</code> (controller, internal API, AMQP) to verify.</p>
+</li>
+<li><p><code>Nova-consoleauth</code> gives the feedback.</p>
+<p>  Using the token, <code>nova-consoleauth</code> retrieves the <code>connect_info</code> object from the cache and <code>returns it to nova-novncproxy</code> (controller, internal API).</p>
+</li>
+<li><p><code>Nova-novncproxy</code> connects to the <code>VNC</code> server.</p>
+<p>  <code>nova-novncproxy</code> connects directly to <code>vncserver</code> (compute, internal API, 5900+) at the port designated for the requested VM and creates a reverse proxy configuration by using <code>connect_info</code>.</p>
+</li>
+<li><p><code>The graphic web UI</code> will be sent to the <code>browser</code>.</p>
+<p><code>nova-novncproxy</code> sends the <code>console graphics</code> back through the dashboard <code>haproxy</code> to the user’s <code>browser</code> (workstation, external).</p>
+</li>
+</ol>
 ]]></content>
       <categories>
         <category>Cloud</category>
