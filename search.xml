@@ -10,10 +10,82 @@
 <p>Database is used to store the persistent data of each OpenStack component. </p>
 </li>
 <li><p>Message Broker (RabbitMQ)</p>
-<p>Message Broker is used to support the communication between each component. Any message broker if only supports AMQP protocol could be used as a back end.<br>In OpenStack here, we use <code>RabbitMQ</code> as the message broker.</p>
+<p>Message Broker is used to support the communication between each component. Any message broker if only supports <code>AMQP</code>(Advanced Message Queueing Protocol) protocol could be used as a back end.</p>
+<p>In OpenStack here, we use <code>RabbitMQ</code> as the message broker.</p>
 </li>
 </ul>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
+<h2 id="Some-common-RabbitMQ-terms-and-definitions"><a href="#Some-common-RabbitMQ-terms-and-definitions" class="headerlink" title="Some common RabbitMQ terms and definitions"></a>Some common RabbitMQ terms and definitions</h2><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Binding</strong></td>
+<td>The key or filter parameter used to route from an exchange to a queue.</td>
+</tr>
+<tr>
+<td><strong>Consumer</strong></td>
+<td>An application that uses the received messages.</td>
+</tr>
+<tr>
+<td><strong>Exchange</strong></td>
+<td>Routes producer-published messages to queues using message metadata.</td>
+</tr>
+<tr>
+<td><strong>Publisher&#x2F;Producer</strong></td>
+<td>Applications that publish messages.</td>
+</tr>
+<tr>
+<td><strong>Queue</strong></td>
+<td>Stores messages until consumed by an application.</td>
+</tr>
+<tr>
+<td><strong>Routing key</strong></td>
+<td>Producer-specified message metadata used by the exchange for message routing.</td>
+</tr>
+<tr>
+<td><strong>Vhost</strong></td>
+<td>A logical division of a RabbitMQ instance, used to segregate applications, queues, and exchanges.</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>Binding</p>
+<p><code>Binding</code> determines the connection between the <code>queue</code> and the <code>exchange</code>.</p>
+</li>
+<li><p>Consumer</p>
+<p><code>Consumer</code> is the application or server side to receive messages, here in OpenStack, it represents those service components.</p>
+</li>
+<li><p>Exchange</p>
+<p><code>Exchange</code> is like an <code>allocation center</code>. Based on <code>Binding</code> the rule, it will route the message to the corresponding queue.(routing key matches the binding key)</p>
+</li>
+<li><p>Publisher&#x2F;Produce</p>
+<p><code>Publisher/Produce</code> is the application or client side to send messages, here in OpenStack, it represents those service components.</p>
+</li>
+<li><p>Queue</p>
+<p><code>Queue</code> is a temporary space to storage the request messages, until customers fetch messages here.</p>
+</li>
+<li><p>Routing Key</p>
+<p><code>Routing Key</code> is the information produce send with the message, for specifying the destination, the matched queue that the message should be routed to.(routing key matches the binding key)</p>
+</li>
+<li><p>Vhost</p>
+<p><code>Vhost</code> provides the <code>isolated</code> environment for each project, it just likes a <code>namespace</code>.</p>
+</li>
+</ul>
+<h2 id="RabbitMQ-Message-Broker-Exchange-Concepts"><a href="#RabbitMQ-Message-Broker-Exchange-Concepts" class="headerlink" title="RabbitMQ Message Broker Exchange Concepts"></a>RabbitMQ Message Broker Exchange Concepts</h2><p>The exchange’s interaction with a queue is based on the match between the <code>routing key included in the message</code> and the <code>binding key associated with the queue</code> on the related exchange.</p>
+<p>This is called the <code>Binding</code> rule.</p>
+<p>Different kinds of exchange determine the match mode of <code>routing key</code> and <code>binding key</code>.</p>
+<h3 id="Default-the-work-queue"><a href="#Default-the-work-queue" class="headerlink" title="Default the work queue"></a>Default the work queue</h3><blockquote>
+<p><code>Exchange</code>, <code>Binding</code> and <code>Queue</code> are combined in patterns.</p>
+</blockquote>
+<p>The basic work mode is <code>work queue</code>. Produce sends the message with the routing key to the <code>exchange</code>, then the exchange will based on its types to determine which queue shoud be routed to. Then customers subscribe the queue to receive the message from produce.</p>
+<p>Even if there is no exchange, queues could aslo hand out work to different multiple customers. The work queue distributes requests in chronological order and follow the rule <strong>FIFO</strong>(first in first out) in the <code>round-robin</code> way.</p>
+<h3 id="Direct"><a href="#Direct" class="headerlink" title="Direct"></a>Direct</h3><p><em>Direct Exchange</em>: The routing keys are matched against a simple string, like “sales.*”. This means that any message with an exact binding key will be routed to this queue (and vice versa). “Direct” exchange type is used when you want messages sent directly from one application&#x2F;service into another.</p>
+<p>In other words, the routing key must be <code>the same as</code> the binding key, one-to-one.</p>
+<p>E.g. <code>taskC_create</code> message is routed to <code>taskC_queue</code> queue.</p>
+<p><img src="/../images/direct.png" alt="direct"></p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
       <categories>
         <category>Cloud</category>
       </categories>
