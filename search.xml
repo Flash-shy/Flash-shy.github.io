@@ -207,18 +207,12 @@
 <li>Asynchronous task tracking in Celery</li>
 </ul>
 <p><img src="/../images/RPC.png" alt="RPC"></p>
-<ul>
-<li>reply_to</li>
-</ul>
-<p><strong>What is <code>reply_to</code>?</strong></p>
+<h4 id="reply-to"><a href="#reply-to" class="headerlink" title="reply_to"></a>reply_to</h4><p><strong>What is <code>reply_to</code>?</strong></p>
 <p><strong>Meaning:</strong> It tells the server “after processing, send the result to which queue”.</p>
 <p><strong>Type:</strong> A string representing the name of the callback queue (reply queue).</p>
 <p><strong>Purpose:</strong> Allows the client to receive the response message.</p>
 <p><strong>Analogy:</strong> It’s like sending a parcel and writing “please send the result back to my office address” — this address is the <code>reply_to</code>.</p>
-<ul>
-<li>correlation_id</li>
-</ul>
-<p><strong>What is <code>correlation_id</code>?</strong></p>
+<h4 id="correlation-id"><a href="#correlation-id" class="headerlink" title="correlation_id"></a>correlation_id</h4><p><strong>What is <code>correlation_id</code>?</strong></p>
 <p><strong>Meaning:</strong> A unique identifier (ID) that establishes the correspondence between request and response.</p>
 <p><strong>Type:</strong> Usually a UUID or any unique string.</p>
 <p><strong>Purpose:</strong> When the client sends multiple requests, it can use the <code>correlation_id</code> to identify which response corresponds to which request.</p>
