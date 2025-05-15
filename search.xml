@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OpenStack Series Chapter6: Using ReaR to back Up OpenStack</title>
+    <url>//Cloud/OpenStack/Using-ReaR-to-back-up-OpenStack/index.html</url>
+    <content><![CDATA[<h2 id="Overview-of-ReaR"><a href="#Overview-of-ReaR" class="headerlink" title="Overview of ReaR"></a>Overview of ReaR</h2><p>Red Hat Enterprise Linux provides a recovery and system migration utility, <code>Relax-and-Recover (ReaR)</code>.</p>
+<p>ReaR is <code>written in Bash</code> and enables the distribution of rescue images or storage of backup files via different network transport methods.</p>
+<p>ReaR produces a <code>bootable image</code> and restores from backup using this image.</p>
+<h3 id="ReaR-supports-the-following-boot-media-formats"><a href="#ReaR-supports-the-following-boot-media-formats" class="headerlink" title="ReaR supports the following boot media formats"></a>ReaR supports the following boot media formats</h3><ul>
+<li><p>ISO</p>
+</li>
+<li><p>USB</p>
+</li>
+<li><p>eSATA</p>
+</li>
+<li><p>PXE</p>
+</li>
+</ul>
+<h3 id="ReaR-can-use-the-following-protocols-to-transport-files"><a href="#ReaR-can-use-the-following-protocols-to-transport-files" class="headerlink" title="ReaR can use the following protocols to transport files"></a>ReaR can use the following protocols to transport files</h3><ul>
+<li><p>HTTP&#x2F;HTTPS</p>
+</li>
+<li><p>SSH&#x2F;SCP</p>
+</li>
+<li><p>NFS</p>
+</li>
+<li><p>CIFS(SMB)</p>
+</li>
+</ul>
+<p>I use the ISO bootable file format and NFS protocol.</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
+      <categories>
+        <category>Cloud</category>
+      </categories>
+      <tags>
+        <tag>OpenStack</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ</title>
     <url>//Cloud/OpenStack/Introducing-Component-Communication-RabbitMQ.html</url>
     <content><![CDATA[<h2 id="Introduction-and-Overview-of-RabbitMQ"><a href="#Introduction-and-Overview-of-RabbitMQ" class="headerlink" title="Introduction and Overview of RabbitMQ"></a>Introduction and Overview of RabbitMQ</h2><p>As we discussed before in the last Chapter, OpenStack is highly <code>modular—each</code> function (like Nova, Neutron, Cinder, etc.) operates as an independent service.</p>
