@@ -76,16 +76,199 @@
 <h2 id="RabbitMQ-Message-Broker-Exchange-Concepts"><a href="#RabbitMQ-Message-Broker-Exchange-Concepts" class="headerlink" title="RabbitMQ Message Broker Exchange Concepts"></a>RabbitMQ Message Broker Exchange Concepts</h2><p>The exchange’s interaction with a queue is based on the match between the <code>routing key included in the message</code> and the <code>binding key associated with the queue</code> on the related exchange.</p>
 <p>This is called the <code>Binding</code> rule.</p>
 <p>Different kinds of exchange determine the match mode of <code>routing key</code> and <code>binding key</code>.</p>
-<h3 id="Default-the-work-queue"><a href="#Default-the-work-queue" class="headerlink" title="Default the work queue"></a>Default the work queue</h3><blockquote>
+<h2 id="Messaging-Patterns-in-RabbitMQ"><a href="#Messaging-Patterns-in-RabbitMQ" class="headerlink" title="Messaging Patterns in RabbitMQ"></a>Messaging Patterns in RabbitMQ</h2><blockquote>
 <p><code>Exchange</code>, <code>Binding</code> and <code>Queue</code> are combined in patterns.</p>
 </blockquote>
-<p>The basic work mode is <code>work queue</code>. Produce sends the message with the routing key to the <code>exchange</code>, then the exchange will based on its types to determine which queue shoud be routed to. Then customers subscribe the queue to receive the message from produce.</p>
-<p>Even if there is no exchange, queues could aslo hand out work to different multiple customers. The work queue distributes requests in chronological order and follow the rule <strong>FIFO</strong>(first in first out) in the <code>round-robin</code> way.</p>
-<h3 id="Direct"><a href="#Direct" class="headerlink" title="Direct"></a>Direct</h3><p><em>Direct Exchange</em>: The routing keys are matched against a simple string, like “sales.*”. This means that any message with an exact binding key will be routed to this queue (and vice versa). “Direct” exchange type is used when you want messages sent directly from one application&#x2F;service into another.</p>
+<table>
+<thead>
+<tr>
+<th>Pattern Name</th>
+<th>Description</th>
+<th>One-to-Many</th>
+<th>Callback</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Work Queue</td>
+<td>A single queue with multiple consumers, messages are distributed in round-robin</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Pub&#x2F;Sub</td>
+<td>Each consumer has its own queue and receives all messages</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Routing</td>
+<td>Exact match on routing key</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Topic</td>
+<td>Fuzzy match on routing key (wildcards allowed)</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Header</td>
+<td>Routing based on headers</td>
+<td>✅</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>RPC</td>
+<td>Request and response messaging (Remote Procedure Call)</td>
+<td>❌ (point-to-point)</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<h3 id="1-Publish-Subscribe"><a href="#1-Publish-Subscribe" class="headerlink" title="1. Publish&#x2F;Subscribe"></a>1. Publish&#x2F;Subscribe</h3><p>Multiple consumers receive the same message.</p>
+<p><strong>Characteristics:</strong>  </p>
+<ul>
+<li>Uses a <code>fanout</code> exchange  </li>
+<li>Messages are broadcast to all bound queues  </li>
+<li>Each consumer has its own queue, isolated from others</li>
+</ul>
+<p><strong>Use Cases:</strong>  </p>
+<ul>
+<li>Broadcasting notifications  </li>
+<li>Log collection  </li>
+<li>Multiple subsystems responding to events simultaneously</li>
+</ul>
+<hr>
+<h3 id="2-Routing"><a href="#2-Routing" class="headerlink" title="2. Routing"></a>2. Routing</h3><p>Messages are delivered based on an exact match of the routing key.</p>
+<p><strong>Characteristics:</strong>  </p>
+<ul>
+<li>Uses a <code>direct</code> exchange  </li>
+<li>Queues are bound with binding keys that exactly match routing keys  </li>
+<li>Multiple queues can be bound with different keys</li>
+</ul>
+<p><strong>Use Cases:</strong>  </p>
+<ul>
+<li>Processing different types of tasks in multiple modules  </li>
+<li>Log levels separation (e.g., error, info, debug)</li>
+</ul>
+<hr>
+<h3 id="3-Topic"><a href="#3-Topic" class="headerlink" title="3. Topic"></a>3. Topic</h3><p>Routing key supports pattern matching with wildcards.</p>
+<p><strong>Characteristics:</strong>  </p>
+<ul>
+<li>Uses a <code>topic</code> exchange  </li>
+<li>Supports wildcards <code>*</code> and <code>#</code>  </li>
+<li>More flexible and complex routing logic</li>
+</ul>
+<p><strong>Use Cases:</strong>  </p>
+<ul>
+<li>Microservices event bus  </li>
+<li>Logging systems with hierarchical logs like <code>logs.system.error</code>, <code>logs.user.info</code></li>
+</ul>
+<hr>
+<h3 id="4-Header"><a href="#4-Header" class="headerlink" title="4. Header"></a>4. Header</h3><p>Routing based on message header attributes.</p>
+<p><strong>Characteristics:</strong>  </p>
+<ul>
+<li>Uses a <code>headers</code> exchange  </li>
+<li>Does not use routing keys, but matches based on header attributes</li>
+</ul>
+<p><strong>Use Cases:</strong>  </p>
+<ul>
+<li>Advanced routing policies  </li>
+<li>Attribute-driven message delivery (e.g., region&#x3D;us, format&#x3D;json)</li>
+</ul>
+<hr>
+<h3 id="5-Work-Queue"><a href="#5-Work-Queue" class="headerlink" title="5. Work Queue"></a>5. Work Queue</h3><p>Multiple consumers share a single queue, and each message is delivered to only one consumer.</p>
+<p>Produce sends the message with the routing key to the <code>exchange</code> (only specify the exchange name), then the exchange will based on its types to determine which queue shoud be routed to. Then, customers subscribe the queue to receive the message from produce.</p>
+<p>Many customers subscribe the same queue, even if there is no exchange, queues could aslo hand out work to different multiple customers. The work queue distributes requests in chronological order and follow the rule <strong>FIFO</strong>(first in first out) in the <code>round-robin</code> way.</p>
+<p><img src="/../images/work_queue.png" alt="work queue"></p>
+<p><strong>Characteristics:</strong>  </p>
+<ul>
+<li>Typically uses a <code>direct or default</code> exchange  </li>
+<li>Multiple consumers compete for messages from the same queue  </li>
+<li>Enables load balancing (the idle consumer takes the message)</li>
+</ul>
+<p><strong>Use Cases:</strong>  </p>
+<ul>
+<li>Background task processing  </li>
+<li>Batch jobs  </li>
+<li>Data import, etc.</li>
+</ul>
+<hr>
+<h3 id="6-RPC-Remote-Procedure-Call"><a href="#6-RPC-Remote-Procedure-Call" class="headerlink" title="6. RPC (Remote Procedure Call)"></a>6. RPC (Remote Procedure Call)</h3><p>Client sends a request, server processes it and replies back (pseudo-synchronous).</p>
+<p><strong>Characteristics:</strong>  </p>
+<ul>
+<li>Uses a <code>direct</code> exchange for the <code>callback</code> and <code>topic</code> exchange for sending</li>
+<li>Messages contain <code>reply_to</code> and <code>correlation_id</code> properties  </li>
+<li>Responses are sent back to a specified temporary queue</li>
+</ul>
+<p><strong>Use Cases:</strong>  </p>
+<ul>
+<li>RPC calls between OpenStack components  </li>
+<li>Asynchronous task tracking in Celery</li>
+</ul>
+<p><img src="/../images/RPC.png" alt="RPC"></p>
+<ul>
+<li>reply_to</li>
+</ul>
+<p><strong>What is <code>reply_to</code>?</strong>  </p>
+<p><strong>Meaning:</strong> It tells the server “after processing, send the result to which queue”.  </p>
+<p><strong>Type:</strong> A string representing the name of the callback queue (reply queue).  </p>
+<p><strong>Purpose:</strong> Allows the client to receive the response message.  </p>
+<p><strong>Analogy:</strong> It’s like sending a parcel and writing “please send the result back to my office address” — this address is the <code>reply_to</code>.  </p>
+<ul>
+<li>correlation_id</li>
+</ul>
+<p><strong>What is <code>correlation_id</code>?</strong>  </p>
+<p><strong>Meaning:</strong> A unique identifier (ID) that establishes the correspondence between request and response.  </p>
+<p><strong>Type:</strong> Usually a UUID or any unique string.  </p>
+<p><strong>Purpose:</strong> When the client sends multiple requests, it can use the <code>correlation_id</code> to identify which response corresponds to which request.  </p>
+<p><strong>Analogy:</strong> You send multiple questions (letters), each labelled “Question 1”, “Question 2”, etc. The reply includes the same label, so you know which answer matches which question.  </p>
+<h2 id="Exchanges"><a href="#Exchanges" class="headerlink" title="Exchanges"></a>Exchanges</h2><h3 id="Direct"><a href="#Direct" class="headerlink" title="Direct"></a>Direct</h3><p><strong>Direct Exchange</strong>: The routing keys are matched against a simple string, like “sales.*”. This means that any message with an exact binding key will be routed to this queue (and vice versa). “Direct” exchange type is used when you want messages sent directly from one application&#x2F;service into another.</p>
 <p>In other words, the routing key must be <code>the same as</code> the binding key, one-to-one.</p>
 <p>E.g. <code>taskC_create</code> message is routed to <code>taskC_queue</code> queue.</p>
 <p><img src="/../images/direct.png" alt="direct"></p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>]]></content>
+<h3 id="Topic"><a href="#Topic" class="headerlink" title="Topic"></a>Topic</h3><p><strong>Topic Exchange</strong>: This type of exchange functions like a <code>“fuzzy match”</code>. The routing key of a message and the binding key of a queue can <code>include wildcards (* and #)</code>, allowing for more flexible matching. The <code>*</code> wildcard matches <code>a single word</code>, while <code>#</code> matches <code>multiple words</code>.</p>
+<p>E.g. A message can be delivered to one or more queues at the same time. Only <code>compute tasks</code> are routed to the queue named <code>compute_tasks</code>, while <code>all tasks</code>, including compute ones, are routed to the queue named <code>all_tasks</code>.</p>
+<p><img src="/../images/topic.png" alt="topic"></p>
+<h3 id="Fanout"><a href="#Fanout" class="headerlink" title="Fanout"></a>Fanout</h3><p><strong>Fanout Exchange</strong>: It is like a <code>“broadcast”</code>. It sends messages to <code>all bound queues</code>, <code>regardless of the routing key</code>. Simply put, “if it’s bound, it gets the message”. For example, in a logging system, all queues bound to the exchange will receive the message.</p>
+<h2 id="Rabbitmq-common-command"><a href="#Rabbitmq-common-command" class="headerlink" title="Rabbitmq common command"></a>Rabbitmq common command</h2><h3 id="Check-the-report-summary"><a href="#Check-the-report-summary" class="headerlink" title="Check the report summary"></a>Check the report summary</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl report</span><br><span class="line">Reporting server status of node rabbit@controller0 ...</span><br><span class="line"></span><br><span class="line">Status of node rabbit@controller0 ...</span><br><span class="line">[&#123;pid,701&#125;,</span><br><span class="line"> &#123;running_applications,</span><br><span class="line">     [&#123;rabbitmq_management,&quot;RabbitMQ Management Console&quot;,&quot;3.7.23&quot;&#125;,</span><br><span class="line">      &#123;rabbitmq_web_dispatch,&quot;RabbitMQ Web Dispatcher&quot;,&quot;3.7.23&quot;&#125;,</span><br><span class="line">      &#123;amqp_client,&quot;RabbitMQ AMQP Client&quot;,&quot;3.7.23&quot;&#125;,</span><br><span class="line">      &#123;rabbitmq_management_agent,&quot;RabbitMQ Management Agent&quot;,&quot;3.7.23&quot;&#125;,</span><br><span class="line">      &#123;rabbit,&quot;RabbitMQ&quot;,&quot;3.7.23&quot;&#125;,</span><br><span class="line">      &#123;mnesia,&quot;MNESIA  CXC 138 12&quot;,&quot;4.15.6&quot;&#125;,</span><br><span class="line">      &#123;rabbit_common,</span><br><span class="line">          &quot;Modules shared by rabbitmq-server and rabbitmq-erlang-client&quot;,</span><br><span class="line">          &quot;3.7.23&quot;&#125;,</span><br><span class="line">...output omitted...</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-users"><a href="#List-users" class="headerlink" title="List users"></a>List users</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl list_users</span><br><span class="line">Listing users ...</span><br><span class="line">user	tags</span><br><span class="line">guest	[administrator]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Create-users"><a href="#Create-users" class="headerlink" title="Create users"></a>Create users</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl add_user shy shypassword</span><br><span class="line">Adding user &quot;shy&quot; ...</span><br><span class="line">()[root@controller0 /]# rabbitmqctl list_users</span><br><span class="line">Listing users ...</span><br><span class="line">user	tags</span><br><span class="line">shy	[]</span><br><span class="line">guest	[administrator]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Allocate-the-permission"><a href="#Allocate-the-permission" class="headerlink" title="Allocate the permission"></a>Allocate the permission</h3><ul>
+<li><p>configure: Define the resources that the user could configure.</p>
+</li>
+<li><p>write: Define the resources that the user could write.</p>
+</li>
+<li><p>read: Define the resources that the user could read.</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl set_permissions shy &#x27;.*&#x27; &#x27;.*&#x27; &#x27;.*&#x27;</span><br><span class="line">Setting permissions for user &quot;shy&quot; in vhost &quot;/&quot; ...</span><br><span class="line">()[root@controller0 /]# rabbitmqctl list_permissions</span><br><span class="line">Listing permissions for vhost &quot;/&quot; ...</span><br><span class="line">user	configure	write	read</span><br><span class="line">shy	.*	.*	.*</span><br><span class="line">guest	.*	.*	.*</span><br></pre></td></tr></table></figure>
+
+<h3 id="Add-the-tag-to-users"><a href="#Add-the-tag-to-users" class="headerlink" title="Add the tag to users"></a>Add the tag to users</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl set_user_tags shy administrator</span><br><span class="line">Setting tags for user &quot;shy&quot; to [administrator] ...</span><br><span class="line">()[root@controller0 /]# rabbitmqctl list_users</span><br><span class="line">Listing users ...</span><br><span class="line">user	tags</span><br><span class="line">shy	[administrator]</span><br><span class="line">guest	[administrator]</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-all-exchanges"><a href="#List-all-exchanges" class="headerlink" title="List all exchanges"></a>List all exchanges</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl list_exchanges</span><br><span class="line">Listing exchanges for vhost / ...</span><br><span class="line">name	type</span><br><span class="line">heat-engine-listener_fanout	fanout</span><br><span class="line">manila-share_fanout	fanout</span><br><span class="line">engine_fanout	fanout</span><br><span class="line">engine_worker_fanout	fanout</span><br><span class="line">cinder-volume_fanout	fanout</span><br><span class="line">q-server-resource-versions_fanout	fanout</span><br><span class="line">openstack	topic</span><br><span class="line">amq.rabbitmq.trace	topic</span><br><span class="line">amq.fanout	fanout</span><br><span class="line">cinder-scheduler_fanout	fanout</span><br><span class="line">compute_fanout	fanout</span><br><span class="line">amq.match	headers</span><br><span class="line">neutron-vo-Port-1.5_fanout	fanout</span><br><span class="line">q-plugin_fanout	fanout</span><br><span class="line">octavia-rpc_fanout	fanout</span><br><span class="line">amq.topic	topic</span><br><span class="line">octavia_provisioning_v2_fanout	fanout</span><br><span class="line">amq.direct	direct</span><br><span class="line">heat	topic</span><br><span class="line">amq.headers	headers</span><br><span class="line">manila-scheduler_fanout	fanout</span><br><span class="line">nova	topic</span><br><span class="line">scheduler_fanout	fanout</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph_fanout	fanout</span><br><span class="line">conductor_fanout	fanout</span><br><span class="line">neutron	topic</span><br><span class="line">octavia	topic</span><br><span class="line">q-reports-plugin_fanout	fanout</span><br><span class="line">	direct</span><br></pre></td></tr></table></figure>
+
+<p>The last one is an <code>implicit direct</code> type exchange. </p>
+<p>Its name is an <code>empty</code> string “”.</p>
+<p>Every queue is automatically bound to it with a <code>binding key</code> that matches the <code>queue’s name</code>.</p>
+<h3 id="List-all-available-queues"><a href="#List-all-available-queues" class="headerlink" title="List all available queues"></a>List all available queues</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl list_queues</span><br><span class="line">Timeout: 60.0 seconds ...</span><br><span class="line">Listing queues for vhost / ...</span><br><span class="line">name	messages</span><br><span class="line">compute.computehci0.overcloud.example.com	0</span><br><span class="line">compute.compute1.overcloud.example.com	0</span><br><span class="line">manila-scheduler.hostgroup	0</span><br><span class="line">engine_worker_fanout_c149d365282c4d7986d35683a679ab43	0</span><br><span class="line">reply_95154a0ef0a7494c91bda27f28a2be56	0</span><br><span class="line">cinder-scheduler	0</span><br><span class="line">q-reports-plugin.controller0.overcloud.example.com	0</span><br><span class="line">scheduler_fanout_76ec3c50ae6447c39559b0311268126b	0</span><br><span class="line">compute.compute0.overcloud.example.com	0</span><br><span class="line">reply_61725f7db23a4e7bacecb41f30be9f72	0</span><br><span class="line">conductor_fanout_49fc039d21894497be4fbfd1ecadcce7	0</span><br><span class="line">octavia-rpc	0</span><br><span class="line">q-server-resource-versions.controller0.overcloud.example.com	0</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph	0</span><br><span class="line">reply_ccfd22e0f82344bb890ff371a0eaa2f9	0</span><br><span class="line">manila-share_fanout_53d504969d5647319932e92f73bb5773	0</span><br><span class="line">manila-share.hostgroup@cephfs	0</span><br><span class="line">conductor.controller0.overcloud.example.com	0</span><br><span class="line">octavia_provisioning_v2	0</span><br><span class="line">q-reports-plugin	0</span><br><span class="line">heat-engine-listener.34703093-ae25-4a65-80db-203f1ebbad36	0</span><br><span class="line">octavia-rpc.controller0	0</span><br><span class="line">engine_fanout_d9489dad34ab4a2e833e25ba5ac9bd43	0</span><br><span class="line">manila-scheduler_fanout_53141319d79548a3a5a23f472026995c	0</span><br><span class="line">engine	0</span><br><span class="line">q-server-resource-versions	0</span><br><span class="line">scheduler.controller0.overcloud.example.com	0</span><br><span class="line">octavia_provisioning_v2_fanout_516bc8a0d4a04e17b02d7a490ffad7e3	0</span><br><span class="line">q-plugin_fanout_82afdb9f58dd46fd9e12d1b9ff981b57	0</span><br><span class="line">q-plugin.controller0.overcloud.example.com	0</span><br><span class="line">manila-share	0</span><br><span class="line">heat-engine-listener_fanout_092d1af0bf034da0aafbd796ef769ec1	0</span><br><span class="line">compute_fanout_3d54889d98a84dcea09b080c23a255f5	0</span><br><span class="line">cinder-volume	0</span><br><span class="line">engine_worker	0</span><br><span class="line">engine.controller0	0</span><br><span class="line">compute_fanout_ef6b7f891f8b482188a1081436cd99b0	0</span><br><span class="line">engine_worker.34703093-ae25-4a65-80db-203f1ebbad36	0</span><br><span class="line">scheduler_fanout_56d907c013304f0b8ea9ab7ed88b6311	0</span><br><span class="line">compute	0</span><br><span class="line">q-server-resource-versions_fanout_1c237cd6f89549e6873ef5d817441b0f	0</span><br><span class="line">scheduler	0</span><br><span class="line">compute_fanout_d20e7a4456e94533b532e1941594ac6f	0</span><br><span class="line">heat-engine-listener	0</span><br><span class="line">octavia_provisioning_v2.controller0	0</span><br><span class="line">q-reports-plugin_fanout_b04fa13918b749eebcc159bb2520934b	0</span><br><span class="line">cinder-scheduler.controller0	0</span><br><span class="line">cinder-volume_fanout_c4f5af48a98e47f5acda0a01681c16a1	0</span><br><span class="line">octavia-rpc_fanout_a68e626ca08943c986a33ec185f2ad12	0</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph.hostgroup	0</span><br><span class="line">scheduler_fanout_a19884991bd64a278afed93434054535	0</span><br><span class="line">manila-scheduler	0</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph_fanout_b7c2b8bbdc494c279d6728ed5fe39f94	0</span><br><span class="line">q-reports-plugin_fanout_3a7fa6f49d9349a0ae6e8143ac075f1f	0</span><br><span class="line">q-plugin	0</span><br><span class="line">conductor	0</span><br><span class="line">cinder-scheduler_fanout_6a11c6037338474a9b3d7ce850b9966a	0</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-all-customers"><a href="#List-all-customers" class="headerlink" title="List all customers"></a>List all customers</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">()[root@controller0 /]# rabbitmqctl list_consumers</span><br><span class="line">Listing consumers in vhost / ...</span><br><span class="line">queue_name	channel_pid	consumer_tag	ack_required	prefetch_count	arguments</span><br><span class="line">compute.computehci0.overcloud.example.com	&lt;rabbit@controller0.3.1232.0&gt;	2	true	0	[]</span><br><span class="line">compute.compute1.overcloud.example.com	&lt;rabbit@controller0.3.1206.0&gt;	2	true	0	[]</span><br><span class="line">manila-scheduler.hostgroup	&lt;rabbit@controller0.3.725.0&gt;	2	true	0	[]</span><br><span class="line">engine_worker_fanout_c149d365282c4d7986d35683a679ab43	&lt;rabbit@controller0.3.1063.0&gt;	3	true	[]</span><br><span class="line">reply_95154a0ef0a7494c91bda27f28a2be56	&lt;rabbit@controller0.3.1117.0&gt;	1	true	0	[]</span><br><span class="line">cinder-scheduler	&lt;rabbit@controller0.3.763.0&gt;	1	true	0	[]</span><br><span class="line">q-reports-plugin.controller0.overcloud.example.com	&lt;rabbit@controller0.3.1624.0&gt;	2	true	[]</span><br><span class="line">q-reports-plugin.controller0.overcloud.example.com	&lt;rabbit@controller0.3.1509.0&gt;	2	true	[]</span><br><span class="line">scheduler_fanout_76ec3c50ae6447c39559b0311268126b	&lt;rabbit@controller0.3.1165.0&gt;	3	true	[]</span><br><span class="line">compute.compute0.overcloud.example.com	&lt;rabbit@controller0.3.953.0&gt;	2	true	0	[]</span><br><span class="line">reply_61725f7db23a4e7bacecb41f30be9f72	&lt;rabbit@controller0.3.802.0&gt;	1	true	0	[]</span><br><span class="line">conductor_fanout_49fc039d21894497be4fbfd1ecadcce7	&lt;rabbit@controller0.3.829.0&gt;	3	true	[]</span><br><span class="line">octavia-rpc	&lt;rabbit@controller0.3.980.0&gt;	1	true	0	[]</span><br><span class="line">q-server-resource-versions.controller0.overcloud.example.com	&lt;rabbit@controller0.3.1585.0&gt;	2	true	0	[]</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph	&lt;rabbit@controller0.3.930.0&gt;	1	true	0	[]</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph	&lt;rabbit@controller0.3.904.0&gt;	2	true	0	[]</span><br><span class="line">reply_ccfd22e0f82344bb890ff371a0eaa2f9	&lt;rabbit@controller0.3.856.0&gt;	1	true	0	[]</span><br><span class="line">manila-share_fanout_53d504969d5647319932e92f73bb5773	&lt;rabbit@controller0.3.696.0&gt;	3	true	[]</span><br><span class="line">manila-share.hostgroup@cephfs	&lt;rabbit@controller0.3.696.0&gt;	2	true	0	[]</span><br><span class="line">conductor.controller0.overcloud.example.com	&lt;rabbit@controller0.3.829.0&gt;	2	true	0	[]</span><br><span class="line">octavia_provisioning_v2	&lt;rabbit@controller0.3.1008.0&gt;	1	true	0	[]</span><br><span class="line">q-reports-plugin	&lt;rabbit@controller0.3.1624.0&gt;	1	true	0	[]</span><br><span class="line">q-reports-plugin	&lt;rabbit@controller0.3.1509.0&gt;	1	true	0	[]</span><br><span class="line">heat-engine-listener.34703093-ae25-4a65-80db-203f1ebbad36	&lt;rabbit@controller0.3.1035.0&gt;	2	true	0	[]</span><br><span class="line">octavia-rpc.controller0	&lt;rabbit@controller0.3.980.0&gt;	2	true	0	[]</span><br><span class="line">engine_fanout_d9489dad34ab4a2e833e25ba5ac9bd43	&lt;rabbit@controller0.3.1090.0&gt;	3	true	0	[]</span><br><span class="line">manila-scheduler_fanout_53141319d79548a3a5a23f472026995c	&lt;rabbit@controller0.3.725.0&gt;	3	true	0	[]</span><br><span class="line">engine	&lt;rabbit@controller0.3.1090.0&gt;	1	true	0	[]</span><br><span class="line">q-server-resource-versions	&lt;rabbit@controller0.3.1585.0&gt;	1	true	0	[]</span><br><span class="line">scheduler.controller0.overcloud.example.com	&lt;rabbit@controller0.3.1164.0&gt;	2	true	0	[]</span><br><span class="line">scheduler.controller0.overcloud.example.com	&lt;rabbit@controller0.3.1165.0&gt;	2	true	0	[]</span><br><span class="line">scheduler.controller0.overcloud.example.com	&lt;rabbit@controller0.3.1149.0&gt;	2	true	0	[]</span><br><span class="line">octavia_provisioning_v2_fanout_516bc8a0d4a04e17b02d7a490ffad7e3	&lt;rabbit@controller0.3.1008.0&gt;	3	true	0	[]</span><br><span class="line">q-plugin_fanout_82afdb9f58dd46fd9e12d1b9ff981b57	&lt;rabbit@controller0.3.1517.0&gt;	3	true	[]</span><br><span class="line">q-plugin.controller0.overcloud.example.com	&lt;rabbit@controller0.3.1517.0&gt;	2	true	0	[]</span><br><span class="line">manila-share	&lt;rabbit@controller0.3.696.0&gt;	1	true	0	[]</span><br><span class="line">heat-engine-listener_fanout_092d1af0bf034da0aafbd796ef769ec1	&lt;rabbit@controller0.3.1035.0&gt;	3	true	0	[]</span><br><span class="line">compute_fanout_3d54889d98a84dcea09b080c23a255f5	&lt;rabbit@controller0.3.1232.0&gt;	3	true	0	[]</span><br><span class="line">cinder-volume	&lt;rabbit@controller0.3.904.0&gt;	1	true	0	[]</span><br><span class="line">engine_worker	&lt;rabbit@controller0.3.1063.0&gt;	1	true	0	[]</span><br><span class="line">engine.controller0	&lt;rabbit@controller0.3.1090.0&gt;	2	true	0	[]</span><br><span class="line">compute_fanout_ef6b7f891f8b482188a1081436cd99b0	&lt;rabbit@controller0.3.1206.0&gt;	3	true	0	[]</span><br><span class="line">engine_worker.34703093-ae25-4a65-80db-203f1ebbad36	&lt;rabbit@controller0.3.1063.0&gt;	2	true	[]</span><br><span class="line">scheduler_fanout_56d907c013304f0b8ea9ab7ed88b6311	&lt;rabbit@controller0.3.1149.0&gt;	3	true	[]</span><br><span class="line">compute	&lt;rabbit@controller0.3.1232.0&gt;	1	true	0	[]</span><br><span class="line">compute	&lt;rabbit@controller0.3.1206.0&gt;	1	true	0	[]</span><br><span class="line">compute	&lt;rabbit@controller0.3.953.0&gt;	1	true	0	[]</span><br><span class="line">q-server-resource-versions_fanout_1c237cd6f89549e6873ef5d817441b0f	&lt;rabbit@controller0.3.1585.0&gt;	true	0	[]</span><br><span class="line">scheduler	&lt;rabbit@controller0.3.1165.0&gt;	1	true	0	[]</span><br><span class="line">scheduler	&lt;rabbit@controller0.3.1164.0&gt;	1	true	0	[]</span><br><span class="line">scheduler	&lt;rabbit@controller0.3.1149.0&gt;	1	true	0	[]</span><br><span class="line">compute_fanout_d20e7a4456e94533b532e1941594ac6f	&lt;rabbit@controller0.3.953.0&gt;	3	true	0	[]</span><br><span class="line">heat-engine-listener	&lt;rabbit@controller0.3.1035.0&gt;	1	true	0	[]</span><br><span class="line">octavia_provisioning_v2.controller0	&lt;rabbit@controller0.3.1008.0&gt;	2	true	0	[]</span><br><span class="line">q-reports-plugin_fanout_b04fa13918b749eebcc159bb2520934b	&lt;rabbit@controller0.3.1624.0&gt;	3	true	0	[]</span><br><span class="line">cinder-scheduler.controller0	&lt;rabbit@controller0.3.763.0&gt;	2	true	0	[]</span><br><span class="line">cinder-volume_fanout_c4f5af48a98e47f5acda0a01681c16a1	&lt;rabbit@controller0.3.904.0&gt;	3	true	[]</span><br><span class="line">octavia-rpc_fanout_a68e626ca08943c986a33ec185f2ad12	&lt;rabbit@controller0.3.980.0&gt;	3	true	[]</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph.hostgroup	&lt;rabbit@controller0.3.930.0&gt;	2	true	0	[]</span><br><span class="line">scheduler_fanout_a19884991bd64a278afed93434054535	&lt;rabbit@controller0.3.1164.0&gt;	3	true	[]</span><br><span class="line">manila-scheduler	&lt;rabbit@controller0.3.725.0&gt;	1	true	0	[]</span><br><span class="line">cinder-volume.hostgroup@tripleo_ceph_fanout_b7c2b8bbdc494c279d6728ed5fe39f94	&lt;rabbit@controller0.3.930.0&gt;	3	true	0	[]</span><br><span class="line">q-reports-plugin_fanout_3a7fa6f49d9349a0ae6e8143ac075f1f	&lt;rabbit@controller0.3.1509.0&gt;	3	true	0	[]</span><br><span class="line">q-plugin	&lt;rabbit@controller0.3.1517.0&gt;	1	true	0	[]</span><br><span class="line">conductor	&lt;rabbit@controller0.3.829.0&gt;	1	true	0	[]</span><br><span class="line">cinder-scheduler_fanout_6a11c6037338474a9b3d7ce850b9966a	&lt;rabbit@controller0.3.763.0&gt;	3	true	0	[]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Trace-on-the-RabbitMQ-message"><a href="#Trace-on-the-RabbitMQ-message" class="headerlink" title="Trace on the RabbitMQ message"></a>Trace on the RabbitMQ message</h3><p>This feature can be used to track all messages flowing through the system, whether incoming or outgoing. In other words, it acts like a supervisor, logging every message in motion. This capability is based on the <code>firehose</code> mechanism.</p>
+<p>The name firehose comes from its function—it behaves like a firehose, <code>spraying out</code> all messages so you can see each one passing through. This feature is very useful during development and debugging, but as it records all messages, it may impact performance.</p>
+<h4 id="Enable-the-trace"><a href="#Enable-the-trace" class="headerlink" title="Enable the trace"></a>Enable the trace</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl trace_on</span><br></pre></td></tr></table></figure>
+
+<p>Once enabled, all messages entering the RabbitMQ system are copied to a special exchange called <code>amq.rabbitmq.trace</code>. This allows you to observe the entire message flow within that exchange, which is particularly useful for <code>debugging and monitoring</code>.</p>
+<blockquote>
+<p><strong>Performance impact</strong>: Enabling the Firehose Tracer <code>increases system load</code>, as it must handle and replicate every message. Therefore, it is recommended to enable it only when debugging is necessary, and to <code>disable it promptly once debugging is complete</code>.</p>
+<p><strong>Monitoring amq.rabbitmq.trace</strong>: After enabling tracing, you can monitor system activity by inspecting the messages in the <code>amq.rabbitmq.trace exchange</code>. This exchange contains copies of all messages, making it easier to analyse system behaviour.</p>
+</blockquote>
+<h4 id="Disable-the-trace"><a href="#Disable-the-trace" class="headerlink" title="Disable the trace"></a>Disable the trace</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rabbitmqctl trace_off</span><br></pre></td></tr></table></figure>
+]]></content>
       <categories>
         <category>Cloud</category>
       </categories>
