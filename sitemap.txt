@@ -1,3 +1,4 @@
+https://www.sunhaoyang.net/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html
 https://www.sunhaoyang.net/Cloud/OpenStack/Using-ReaR-to-back-up-OpenStack/index.html
 https://www.sunhaoyang.net/Cloud/OpenStack/Introducing-Component-Communication-RabbitMQ.html
 https://www.sunhaoyang.net/Cloud/OpenStack/Identifying-shared-services-and-VNC/index.html

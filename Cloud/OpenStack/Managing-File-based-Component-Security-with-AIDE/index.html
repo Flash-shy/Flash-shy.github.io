@@ -1,0 +1,432 @@
+<!DOCTYPE html><html lang="en-GB" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>OpenStack Series Chapter7: Managing File based Component Security with AIDE | Haoyang Sun's Blog</title><meta name="author" content="Haoyang Sun"><meta name="copyright" content="Haoyang Sun"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="This article will explain the basic principles of AIDE (Advanced Intrusion Detection Environment) and provide detailed methods for its deployment and use.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenStack Series Chapter7: Managing File based Component Security with AIDE">
+<meta property="og:url" content="https://www.sunhaoyang.net/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html">
+<meta property="og:site_name" content="Haoyang Sun&#39;s Blog">
+<meta property="og:description" content="This article will explain the basic principles of AIDE (Advanced Intrusion Detection Environment) and provide detailed methods for its deployment and use.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://blog.sunhaoyang.net/images/OpenStack.png">
+<meta property="article:published_time" content="2025-05-22T06:29:17.000Z">
+<meta property="article:modified_time" content="2025-05-22T07:53:37.863Z">
+<meta property="article:author" content="Haoyang Sun">
+<meta property="article:tag" content="OpenStack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.sunhaoyang.net/images/OpenStack.png"><link rel="shortcut icon" href="https://blog.sunhaoyang.net/images/favicon.ico"><link rel="canonical" href="https://www.sunhaoyang.net/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html"><link rel="preconnect"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'OpenStack Series Chapter7: Managing File based Component Security with AIDE',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  isShuoshuo: false
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Haoyang Sun's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">OpenStack Series Chapter7: Managing File based Component Security with AIDE</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Homepage</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fa fa-comment-alt"></i><span> Artitalk</span></a></div><div class="menus_item"><a class="site-page" href="/about"><i class="fa-fw fa-solid fa-user"></i><span> About the author</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">OpenStack Series Chapter7: Managing File based Component Security with AIDE</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-05-22T06:29:17.000Z" title="Created 2025-05-22 14:29:17">2025-05-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-05-22T07:53:37.863Z" title="Updated 2025-05-22 15:53:37">2025-05-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Cloud/">Cloud</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>7mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">Comments:</span><a href="/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html#post-comment"><span id="twikoo-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div><article class="container post-content" id="article-container"><h2 id="What-is-AIDE"><a href="#What-is-AIDE" class="headerlink" title="What is AIDE?"></a>What is AIDE?</h2><p><code>Advanced Intrusion Detection Environment (AIDE)</code> is a tool to compare changes within files or directories. The <code>hashes</code> will be stored in the local database on the first run. After that, it will be compared on each subsequent run. If the <code>hash</code> content is different from the that in database, it will be recorded in logs. What’s more, we could configure the report and email reminder as well.</p>
+<blockquote>
+<p>Its working principle is analogous to using <code>md5sum</code> to calculate the MD5 hash of a file. Then, we could compare the value of MD5 to check whether the file changes or not.</p>
+</blockquote>
+<h2 id="Installing-and-configuring-AIDE"><a href="#Installing-and-configuring-AIDE" class="headerlink" title="Installing and configuring AIDE"></a>Installing and configuring AIDE</h2><h3 id="Installing-the-software-application"><a href="#Installing-the-software-application" class="headerlink" title="Installing the software application"></a>Installing the software application</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(undercloud) [stack@director ~]$ <span class="built_in">sudo</span> -i</span><br><span class="line"> [root@director ~]# yum install aide -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="Initialize-the-AIDE-database"><a href="#Initialize-the-AIDE-database" class="headerlink" title="Initialize the AIDE database"></a>Initialize the AIDE database</h3><p>Because this is the first time for us to use <code>aide</code> command, it’s a good idea to check the manual.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@director ~]# aide -h</span><br><span class="line">Aide 0.16</span><br><span class="line"></span><br><span class="line">Usage: aide [options] <span class="built_in">command</span></span><br><span class="line"></span><br><span class="line">Commands:</span><br><span class="line">  -i, --init  Initialize the database</span><br><span class="line">  -C, --check  Check the database</span><br><span class="line">  -u, --update  Check and update the database non-interactively</span><br><span class="line">  -E, --compare  Compare two databases</span><br><span class="line"></span><br><span class="line">Miscellaneous:</span><br><span class="line">  -D, --config-check Test the configuration file</span><br><span class="line">  -v, --version  Show version of AIDE and compilation options</span><br><span class="line">  -h, --<span class="built_in">help</span>  Show this <span class="built_in">help</span> message</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line">  -c [cfgfile] --config=[cfgfile] Get config options from [cfgfile]</span><br><span class="line">  -l [REGEX] --<span class="built_in">limit</span>=[REGEX]  Limit <span class="built_in">command</span> to entries matching [REGEX]</span><br><span class="line">  -B <span class="string">&quot;OPTION&quot;</span> --before=<span class="string">&quot;OPTION&quot;</span> Before configuration file is <span class="built_in">read</span> define OPTION</span><br><span class="line">  -A <span class="string">&quot;OPTION&quot;</span> --after=<span class="string">&quot;OPTION&quot;</span> After configuration file is <span class="built_in">read</span> define OPTION</span><br><span class="line">  -r [reporter] --report=[reporter] Write report output to [reporter] url</span><br><span class="line">  -V[level] --verbose=[level] Set debug message level to [level]</span><br></pre></td></tr></table></figure>
+
+<p>After learning the usage of <code>aide</code> command, Let’s Initialize the database.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@director ~]# aide --init</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Start timestamp: 2025-05-22 02:55:18 -0400 (AIDE 0.16)</span><br><span class="line">AIDE initialized database at /var/lib/aide/aide.db.new.gz</span><br><span class="line"></span><br><span class="line">Number of entries: 146260</span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">The attributes of the (uncompressed) database(s):</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">/var/lib/aide/aide.db.new.gz</span><br><span class="line">  MD5      : 6SBee41U474Po/3Ez0LbzA==</span><br><span class="line">  SHA1     : gP2ufYflEIe+8fmGz4rjzsFvZZE=</span><br><span class="line">  RMD160   : Ffeno7GgHw2m4T3nO8kBkzWEJvU=</span><br><span class="line">  TIGER    : cZ4f60cWTM93LLhbnnd4UCi/Mb3wial/</span><br><span class="line">  SHA256   : dA5mb3sOorYG6TNUYv6wx3AiACaOmjik</span><br><span class="line">             pV5urYvvde0=</span><br><span class="line">  SHA512   : F7A4C03VGO89VbCJRU8/twujPdQPfigc</span><br><span class="line">             lKWaO7sGuIw4skAZnMg32uhA2xA4uZGB</span><br><span class="line">             2yvAThbJjGvsv/z5xluuoQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">End timestamp: 2025-05-22 03:06:00 -0400 (run time: 10m 42s)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Checking-the-database"><a href="#Checking-the-database" class="headerlink" title="Checking the database"></a>Checking the database</h3><blockquote>
+<p>Note: The default database generated by aide is called <code>aide.db.new.gz</code>. While, when we check the database, it will check the database called <code>aide.db.gz</code>. Therefore, it is necessary for us to <code>modify the name</code> of the initialized database.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@director ~]# aide --check</span><br><span class="line">Couldn<span class="string">&#x27;t open file /var/lib/aide/aide.db.gz for reading</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[root@director ~]# mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz</span></span><br></pre></td></tr></table></figure>
+
+<p>After changing the name, Let’s check the database again!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@director ~]# aide --check</span><br><span class="line">Start timestamp: 2025-05-22 03:09:45 -0400 (AIDE 0.16)</span><br><span class="line">AIDE found NO differences between database and filesystem. Looks okay!!</span><br><span class="line"></span><br><span class="line">Number of entries: 146260</span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">The attributes of the (uncompressed) database(s):</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">/var/lib/aide/aide.db.gz</span><br><span class="line">  MD5      : 6SBee41U474Po/3Ez0LbzA==</span><br><span class="line">  SHA1     : gP2ufYflEIe+8fmGz4rjzsFvZZE=</span><br><span class="line">  RMD160   : Ffeno7GgHw2m4T3nO8kBkzWEJvU=</span><br><span class="line">  TIGER    : cZ4f60cWTM93LLhbnnd4UCi/Mb3wial/</span><br><span class="line">  SHA256   : dA5mb3sOorYG6TNUYv6wx3AiACaOmjik</span><br><span class="line">             pV5urYvvde0=</span><br><span class="line">  SHA512   : F7A4C03VGO89VbCJRU8/twujPdQPfigc</span><br><span class="line">             lKWaO7sGuIw4skAZnMg32uhA2xA4uZGB</span><br><span class="line">             2yvAThbJjGvsv/z5xluuoQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">End timestamp: 2025-05-22 03:17:33 -0400 (run time: 7m 48s)</span><br></pre></td></tr></table></figure>
+
+<p>Lovely！ Everything is OKay!!!</p>
+<h3 id="Testing-for-creating-and-modifying-files"><a href="#Testing-for-creating-and-modifying-files" class="headerlink" title="Testing for creating and modifying files"></a>Testing for creating and modifying files</h3><p>The basic rule is defined in <code>/etc/aide.conf</code>, Please view the configuration.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@director aide]# <span class="built_in">cat</span> /etc/aide.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"> [root@director ~]# aide --check</span><br><span class="line">Start timestamp: 2025-05-22 03:45:03 -0400 (AIDE 0.16)</span><br><span class="line">AIDE found differences between database and filesystem!!</span><br><span class="line"></span><br><span class="line">Summary:</span><br><span class="line">  Total number of entries: 146260</span><br><span class="line">  Added entries:  0</span><br><span class="line">  Removed entries:  0</span><br><span class="line">  Changed entries:  8</span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">Changed entries:</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">f &lt; ...    . ... : /var/log/boot.log</span><br><span class="line">f &lt; ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/system.journal</span><br><span class="line">f = ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-1002.journal</span><br><span class="line">f = ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42445.journal</span><br><span class="line">f = ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42454.journal</span><br><span class="line">f &lt; ...    . ... : /var/log/openvswitch/ovs-vswitchd.log</span><br><span class="line">f &lt; ...    . ... : /var/log/openvswitch/ovsdb-server.log</span><br><span class="line">f           C    : /var/spool/anacron/cron.daily</span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">Detailed information about changes:</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">File: /var/log/boot.log</span><br><span class="line">  Size     : 20229                            | 0</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/system.journal</span><br><span class="line">  Size     : 33554432                         | 8388608</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; 8itPerM | [1] user.crtime_usec &lt;=&gt; aNrhqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-1002.journal</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; tA1SerM | [1] user.crtime_usec &lt;=&gt; fIPkqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42445.journal</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; H8tRerM | [1] user.crtime_usec &lt;=&gt; ZWjjqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42454.journal</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; 0RNRerM | [1] user.crtime_usec &lt;=&gt; ssXiqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/openvswitch/ovs-vswitchd.log</span><br><span class="line">  Size     : 9962                             | 95</span><br><span class="line"></span><br><span class="line">File: /var/log/openvswitch/ovsdb-server.log</span><br><span class="line">  Size     : 799                              | 95</span><br><span class="line"></span><br><span class="line">File: /var/spool/anacron/cron.daily</span><br><span class="line">  SHA512   : x31MHpzW9WWgozNuoqMPg1cHHVt0xQO8 | c3xpb2d16NpVt1cajv8PMqwjIx+Z8RCn</span><br><span class="line">             EG9RnlH5Qb4esO1bFTsytUoD975FOL5t | VWXKX3+wg/Z/Td1oHm/jHmlO3A3HBXF3</span><br><span class="line">             VKsfa01Fo4G65ZOPi7d+9A==         | Nb9nq+4ZK0/+9mx9vyeZDQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">The attributes of the (uncompressed) database(s):</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">/var/lib/aide/aide.db.gz</span><br><span class="line">  MD5      : 6SBee41U474Po/3Ez0LbzA==</span><br><span class="line">  SHA1     : gP2ufYflEIe+8fmGz4rjzsFvZZE=</span><br><span class="line">  RMD160   : Ffeno7GgHw2m4T3nO8kBkzWEJvU=</span><br><span class="line">  TIGER    : cZ4f60cWTM93LLhbnnd4UCi/Mb3wial/</span><br><span class="line">  SHA256   : dA5mb3sOorYG6TNUYv6wx3AiACaOmjik</span><br><span class="line">             pV5urYvvde0=</span><br><span class="line">  SHA512   : F7A4C03VGO89VbCJRU8/twujPdQPfigc</span><br><span class="line">             lKWaO7sGuIw4skAZnMg32uhA2xA4uZGB</span><br><span class="line">             2yvAThbJjGvsv/z5xluuoQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">End timestamp: 2025-05-22 03:46:29 -0400 (run time: 1m 26s)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="Updating-the-database"><a href="#Updating-the-database" class="headerlink" title="Updating the database"></a>Updating the database</h3><p>If you confirm that the modification is legal and right, you could update the current status to the database.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">[root@director ~]# aide --update</span><br><span class="line">Start timestamp: 2025-05-22 03:51:02 -0400 (AIDE 0.16)</span><br><span class="line">AIDE found differences between database and filesystem!!</span><br><span class="line">New AIDE database written to /var/lib/aide/aide.db.new.gz</span><br><span class="line"></span><br><span class="line">Summary:</span><br><span class="line">  Total number of entries: 146260</span><br><span class="line">  Added entries:  0</span><br><span class="line">  Removed entries:  0</span><br><span class="line">  Changed entries:  8</span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">Changed entries:</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">f &lt; ...    . ... : /var/log/boot.log</span><br><span class="line">f &lt; ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/system.journal</span><br><span class="line">f = ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-1002.journal</span><br><span class="line">f = ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42445.journal</span><br><span class="line">f = ...    . .X. : /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42454.journal</span><br><span class="line">f &lt; ...    . ... : /var/log/openvswitch/ovs-vswitchd.log</span><br><span class="line">f &lt; ...    . ... : /var/log/openvswitch/ovsdb-server.log</span><br><span class="line">f           C    : /var/spool/anacron/cron.daily</span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">Detailed information about changes:</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">File: /var/log/boot.log</span><br><span class="line">  Size     : 20229                            | 0</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/system.journal</span><br><span class="line">  Size     : 33554432                         | 8388608</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; 8itPerM | [1] user.crtime_usec &lt;=&gt; aNrhqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-1002.journal</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; tA1SerM | [1] user.crtime_usec &lt;=&gt; fIPkqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42445.journal</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; H8tRerM | [1] user.crtime_usec &lt;=&gt; ZWjjqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/journal/f874df04639f474cb0a9881041f4f7d4/user-42454.journal</span><br><span class="line">  XAttrs   : num=1                            | num=1</span><br><span class="line">             [1] user.crtime_usec &lt;=&gt; 0RNRerM | [1] user.crtime_usec &lt;=&gt; ssXiqLQ</span><br><span class="line">             1BgA=                            | 1BgA=</span><br><span class="line"></span><br><span class="line">File: /var/log/openvswitch/ovs-vswitchd.log</span><br><span class="line">  Size     : 9962                             | 95</span><br><span class="line"></span><br><span class="line">File: /var/log/openvswitch/ovsdb-server.log</span><br><span class="line">  Size     : 799                              | 95</span><br><span class="line"></span><br><span class="line">File: /var/spool/anacron/cron.daily</span><br><span class="line">  SHA512   : x31MHpzW9WWgozNuoqMPg1cHHVt0xQO8 | c3xpb2d16NpVt1cajv8PMqwjIx+Z8RCn</span><br><span class="line">             EG9RnlH5Qb4esO1bFTsytUoD975FOL5t | VWXKX3+wg/Z/Td1oHm/jHmlO3A3HBXF3</span><br><span class="line">             VKsfa01Fo4G65ZOPi7d+9A==         | Nb9nq+4ZK0/+9mx9vyeZDQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---------------------------------------------------</span><br><span class="line">The attributes of the (uncompressed) database(s):</span><br><span class="line">---------------------------------------------------</span><br><span class="line"></span><br><span class="line">/var/lib/aide/aide.db.gz</span><br><span class="line">  MD5      : 6SBee41U474Po/3Ez0LbzA==</span><br><span class="line">  SHA1     : gP2ufYflEIe+8fmGz4rjzsFvZZE=</span><br><span class="line">  RMD160   : Ffeno7GgHw2m4T3nO8kBkzWEJvU=</span><br><span class="line">  TIGER    : cZ4f60cWTM93LLhbnnd4UCi/Mb3wial/</span><br><span class="line">  SHA256   : dA5mb3sOorYG6TNUYv6wx3AiACaOmjik</span><br><span class="line">             pV5urYvvde0=</span><br><span class="line">  SHA512   : F7A4C03VGO89VbCJRU8/twujPdQPfigc</span><br><span class="line">             lKWaO7sGuIw4skAZnMg32uhA2xA4uZGB</span><br><span class="line">             2yvAThbJjGvsv/z5xluuoQ==</span><br><span class="line"></span><br><span class="line">/var/lib/aide/aide.db.new.gz</span><br><span class="line">  MD5      : kRAvaLUIKffJjsIXOkGvBw==</span><br><span class="line">  SHA1     : Lmaax9VyxEbBBxBetixpEmdWAmU=</span><br><span class="line">  RMD160   : uNOWJnBJ6vuV9bMC/kNJT+7Tagg=</span><br><span class="line">  TIGER    : 9s27LZvANGDyxzuNPsItCg+Jj2kVpW8/</span><br><span class="line">  SHA256   : CfPQWplclKeJ/KgAmvn0sRY69VYup5nM</span><br><span class="line">             lYXg/yz1+24=</span><br><span class="line">  SHA512   : PeEcnnOWA8EeRWHpYJdpHdv3x0lmvrJD</span><br><span class="line">             QC3FQlDjsKssmneR5R6gENVSKPQjjAcH</span><br><span class="line">             o37gGmDLiXgEN0IOQZDKHQ==</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">End timestamp: 2025-05-22 03:52:27 -0400 (run time: 1m 25s)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>And do not forget to rename the database!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@director ~]# <span class="built_in">mv</span> /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz</span><br><span class="line"><span class="built_in">mv</span>: overwrite <span class="string">&#x27;/var/lib/aide/aide.db.gz&#x27;</span>? y</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.sunhaoyang.net">Haoyang Sun</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.sunhaoyang.net/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html">https://www.sunhaoyang.net/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">This article is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. Please attribute the original author and source when sharing.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OpenStack/">OpenStack</a></div><div class="post-share"><div class="social-share" data-image="https://blog.sunhaoyang.net/images/OpenStack.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="/pluginsSrc/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>Buy Me a Coffee</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/wechat.jpg" alt="Wechat"/></a><div class="post-qr-code-desc">Wechat</div></li><li class="reward-item"><a href="https://blog.sunhaoyang.net/images/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://blog.sunhaoyang.net/images/alipay.jpg" alt="Alipay"/></a><div class="post-qr-code-desc">Alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/Cloud/OpenStack/Using-ReaR-to-back-up-OpenStack/index.html" title="OpenStack Series Chapter6: Using ReaR to back Up OpenStack"><img class="cover" src="https://blog.sunhaoyang.net/images/OpenStack.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">OpenStack Series Chapter6: Using ReaR to back Up OpenStack</div></div><div class="info-2"><div class="info-item-1">I intend to introduce how to use ReaR to back up and restore OpenStack.</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/Cloud/OpenStack/Using-ReaR-to-back-up-OpenStack/index.html" title="OpenStack Series Chapter6: Using ReaR to back Up OpenStack"><img class="cover" src="https://blog.sunhaoyang.net/images/OpenStack.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-15</div><div class="info-item-2">OpenStack Series Chapter6: Using ReaR to back Up OpenStack</div></div><div class="info-2"><div class="info-item-1">I intend to introduce how to use ReaR to back up and restore OpenStack.</div></div></div></a><a class="pagination-related" href="/Cloud/OpenStack/Introducing-Component-Communication-RabbitMQ.html" title="OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ"><img class="cover" src="https://blog.sunhaoyang.net/images/OpenStack.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-09</div><div class="info-item-2">OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ</div></div><div class="info-2"><div class="info-item-1">Let's discuss RabbitMQ, a message broker that can be used to communicate between different components in an OpenStack environment.</div></div></div></a><a class="pagination-related" href="/Cloud/OpenStack/Identifying-shared-services-and-VNC/index.html" title="OpenStack Series Chapter4: Identifying shared services and VNC"><img class="cover" src="https://blog.sunhaoyang.net/images/OpenStack.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-07</div><div class="info-item-2">OpenStack Series Chapter4: Identifying shared services and VNC</div></div><div class="info-2"><div class="info-item-1">This article mainly introduces the shared services running on the controller node and the process of VNC.</div></div></div></a><a class="pagination-related" href="/Cloud/OpenStack/Openstack-Deployment-Overview/index.html" title="Openstack Deployment Series Chapter0:Overview"><img class="cover" src="https://blog.sunhaoyang.net/images/OpenStack.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-06</div><div class="info-item-2">Openstack Deployment Series Chapter0:Overview</div></div><div class="info-2"><div class="info-item-1">This deployment uses a fully manual approach, with the aim of helping everyone understand the deployment details and how the components work together.</div></div></div></a><a class="pagination-related" href="/Cloud/OpenStack/Introducing-Overcloud/index.html" title="OpenStack Series Chapter3:Introducing Overcloud"><img class="cover" src="https://blog.sunhaoyang.net/images/OpenStack.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-05-06</div><div class="info-item-2">OpenStack Series Chapter3:Introducing Overcloud</div></div><div class="info-2"><div class="info-item-1">Similarly, Let's understand the core Red Hat OpenStack components, manage overcloud services, and view the overcloud structure in this Chapter.</div></div></div></a><a class="pagination-related" href="/Cloud/OpenStack/Introducing-Undercloud/index.html" title="OpenStack Series Chapter2:Introducing Undercloud"><img class="cover" src="https://blog.sunhaoyang.net/images/OpenStack.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-04-30</div><div class="info-item-2">OpenStack Series Chapter2:Introducing Undercloud</div></div><div class="info-2"><div class="info-item-1">Let's understand the core Red Hat OpenStack components, manage undercloud services, and view the undercloud structure in this Chapter.</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://blog.sunhaoyang.net/images/myphoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Haoyang Sun</div><div class="author-info-description">DevOps Engineer, Cloud-native Engineer, Open-source technology enthusiast</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">40</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">14</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content"><div class="center-content" style="text-align: center;">
+    <p>My blog is now live!</p>
+    <p>Hello everyone! Thank you for visiting my blog!</p>
+    <p>Here, I will share my thoughts and reflections on various technologies and aspects of life.</p>
+    <p>Please stay tuned for updates!:)</p>
+    <p>If you’re interested in discussing any topic with me, feel free to leave a comment or reach out through the contact information provided below.</p>
+    <p>Email: Flash_shy@163.com</p>
+    <p>QQ ID: 1135300457</p>
+    <p>Wechat ID: Flash_sunhy</p>
+</div>
+</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-AIDE"><span class="toc-number">1.</span> <span class="toc-text">What is AIDE?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Installing-and-configuring-AIDE"><span class="toc-number">2.</span> <span class="toc-text">Installing and configuring AIDE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Installing-the-software-application"><span class="toc-number">2.1.</span> <span class="toc-text">Installing the software application</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Initialize-the-AIDE-database"><span class="toc-number">2.2.</span> <span class="toc-text">Initialize the AIDE database</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Checking-the-database"><span class="toc-number">2.3.</span> <span class="toc-text">Checking the database</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Testing-for-creating-and-modifying-files"><span class="toc-number">2.4.</span> <span class="toc-text">Testing for creating and modifying files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Updating-the-database"><span class="toc-number">2.5.</span> <span class="toc-text">Updating the database</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html" title="OpenStack Series Chapter7: Managing File based Component Security with AIDE"><img src="https://blog.sunhaoyang.net/images/OpenStack.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenStack Series Chapter7: Managing File based Component Security with AIDE"/></a><div class="content"><a class="title" href="/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html" title="OpenStack Series Chapter7: Managing File based Component Security with AIDE">OpenStack Series Chapter7: Managing File based Component Security with AIDE</a><time datetime="2025-05-22T06:29:17.000Z" title="Created 2025-05-22 14:29:17">2025-05-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Cloud/OpenStack/Using-ReaR-to-back-up-OpenStack/index.html" title="OpenStack Series Chapter6: Using ReaR to back Up OpenStack"><img src="https://blog.sunhaoyang.net/images/OpenStack.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenStack Series Chapter6: Using ReaR to back Up OpenStack"/></a><div class="content"><a class="title" href="/Cloud/OpenStack/Using-ReaR-to-back-up-OpenStack/index.html" title="OpenStack Series Chapter6: Using ReaR to back Up OpenStack">OpenStack Series Chapter6: Using ReaR to back Up OpenStack</a><time datetime="2025-05-15T12:14:05.000Z" title="Created 2025-05-15 20:14:05">2025-05-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Cloud/OpenStack/Introducing-Component-Communication-RabbitMQ.html" title="OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ"><img src="https://blog.sunhaoyang.net/images/OpenStack.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ"/></a><div class="content"><a class="title" href="/Cloud/OpenStack/Introducing-Component-Communication-RabbitMQ.html" title="OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ">OpenStack Series Chapter5: Introducing Component Communiation---RabbitMQ</a><time datetime="2025-05-09T07:55:04.000Z" title="Created 2025-05-09 15:55:04">2025-05-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Cloud/OpenStack/Identifying-shared-services-and-VNC/index.html" title="OpenStack Series Chapter4: Identifying shared services and VNC"><img src="https://blog.sunhaoyang.net/images/OpenStack.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenStack Series Chapter4: Identifying shared services and VNC"/></a><div class="content"><a class="title" href="/Cloud/OpenStack/Identifying-shared-services-and-VNC/index.html" title="OpenStack Series Chapter4: Identifying shared services and VNC">OpenStack Series Chapter4: Identifying shared services and VNC</a><time datetime="2025-05-07T09:16:17.000Z" title="Created 2025-05-07 17:16:17">2025-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/Linux/Mount/cifs-mount-attention/index.html" title="cifs mount attention"><img src="https://blog.sunhaoyang.net/images/Mount.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="cifs mount attention"/></a><div class="content"><a class="title" href="/Linux/Mount/cifs-mount-attention/index.html" title="cifs mount attention">cifs mount attention</a><time datetime="2025-05-07T05:12:46.000Z" title="Created 2025-05-07 13:12:46">2025-05-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://blog.sunhaoyang.net/images/footer_background.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Haoyang Sun</div><div class="footer_custom_text"><a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/gonganbeian.png" alt="公安备案" style="vertical-align:middle; width:16px; heigh:16px;"> 辽公网安备21029602001011号
+</a>
+<a href="https://beian.miit.gov.cn/" rel="noreferrer" target="_blank">
+  <img src="https://blog.sunhaoyang.net/images/icpbeian.png" alt="ICP备案" style="vertical-align:middle; width:16px; height:16px;"> 辽ICP备2025048274号-1
+</a>
+</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.isShuoshuo
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://twikoo.sunhaoyang.net/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.isPost && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !false) {
+    if (false) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><script>window.newestComments = {
+  changeContent: content => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[Image]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[Link]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[Code]') // replace code
+    content = content.replace(/<code>.*?<\/code>/gi, '[Code]') // replace code      
+    content = content.replace(/<[^>]+>/g, "") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0, 150) + '...'
+    }
+    return content
+  },
+
+  generateHtml: (array, ele) => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class="aside-list-item">'
+
+        if (true && array[i].avatar) {
+          const imgAttr = 'src'
+          result += `<a href="${array[i].url}" class="thumbnail"><img ${imgAttr}="${array[i].avatar}" alt="${array[i].nick}"></a>`
+        }
+
+        result += `<div class="content">
+        <a class="comment" href="${array[i].url}" title="${array[i].content}">${array[i].content}</a>
+        <div class="name"><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += 'No comments'
+    }
+
+    ele.innerHTML = result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh(ele)
+  },
+
+  newestCommentInit: (name, getComment) => {
+    const $dom = document.querySelector('#card-newest-comments .aside-list')
+    if ($dom) {
+      const data = btf.saveToLocal.get(name)
+      if (data) {
+        newestComments.generateHtml(JSON.parse(data), $dom)
+      } else {
+        getComment($dom)
+      }
+    }
+  },
+
+  run: (name, getComment) => {
+    newestComments.newestCommentInit(name, getComment)
+    btf.addGlobalFn('pjaxComplete', () => newestComments.newestCommentInit(name, getComment), name)
+  }
+}</script><script>window.addEventListener('load', () => {
+  const keyName = 'twikoo-newest-comments'
+  const { changeContent, generateHtml, run } = window.newestComments
+
+  const getComment = ele => {
+    const runTwikoo = () => {
+      twikoo.getRecentComments({
+        envId: 'https://twikoo.sunhaoyang.net/',
+        region: '',
+        pageSize: 6,
+        includeReply: true
+      }).then(res => {
+        const twikooArray = res.map(e => {
+          return {
+            'content': changeContent(e.comment),
+            'avatar': e.avatar,
+            'nick': e.nick,
+            'url': e.url + '#' + e.id,
+            'date': new Date(e.created).toISOString()
+          }
+        })
+
+        btf.saveToLocal.set(keyName, JSON.stringify(twikooArray), 10/(60*24))
+        generateHtml(twikooArray, ele)
+      }).catch(err => {
+        console.error(err)
+        ele.textContent= "Unable to retrieve comments, please check the configuration"
+      })
+    }
+
+    if (typeof twikoo === 'object') {
+      runTwikoo()
+    } else {
+      btf.getScript('/pluginsSrc/twikoo/dist/twikoo.all.min.js').then(runTwikoo)
+    }
+  }
+
+  run(keyName, getComment)
+})</script><div class="aplayer no-destroy" data-id="7613104556" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><script defer="defer" id="fluttering_ribbon" mobile="true" src="/pluginsSrc/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="click-heart" src="/pluginsSrc/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><link rel="stylesheet" href="/pluginsSrc/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="/pluginsSrc/aplayer/dist/APlayer.min.js"></script><script src="/pluginsSrc/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="/pluginsSrc/pjax/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => fn())
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      pjax.loadUrl('/404.html')
+    }
+  })
+})()</script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
