@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>2025/05/27 English accumulation</title>
+    <url>//Language/English/20250527/index.html</url>
+    <content><![CDATA[<ul>
+<li><p><strong>encompass</strong>: Identity <code>encompasses</code> authentication and authorization functions.</p>
+</li>
+<li><p><strong>evolve</strong>: Token protocols have <code>evolved</code> since the early OpenStack days,<br>and are discussed later in this chapter.</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Language</category>
+      </categories>
+      <tags>
+        <tag>English</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenStack Series Chapter7: Managing File based Component Security with AIDE</title>
     <url>//Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html</url>
     <content><![CDATA[<h2 id="What-is-AIDE"><a href="#What-is-AIDE" class="headerlink" title="What is AIDE?"></a>What is AIDE?</h2><p><code>Advanced Intrusion Detection Environment (AIDE)</code> is a tool to compare changes within files or directories. The <code>hashes</code> will be stored in the local database on the first run. After that, it will be compared on each subsequent run. If the <code>hash</code> content is different from the that in database, it will be recorded in logs. What’s more, we could configure the report and email reminder as well.</p>
