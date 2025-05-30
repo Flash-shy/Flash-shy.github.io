@@ -1,3 +1,4 @@
+https://www.sunhaoyang.net/Linux/LDAP/The-high-availability-deployment-of-the-LDAP-server/index.html
 https://www.sunhaoyang.net/Language/English/20250527/index.html
 https://www.sunhaoyang.net/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html
 https://www.sunhaoyang.net/Cloud/OpenStack/Using-ReaR-to-back-up-OpenStack/index.html

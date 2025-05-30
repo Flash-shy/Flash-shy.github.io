@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.sunhaoyang.net/Linux/LDAP/The-high-availability-deployment-of-the-LDAP-server/index.html</loc>
+    
+    <lastmod>2025-05-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.sunhaoyang.net/Language/English/20250527/index.html</loc>
     
     <lastmod>2025-05-27</lastmod>
@@ -409,7 +418,7 @@
 
   <url>
     <loc>https://www.sunhaoyang.net/</loc>
-    <lastmod>2025-05-27</lastmod>
+    <lastmod>2025-05-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
