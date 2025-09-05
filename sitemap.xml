@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.sunhaoyang.net/uncategorized/Complete-Guide-to-Deploy-Gitlab-Gitlab-runner-docker/index.html</loc>
+    
+    <lastmod>2025-09-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://www.sunhaoyang.net/Linux/LDAP/The-high-availability-deployment-of-the-LDAP-server/index.html</loc>
     
     <lastmod>2025-05-30</lastmod>
@@ -65,15 +74,6 @@
   </url>
   
   <url>
-    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Openstack-Deployment-Overview/index.html</loc>
-    
-    <lastmod>2025-05-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://www.sunhaoyang.net/Database/MySQL/Introduction/index.html</loc>
     
     <lastmod>2025-05-06</lastmod>
@@ -83,34 +83,7 @@
   </url>
   
   <url>
-    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Introducing-Overcloud/index.html</loc>
-    
-    <lastmod>2025-05-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Introducing-Undercloud/index.html</loc>
-    
-    <lastmod>2025-05-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Introducing-Containerized-Services/index.html</loc>
-    
-    <lastmod>2025-05-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Creating-and-Deleting-VMs-instaces(2)/index.html</loc>
+    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Openstack-Deployment-Overview/index.html</loc>
     
     <lastmod>2025-05-06</lastmod>
     
@@ -128,16 +101,43 @@
   </url>
   
   <url>
-    <loc>https://www.sunhaoyang.net/Tools/Frp/Frp-P2P-mode/index.html</loc>
+    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Creating-and-Deleting-VMs-instaces(2)/index.html</loc>
     
-    <lastmod>2025-04-29</lastmod>
+    <lastmod>2025-05-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://www.sunhaoyang.net/Tools/Frp/Frp-supplementation-and-improvement/index.html</loc>
+    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Introducing-Containerized-Services/index.html</loc>
+    
+    <lastmod>2025-05-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Introducing-Undercloud/index.html</loc>
+    
+    <lastmod>2025-05-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.sunhaoyang.net/Cloud/OpenStack/Introducing-Overcloud/index.html</loc>
+    
+    <lastmod>2025-05-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.sunhaoyang.net/Tools/Frp/Complete-Guide-to-Use-Frp/index.html</loc>
     
     <lastmod>2025-04-29</lastmod>
     
@@ -155,7 +155,16 @@
   </url>
   
   <url>
-    <loc>https://www.sunhaoyang.net/Tools/Frp/Complete-Guide-to-Use-Frp/index.html</loc>
+    <loc>https://www.sunhaoyang.net/Tools/Frp/Frp-P2P-mode/index.html</loc>
+    
+    <lastmod>2025-04-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.sunhaoyang.net/Tools/Frp/Frp-supplementation-and-improvement/index.html</loc>
     
     <lastmod>2025-04-29</lastmod>
     
@@ -200,7 +209,7 @@
   </url>
   
   <url>
-    <loc>https://www.sunhaoyang.net/Linux/Ansible/implementing-recommended-ansible-practices/index.html</loc>
+    <loc>https://www.sunhaoyang.net/Linux/Ansible/the-introduction-of-ansible-automation-platform2/index.html</loc>
     
     <lastmod>2025-03-07</lastmod>
     
@@ -218,7 +227,7 @@
   </url>
   
   <url>
-    <loc>https://www.sunhaoyang.net/Linux/Ansible/the-introduction-of-ansible-automation-platform2/index.html</loc>
+    <loc>https://www.sunhaoyang.net/Linux/Ansible/implementing-recommended-ansible-practices/index.html</loc>
     
     <lastmod>2025-03-07</lastmod>
     
@@ -418,7 +427,7 @@
 
   <url>
     <loc>https://www.sunhaoyang.net/</loc>
-    <lastmod>2025-05-30</lastmod>
+    <lastmod>2025-09-05</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
