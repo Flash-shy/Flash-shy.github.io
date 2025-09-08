@@ -2,9 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://www.sunhaoyang.net/Tools/Complete-Guide-to-Deploy-Gitlab-Gitlab-runner-docker/index.html</loc>
+    <loc>https://www.sunhaoyang.net/Tools/Gitlab/Complete-Guide-to-Deploy-Gitlab-Gitlab-runner-docker/index.html</loc>
     
-    <lastmod>2025-09-05</lastmod>
+    <lastmod>2025-09-08</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -427,7 +427,7 @@
 
   <url>
     <loc>https://www.sunhaoyang.net/</loc>
-    <lastmod>2025-09-05</lastmod>
+    <lastmod>2025-09-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

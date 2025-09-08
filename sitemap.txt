@@ -1,4 +1,4 @@
-https://www.sunhaoyang.net/Tools/Complete-Guide-to-Deploy-Gitlab-Gitlab-runner-docker/index.html
+https://www.sunhaoyang.net/Tools/Gitlab/Complete-Guide-to-Deploy-Gitlab-Gitlab-runner-docker/index.html
 https://www.sunhaoyang.net/Linux/LDAP/The-high-availability-deployment-of-the-LDAP-server/index.html
 https://www.sunhaoyang.net/Language/English/20250527/index.html
 https://www.sunhaoyang.net/Cloud/OpenStack/Managing-File-based-Component-Security-with-AIDE/index.html
